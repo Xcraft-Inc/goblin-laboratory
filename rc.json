@@ -1,0 +1,11 @@
+{
+  "create": {
+    "parallel": true,
+    "desc": "Create a widget",
+    "options": {
+      "params": {
+        "required": "config..."
+      }
+    }
+  }
+}
