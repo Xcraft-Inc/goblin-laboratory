@@ -4,7 +4,7 @@
     "desc": "Create a widget",
     "options": {
       "params": {
-        "required": "config..."
+        "optional": "config..."
       }
     }
   }
