@@ -7,5 +7,14 @@
         "optional": "config..."
       }
     }
+  },
+  "open": {
+    "parallel": true,
+    "desc": "Open a widget",
+    "options": {
+      "params": {
+        "required": "route"
+      }
+    }
   }
 }
