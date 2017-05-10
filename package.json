@@ -9,9 +9,24 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4",
+    "react-loadable": "^3.3.1",
     "xcraft-core-goblin": "^2.0.0"
   },
   "devDependencies": {
+    "babel-cli": "",
+    "babel-core": "",
+    "babel-plugin-react-intl": "",
+    "babel-plugin-react-transform": "",
+    "babel-plugin-transform-class-properties": "",
+    "babel-plugin-transform-decorators-legacy": "",
+    "babel-plugin-transform-es2015-classes": "",
+    "babel-polyfill": "",
+    "babel-preset-node6": "",
+    "babel-preset-react": "",
+    "babel-preset-stage-0": "",
+    "react-hot-loader": "^3.0.0-beta.7",
     "xcraft-dev-rules": "^0.1.8"
   }
 }
