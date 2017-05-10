@@ -2,15 +2,7 @@ require ('react-hot-loader/patch');
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {AppContainer} from 'react-hot-loader';
-
-import Loadable from 'react-loadable';
-import Loading from './loading';
-import fakeDelay from './fakeDelay';
-
-let LoadableExample = Loadable ({
-  loader: () => fakeDelay (400).then (() => import ('./hello.js')),
-  LoadingComponent: Loading,
-});
+import LoadableExample from './exemple.js';
 
 const main = Component => {
   ReactDOM.render (
