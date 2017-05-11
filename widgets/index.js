@@ -2,7 +2,7 @@ require ('react-hot-loader/patch');
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {AppContainer} from 'react-hot-loader';
-import LoadableExample from './exemple.js';
+import Hello from './hello.js';
 
 const main = Component => {
   ReactDOM.render (
@@ -18,4 +18,4 @@ if (module.hot) {
 }
 
 //main (() => <span>Empty Laboratory</span>);
-main (LoadableExample);
+main (Hello);
