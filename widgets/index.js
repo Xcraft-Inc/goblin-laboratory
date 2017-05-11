@@ -4,9 +4,8 @@ import ReactDOM from 'react-dom';
 import {AppContainer} from 'react-hot-loader';
 import comp from './comp.js';
 
-const Hello = comp ('hello');
-
-const main = Component => {
+const main = component => {
+  const Component = comp (component);
   ReactDOM.render (
     <AppContainer>
       <Component />
@@ -20,4 +19,4 @@ if (module.hot) {
 }
 
 // main (() => <span>Empty Laboratory</span>);
-main (Hello);
+main ('hello');
