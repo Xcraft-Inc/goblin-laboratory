@@ -4,7 +4,7 @@ export default function Loading({isLoading, pastDelay, error}) {
   if (isLoading && pastDelay) {
     return <p>Loading...</p>;
   } else if (error && !isLoading) {
-    return <p>Error! {error}</p>;
+    return <p>{error.toString ()}</p>;
   } else {
     return null;
   }
