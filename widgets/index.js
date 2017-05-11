@@ -2,7 +2,9 @@ require ('react-hot-loader/patch');
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {AppContainer} from 'react-hot-loader';
-import Hello from './hello.js';
+import comp from './comp.js';
+
+const Hello = comp ('hello');
 
 const main = Component => {
   ReactDOM.render (
@@ -17,5 +19,5 @@ if (module.hot) {
   module.hot.accept ();
 }
 
-//main (() => <span>Empty Laboratory</span>);
+// main (() => <span>Empty Laboratory</span>);
 main (Hello);
