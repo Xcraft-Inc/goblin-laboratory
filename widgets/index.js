@@ -3,6 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {AppContainer} from 'react-hot-loader';
 import comp from './comp.js';
+const ipcRenderer = require ('electron').ipcRenderer;
 
 const main = component => {
   const Component = comp (component);
