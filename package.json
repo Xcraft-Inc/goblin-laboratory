@@ -37,6 +37,7 @@
     "babel-preset-node6": "",
     "babel-preset-react": "",
     "babel-preset-stage-0": "",
+    "react-addons-perf": "^15.4.2",
     "react-hot-loader": "^3.0.0-beta.7",
     "xcraft-dev-rules": "^0.1.8"
   }

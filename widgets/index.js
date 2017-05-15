@@ -1,4 +1,8 @@
 require ('react-hot-loader/patch');
+
+import Perf from 'react-addons-perf';
+window.Perf = Perf;
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {AppContainer} from 'react-hot-loader';
