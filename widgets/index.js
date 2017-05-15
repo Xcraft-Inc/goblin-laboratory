@@ -2,10 +2,14 @@ require ('react-hot-loader/patch');
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {AppContainer} from 'react-hot-loader';
-//import Root from 'laboratory/root';
-import Hello from 'venture-trade-company/hello';
+import Root from 'laboratory/root';
+import createHashHistory from 'history/createHashHistory';
 
-//const store = configureStore (window.__INITIAL_STATE__);
+const history = createHashHistory ();
+//import Hello from 'venture-trade-company/hello';
+import configureStore from 'laboratory/store/store';
+const store = configureStore (window.__INITIAL_STATE__, history);
+
 const ipcRenderer = require ('electron').ipcRenderer;
 ipcRenderer.on ('PUSH_PATH', (event, path) => {
   store.dispatch (push (path));
@@ -29,10 +33,10 @@ ipcRenderer.on ('NEW_BACKEND_STATE', (event, state, from) => {
   }
 });
 
-const main = Component => {
+const main = () => {
   ReactDOM.render (
     <AppContainer>
-      <Component />
+      <Root store={store} history={history} />
     </AppContainer>,
     document.getElementById ('root')
   );
@@ -43,4 +47,4 @@ if (module.hot) {
 }
 
 // main (() => <span>Empty Laboratory</span>);
-main (Hello);
+main ();

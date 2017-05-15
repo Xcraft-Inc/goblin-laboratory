@@ -1,8 +1,8 @@
 import React from 'react';
 import {Route, IndexRoute} from 'react-router';
 
-export default (
-  <Route path="/" component={Layout}>
-    <IndexRoute component={Loading} />
-  </Route>
-);
+const Layout = () => {
+  return <div>Layout</div>;
+};
+
+export default <Route exact path="/" component={Layout} />;
