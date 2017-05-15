@@ -25,6 +25,7 @@ ipcRenderer.on ('DISPATCH_IN_APP', (event, action) => {
 });
 
 let backendLoaded = false;
+let wid = null;
 // Must be the last event to subscribe because it sends the FRONT_END_READY msg
 ipcRenderer.on ('NEW_BACKEND_STATE', (event, transitState, from) => {
   const state = transit.fromJSON (transitState);
@@ -33,7 +34,8 @@ ipcRenderer.on ('NEW_BACKEND_STATE', (event, transitState, from) => {
     newAppState: state,
   });
   if (backendLoaded === false && from === 'main') {
-    ipcRenderer.send ('FRONT_END_READY', state.get ('wid'));
+    wid = state.get ('wid');
+    ipcRenderer.send ('FRONT_END_READY', wid);
     backendLoaded = true;
     return;
   }
@@ -50,6 +52,10 @@ const main = () => {
 
 if (module.hot) {
   module.hot.accept ();
+  if (wid) {
+    console.log ('Requesing a resend...');
+    ipcRenderer.send ('RESEND', wid);
+  }
 }
 
 // main (() => <span>Empty Laboratory</span>);

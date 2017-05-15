@@ -2,7 +2,7 @@ import {applyMiddleware, compose, createStore} from 'redux';
 import {routerMiddleware} from 'react-router-redux';
 import thunk from 'redux-thunk';
 
-import rootReducer from 'laboratory/store/root-reducer';
+const rootReducer = require ('laboratory/store/root-reducer').default;
 const ipcRenderer = require ('electron').ipcRenderer;
 
 const questMiddleware = store => next => action => {
@@ -24,12 +24,12 @@ export default function configureStore (initialState, history) {
   ) (createStore);
 
   const store = finalCreateStore (rootReducer, initialState);
-  /*if (module.hot) {
+  if (module.hot) {
     module.hot.accept ('laboratory/store/root-reducer', () => {
-      const nextRootReducer = env ('rootReducer');
+      const rootReducer = require ('laboratory/store/root-reducer').default;
       store.replaceReducer (nextRootReducer);
     });
   }
-  console.dir (store.getState ());*/
+  console.dir (store.getState ());
   return store;
 }
