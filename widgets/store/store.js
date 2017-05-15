@@ -15,17 +15,15 @@ const questMiddleware = store => next => action => {
 
 export default function configureStore (initialState, history) {
   const routerHistory = routerMiddleware (history);
-  const finalCreateStore = compose (
+  const composeEnhancers =
+    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
+  const finalCreateStore = composeEnhancers (
     // Middleware you want to use in development:
     applyMiddleware (thunk, routerHistory, questMiddleware)
   ) (createStore);
 
-  const store = finalCreateStore (
-    rootReducer,
-    window.__REDUX_DEVTOOLS_EXTENSION__ &&
-      window.__REDUX_DEVTOOLS_EXTENSION__ (),
-    initialState
-  );
+  const store = finalCreateStore (rootReducer, initialState);
   /*if (module.hot) {
     module.hot.accept ('laboratory/store/root-reducer', () => {
       const nextRootReducer = env ('rootReducer');
