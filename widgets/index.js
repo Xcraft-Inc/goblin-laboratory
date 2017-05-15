@@ -3,6 +3,7 @@ require ('react-hot-loader/patch');
 import Perf from 'react-addons-perf';
 window.Perf = Perf;
 
+import transit from 'transit-immutable-js';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {AppContainer} from 'react-hot-loader';
@@ -25,13 +26,14 @@ ipcRenderer.on ('DISPATCH_IN_APP', (event, action) => {
 
 let backendLoaded = false;
 // Must be the last event to subscribe because it sends the FRONT_END_READY msg
-ipcRenderer.on ('NEW_BACKEND_STATE', (event, state, from) => {
+ipcRenderer.on ('NEW_BACKEND_STATE', (event, transitState, from) => {
+  const state = transit.fromJSON (transitState);
   store.dispatch ({
     type: 'NEW_BACKEND_STATE',
     newAppState: state,
   });
   if (backendLoaded === false && from === 'main') {
-    ipcRenderer.send ('FRONT_END_READY');
+    ipcRenderer.send ('FRONT_END_READY', state.get ('wid'));
     backendLoaded = true;
     return;
   }

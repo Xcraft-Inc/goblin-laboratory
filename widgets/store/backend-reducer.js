@@ -1,12 +1,9 @@
-/*import {fromJS} from 'immutable';
-import transit  from 'transit-immutable-js';
+import {fromJS} from 'immutable';
 
-function backendReducer (state = fromJS ({}), action = {}) {
+function backendReducer (state = {}, action = {}) {
   if (action.type === 'NEW_BACKEND_STATE') {
-    return transit.fromJSON (action.newAppState);
+    return action.newAppState;
   }
   return state;
 }
-export default backendReducer;*/
-
-export default (state = {}) => state;
+export default backendReducer;
