@@ -34,17 +34,24 @@ ipcRenderer.on ('NEW_BACKEND_STATE', (event, transitState, from) => {
     newAppState: state,
   });
   if (backendLoaded === false && from === 'main') {
-    wid = state.get ('wid');
+    console.log ('Init WM');
+    console.dir (state.toJS ());
+    wid = state.toJS ().wid;
+    if (!wid) {
+      throw new Error ('No window id provided');
+    }
+    console.log (`Sending FRONT_END_READY for window ${wid}`);
     ipcRenderer.send ('FRONT_END_READY', wid);
     backendLoaded = true;
+    main (Root);
     return;
   }
 });
 
-const main = () => {
+const main = Main => {
   ReactDOM.render (
     <AppContainer>
-      <Root store={store} history={history} />
+      <Main store={store} history={history} />
     </AppContainer>,
     document.getElementById ('root')
   );
@@ -58,5 +65,4 @@ if (module.hot) {
   }
 }
 
-// main (() => <span>Empty Laboratory</span>);
-main ();
+main (() => <span>Empty Laboratory</span>);
