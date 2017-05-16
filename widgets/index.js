@@ -50,6 +50,7 @@ ipcRenderer.on ('NEW_BACKEND_STATE', (event, transitState, from) => {
   if (!rootMounted) {
     main (Root);
     rootMounted = true;
+    ipcRenderer.send ('LABORATORY_READY', wid);
   }
 });
 

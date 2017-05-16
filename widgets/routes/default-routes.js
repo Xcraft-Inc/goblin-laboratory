@@ -16,11 +16,12 @@ const renderRoutes = routes => {
     const route = w.get ('route');
     const name = w.get ('widget');
     return (
-      <div>
-        <ImportWidget name={name} />;
-        <Route key={i} path={route} render={() => <span>hi</span>} />
-      </div>
-    ); //;
+      <Route
+        key={i}
+        path={route}
+        render={() => <span>todo: require ({name})</span>}
+      />
+    );
   });
   return res;
 };
