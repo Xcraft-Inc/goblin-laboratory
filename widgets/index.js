@@ -1,7 +1,5 @@
 require ('react-hot-loader/patch');
-
-import Perf from 'react-addons-perf';
-window.Perf = Perf;
+require ('./devtools.js');
 
 import transit from 'transit-immutable-js';
 import React from 'react';
