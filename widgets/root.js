@@ -4,7 +4,7 @@ import React from 'react';
 import pure from 'recompose/pure';
 
 import {Provider} from 'react-redux';
-import {Router} from 'react-router';
+import {ConnectedRouter} from 'react-router-redux';
 
 // ROUTES DEF
 import Routes from 'laboratory/routes/default-routes';
@@ -16,9 +16,9 @@ const root = props => {
   return (
     <Provider store={store}>
       <div>
-        <Router history={history}>
+        <ConnectedRouter history={history}>
           <Routes />
-        </Router>
+        </ConnectedRouter>
       </div>
     </Provider>
   );

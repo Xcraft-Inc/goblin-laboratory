@@ -11,22 +11,26 @@ const ImportWidget = props => {
   return <span>todo: dynamic import {props.name}</span>;
 };
 
+const renderRoutes = routes => {
+  const res = routes.select ((w, i) => {
+    const route = w.get ('route');
+    const name = w.get ('widget');
+    return (
+      <div>
+        <ImportWidget name={name} />;
+        <Route key={i} path={route} render={() => <span>hi</span>} />
+      </div>
+    ); //;
+  });
+  return res;
+};
+
 const Routes = props => {
   const routes = props.widgets;
+
   return (
     <div>
-      {routes.map ((w, i) => {
-        const route = w.get ('route');
-        const name = w.get ('widget');
-        return (
-          <Route
-            key={i}
-            exact
-            path={route}
-            component={<ImportWidget name={name} />}
-          />
-        );
-      })}
+      {renderRoutes (routes)}
     </div>
   );
 };

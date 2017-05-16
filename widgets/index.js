@@ -6,16 +6,17 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {AppContainer} from 'react-hot-loader';
 import Root from 'laboratory/root';
-import createHashHistory from 'history/createHashHistory';
-import {push} from 'react-router';
+import createHistory from 'history/createHashHistory';
+import {push} from 'react-router-redux';
 
-const history = createHashHistory ();
+const history = createHistory ();
 //import Hello from 'venture-trade-company/hello';
 import configureStore from 'laboratory/store/store';
 const store = configureStore (window.__INITIAL_STATE__, history);
 
 const ipcRenderer = require ('electron').ipcRenderer;
 ipcRenderer.on ('PUSH_PATH', (event, path) => {
+  console.log (`Received a PUSH_PATH to ${path}`);
   store.dispatch (push (path));
 });
 
