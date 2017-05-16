@@ -9,6 +9,7 @@ import ReactDOM from 'react-dom';
 import {AppContainer} from 'react-hot-loader';
 import Root from 'laboratory/root';
 import createHashHistory from 'history/createHashHistory';
+import {push} from 'react-router';
 
 const history = createHashHistory ();
 //import Hello from 'venture-trade-company/hello';

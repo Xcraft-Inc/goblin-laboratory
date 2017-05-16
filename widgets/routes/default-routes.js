@@ -7,8 +7,8 @@ const Layout = () => {
   return <div>Layout</div>;
 };
 
-const importWidget = wName => {
-  return require (wName).default;
+const ImportWidget = props => {
+  return <span>todo: dynamic import {props.name}</span>;
 };
 
 const Routes = props => {
@@ -16,12 +16,14 @@ const Routes = props => {
   return (
     <div>
       {routes.map ((w, i) => {
+        const route = w.get ('route');
+        const name = w.get ('widget');
         return (
           <Route
             key={i}
             exact
-            path={w.get ('route')}
-            component={importWidget (w.get ('widgetName'))}
+            path={route}
+            component={<ImportWidget name={name} />}
           />
         );
       })}
