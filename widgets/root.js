@@ -7,7 +7,7 @@ import {Provider} from 'react-redux';
 import {Router} from 'react-router';
 
 // ROUTES DEF
-import routes from 'laboratory/routes/default-routes';
+import Routes from 'laboratory/routes/default-routes';
 
 // ROOT component
 // RespOf: Providing store and routes to a particular domain
@@ -17,7 +17,7 @@ const root = props => {
     <Provider store={store}>
       <div>
         <Router history={history}>
-          {routes}
+          <Routes />
         </Router>
       </div>
     </Provider>
