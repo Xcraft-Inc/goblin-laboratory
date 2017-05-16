@@ -25,6 +25,7 @@ ipcRenderer.on ('DISPATCH_IN_APP', (event, action) => {
 });
 
 let backendLoaded = false;
+let rootMounted = false;
 let wid = null;
 // Must be the last event to subscribe because it sends the FRONT_END_READY msg
 ipcRenderer.on ('NEW_BACKEND_STATE', (event, transitState, from) => {
@@ -43,8 +44,12 @@ ipcRenderer.on ('NEW_BACKEND_STATE', (event, transitState, from) => {
     console.log (`Sending FRONT_END_READY for window ${wid}`);
     ipcRenderer.send ('FRONT_END_READY', wid);
     backendLoaded = true;
-    main (Root);
     return;
+  }
+
+  if (!rootMounted) {
+    main (Root);
+    rootMounted = true;
   }
 });
 
