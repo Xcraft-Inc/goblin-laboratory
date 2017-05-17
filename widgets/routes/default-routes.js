@@ -19,8 +19,8 @@ const Routes = props => {
             key={i}
             path={route}
             getComponent={(location, cb) => {
-              console.log (`will load: ../../goblin-${name}`);
-              import (`../../goblin-${name}`).then (module =>
+              console.log (`will load: ./goblin-${name}`);
+              import (`/goblin-${name}`).then (module =>
                 cb (null, module.default)
               );
             }}
