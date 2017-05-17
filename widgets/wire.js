@@ -8,10 +8,9 @@ export const wire = wires => {
       if (state.backend && state.backend.toJS) {
         const shredded = new Shredder (state.backend);
         Object.keys (wires).forEach (wire => {
-          const val = shredded.get (wires[wire], {});
+          const val = shredded.get (wires[wire], null);
           mapState[wire] = val;
         });
-
         return mapState;
       }
 
