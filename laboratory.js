@@ -18,6 +18,15 @@ exports.xcraftCommands = function () {
           },
         },
       },
+      _ready: {
+        parallel: true,
+        desc: 'internal ready',
+        options: {
+          params: {
+            required: 'wid',
+          },
+        },
+      },
       open: {
         parallel: true,
         desc: 'Open a widget',
