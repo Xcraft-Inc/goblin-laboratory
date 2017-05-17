@@ -14,9 +14,18 @@ const Routes = props => {
       {props.widgets.select ((w, i) => {
         const route = w.get ('route');
         const name = w.get ('widget');
-        //const Comp = __webpack_require__ ('../../' + name).default;
-        //console.log (`Creating route ${route} for ${name}`);
-        return <Route key={i} path={route} render={() => <h1>{name}</h1>} />;
+        return (
+          <Route
+            key={i}
+            path={route}
+            getComponent={(location, cb) => {
+              console.log (`will load: ../../goblin-${name}`);
+              import (`../../goblin-${name}`).then (module =>
+                cb (null, module.default)
+              );
+            }}
+          />
+        );
       })}
     </div>
   );
