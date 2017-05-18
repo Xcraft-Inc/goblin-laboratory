@@ -27,6 +27,8 @@ ipcRenderer.on ('DISPATCH_IN_APP', (event, action) => {
 let backendLoaded = false;
 let rootMounted = false;
 let wid = null;
+let labId;
+
 // Must be the last event to subscribe because it sends the FRONT_END_READY msg
 ipcRenderer.on ('NEW_BACKEND_STATE', (event, transitState, from) => {
   const state = transit.fromJSON (transitState);
@@ -48,16 +50,28 @@ ipcRenderer.on ('NEW_BACKEND_STATE', (event, transitState, from) => {
   }
 
   if (!rootMounted) {
-    main (Root);
-    rootMounted = true;
-    ipcRenderer.send ('LABORATORY_READY', wid);
+    if (
+      state.some ((v, k) => {
+        const ns = k.replace (/([^@]+)@.*/, '$1');
+        if (ns !== 'laboratory') {
+          return false;
+        }
+        labId = k;
+        return true;
+      })
+    ) {
+      console.dir (labId);
+      main (Root);
+      rootMounted = true;
+      ipcRenderer.send ('LABORATORY_READY', labId, wid);
+    }
   }
 });
 
 const main = Main => {
   ReactDOM.render (
     <AppContainer>
-      <Main store={store} history={history} />
+      <Main store={store} history={history} labId={labId} />
     </AppContainer>,
     document.getElementById ('root')
   );
