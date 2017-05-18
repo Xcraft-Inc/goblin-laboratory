@@ -24,6 +24,7 @@
     "react-router": "^4.1.1",
     "react-router-redux": "^5.0.0-alpha.6",
     "recompose": "^0.23.3",
+    "redux-form": "^6.7.0",
     "redux-thunk": "^2.2.0",
     "transit-immutable-js": "^0.7.0",
     "transit-js": "^0.8.846",
