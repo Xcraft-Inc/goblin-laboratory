@@ -47,24 +47,32 @@ class Widget extends React.PureComponent {
     const {labId, id} = this.props;
     const widgetId = id || uuidV4 ();
     this.setState ({widgetId});
-    this.cmd (`${this.name}.create`, {id});
-    this.cmd (`laboratory.feed.add`, {id: labId, feed: `${name}@${id}`});
+    this.cmd (`laboratory.feed.add`, {
+      id: labId,
+      feed: `${this.name}@${widgetId}`,
+    });
+    this.cmd (`${this.name}.create`, {id: widgetId});
   }
 
   componentWillUnmount () {
     const {labId} = this.props;
-    this.cmd (`${this.name}.delete`, {id: this.state.widgetId});
+    const widgetId = this.state.widgetId;
+    this.cmd (`${this.name}.delete`, {id: `${this.name}@${widgetId}`});
     this.cmd (`laboratory.feed.del`, {
       id: labId,
-      feed: this.state.widgetId,
+      feed: `${this.name}@${widgetId}`,
     });
   }
 
   render () {
-    const WiredWidget = this.wire (this.wiring (this.state.widgetId)) (
-      this.widget ()
+    const Widget = this.widget ();
+    const wiring = this.wiring (this.state.widgetId);
+    const WiredWidget = this.wire (wiring) (
+      props => (props.id ? Widget (props) : <div>waiting {this.name}</div>)
     );
-    return <WiredWidget {...this.props} />;
+    return (
+      <WiredWidget labId={this.props.labId} dispatch={this.props.dispatch} />
+    );
   }
 }
 
