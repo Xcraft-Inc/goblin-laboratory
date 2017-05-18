@@ -4,6 +4,15 @@ import Shredder from 'xcraft-core-shredder';
 import uuidV4 from 'uuid/v4';
 
 class Widget extends React.PureComponent {
+  constructor (name) {
+    super ();
+    this._name = name;
+  }
+
+  get name () {
+    return this._name;
+  }
+
   cmd (cmd, args) {
     const action = {
       type: 'QUEST',
@@ -35,16 +44,16 @@ class Widget extends React.PureComponent {
   }
 
   componentWillMount () {
-    const {name, labId, id} = this.props;
+    const {labId, id} = this.props;
     const widgetId = id || uuidV4 ();
     this.setState ({widgetId});
-    this.cmd (`${name}.create`, {id});
+    this.cmd (`${this.name}.create`, {id});
     this.cmd (`laboratory.feed.add`, {id: labId, feed: `${name}@${id}`});
   }
 
   componentWillUnmount () {
-    const {name, labId} = this.props;
-    this.cmd (`${name}.delete`, {id: this.state.widgetId});
+    const {labId} = this.props;
+    this.cmd (`${this.name}.delete`, {id: this.state.widgetId});
     this.cmd (`laboratory.feed.del`, {
       id: labId,
       feed: this.state.widgetId,
