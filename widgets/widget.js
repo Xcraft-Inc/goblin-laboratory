@@ -43,7 +43,7 @@ class Widget extends React.PureComponent {
   }
 
   componentWillUnmount () {
-    const {labId} = this.props;
+    const {name, labId} = this.props;
     this.cmd (`${name}.delete`, {id: this.state.widgetId});
     this.cmd (`laboratory.feed.del`, {
       id: labId,
