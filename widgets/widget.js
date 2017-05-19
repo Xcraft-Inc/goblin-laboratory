@@ -4,13 +4,14 @@ import Shredder from 'xcraft-core-shredder';
 import uuidV4 from 'uuid/v4';
 
 class Widget extends React.PureComponent {
-  constructor (props, name) {
+  constructor (props) {
     super (props);
-    this._name = name;
   }
 
   get name () {
-    return this._name;
+    return this.constructor.name
+      .replace (/([a-z])([A-Z])/g, '$1-$2')
+      .toLowerCase ();
   }
 
   cmd (cmd, args) {
