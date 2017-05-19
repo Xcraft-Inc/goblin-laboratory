@@ -80,7 +80,7 @@ const main = Main => {
 if (module.hot) {
   module.hot.accept ();
   if (wid) {
-    console.log ('Requesing a resend...');
+    console.log ('Requesting a resend...');
     ipcRenderer.send ('RESEND', wid);
   }
 }
