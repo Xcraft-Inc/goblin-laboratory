@@ -36,9 +36,9 @@ exports.xcraftCommands = function () {
           },
         },
       },
-      'feed.add': {
+      'widget.add': {
         parallel: true,
-        desc: 'Add a feed to a window',
+        desc: 'Add a widget to a window',
         options: {
           params: {
             required: 'id',

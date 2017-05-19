@@ -47,20 +47,20 @@ class Widget extends React.PureComponent {
     const {labId, id} = this.props;
     const widgetId = id || uuidV4 ();
     this.setState ({widgetId});
-    this.cmd (`laboratory.feed.add`, {
+    this.cmd (`laboratory.widget.add`, {
       id: labId,
-      feed: `${this.name}@${widgetId}`,
+      widgetId,
+      name: this.name,
     });
-    this.cmd (`${this.name}.create`, {id: widgetId});
   }
 
   componentWillUnmount () {
     const {labId} = this.props;
     const widgetId = this.state.widgetId;
     this.cmd (`${this.name}.delete`, {id: `${this.name}@${widgetId}`});
-    this.cmd (`laboratory.feed.del`, {
+    this.cmd (`laboratory.widget.del`, {
       id: labId,
-      feed: `${this.name}@${widgetId}`,
+      branch: `${this.name}@${widgetId}`,
     });
   }
 
