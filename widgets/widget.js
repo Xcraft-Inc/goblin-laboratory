@@ -4,8 +4,8 @@ import Shredder from 'xcraft-core-shredder';
 import uuidV4 from 'uuid/v4';
 
 class Widget extends React.PureComponent {
-  constructor (name) {
-    super ();
+  constructor (props, name) {
+    super (props);
     this._name = name;
   }
 

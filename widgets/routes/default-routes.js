@@ -1,7 +1,6 @@
 import React from 'react';
 import {Route, IndexRoute} from 'react-router';
 import {push} from 'react-router-redux';
-import {wire} from 'laboratory/wire';
 
 const Layout = () => {
   return <div>Layout</div>;

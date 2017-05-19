@@ -30,6 +30,6 @@ export default function configureStore (initialState, history) {
       store.replaceReducer (nextRootReducer);
     });
   }
-  console.dir (store.getState ());
+  //console.dir (store.getState ());
   return store;
 }
