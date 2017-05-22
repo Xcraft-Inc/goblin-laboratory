@@ -2,6 +2,7 @@
 import React from 'react';
 // UTILS
 import pure from 'recompose/pure';
+import PropTypes from 'prop-types';
 
 import {Provider} from 'react-redux';
 //import {ConnectedRouter} from 'react-router-redux';
@@ -11,13 +12,27 @@ import Hello from 'venture-trade-company/hello';
 
 // ROOT component
 // RespOf: Providing store and routes to a particular domain
-const root = props => {
-  const {store, history, debug, labId} = props;
-  return (
-    <Provider store={store}>
-      <Hello labId={labId} dispatch={store.dispatch} />
-    </Provider>
-  );
-};
+class Root extends React.PureComponent {
+  getChildContext () {
+    return {labId: this.props.labId, dispatch: this.props.store.dispatch};
+  }
 
-export default pure (root);
+  static get childContextTypes () {
+    return {
+      labId: PropTypes.string,
+      dispatch: PropTypes.func,
+    };
+  }
+
+  render () {
+    const {store, history, debug} = this.props;
+
+    return (
+      <Provider store={store}>
+        <Hello />
+      </Provider>
+    );
+  }
+}
+
+export default Root;

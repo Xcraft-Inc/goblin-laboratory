@@ -1,5 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
 import Shredder from 'xcraft-core-shredder';
 import VirtualList from 'react-virtual-list';
 import uuidV4 from 'uuid/v4';
@@ -37,6 +38,13 @@ class Widget extends React.PureComponent {
     super (props);
   }
 
+  static get contextTypes () {
+    return {
+      labId: PropTypes.string,
+      dispatch: PropTypes.func,
+    };
+  }
+
   get name () {
     return this.constructor.name
       .replace (/([a-z])([A-Z])/g, '$1-$2')
@@ -49,7 +57,7 @@ class Widget extends React.PureComponent {
       cmd: cmd,
       args: args,
     };
-    this.props.dispatch (action);
+    this.context.dispatch (action);
   }
 
   wire (wires) {
@@ -74,13 +82,13 @@ class Widget extends React.PureComponent {
   }
 
   componentWillMount () {
-    const {labId, id, items} = this.props;
+    const {id, items} = this.props;
     console.log ('Widget will mount');
     console.dir (this.props);
     const widgetId = id || `${this.name}@${uuidV4 ()}`;
     this.setState ({widgetId});
     this.cmd (`laboratory.widget.add`, {
-      id: labId,
+      id: this.context.labId,
       widgetId,
       name: this.name,
       items: items ? items.select (i => i) : null,
@@ -88,11 +96,10 @@ class Widget extends React.PureComponent {
   }
 
   componentWillUnmount () {
-    const {labId} = this.props;
     const widgetId = this.state.widgetId;
     this.cmd (`${this.name}.delete`, {id: widgetId});
     this.cmd (`laboratory.widget.del`, {
-      id: labId,
+      id: this.context.labId,
       branch: widgetId,
     });
   }
@@ -123,9 +130,7 @@ class Widget extends React.PureComponent {
       return <VirtualListWidget {...this.props} />;
     }
 
-    return (
-      <WiredWidget labId={this.props.labId} dispatch={this.props.dispatch} />
-    );
+    return <WiredWidget />;
   }
 }
 
