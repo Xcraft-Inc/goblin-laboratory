@@ -2,36 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import Shredder from 'xcraft-core-shredder';
-import VirtualList from 'react-virtual-list';
 import uuidV4 from 'uuid/v4';
-
-const defaultMapToVirtualProps = (
-  {items, itemHeight},
-  {firstItemIndex, lastItemIndex}
-) => {
-  console.log ('Virtual Mapper:');
-  console.log (itemHeight);
-  console.dir (items);
-  const data = items.select ((d, id) => id);
-  console.dir (data);
-  const visibleItems = lastItemIndex > -1
-    ? data.slice (firstItemIndex, lastItemIndex + 1)
-    : [];
-  console.dir (visibleItems);
-  // style
-  const height = items.length * itemHeight;
-  const paddingTop = firstItemIndex * itemHeight;
-
-  return {
-    virtual: {
-      items: visibleItems,
-      style: {
-        height,
-        paddingTop,
-      },
-    },
-  };
-};
 
 class Widget extends React.PureComponent {
   constructor (props) {
@@ -87,11 +58,18 @@ class Widget extends React.PureComponent {
     console.dir (this.props);
     const widgetId = id || `${this.name}@${uuidV4 ()}`;
     this.setState ({widgetId});
+
+    const questParams = {};
+    Object.keys (this.props).filter (k => /^quest-/.test (k)).forEach (k => {
+      questParams[k.replace ('quest-', '')] = this.props[k];
+    });
+
     this.cmd (`laboratory.widget.add`, {
       id: this.context.labId,
       widgetId,
       name: this.name,
-      items: items ? items.select (i => i) : null,
+      questParams,
+      // items: items ? items.select (i => i) : null,
     });
   }
 
@@ -115,20 +93,6 @@ class Widget extends React.PureComponent {
         return <div>waiting {this.name}</div>;
       }
     });
-
-    if (this.isVirtualList) {
-      console.dir ('Widget behave now like virtual list');
-      const VirtualListWidget = VirtualList (
-        {
-          initialState: {
-            firstItemIndex: 0, // show first ten items
-            lastItemIndex: 9, // during initial render
-          },
-        },
-        defaultMapToVirtualProps
-      ) (Widget);
-      return <VirtualListWidget {...this.props} />;
-    }
 
     return <WiredWidget />;
   }
