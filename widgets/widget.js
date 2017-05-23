@@ -24,6 +24,7 @@ class Widget extends React.PureComponent {
   }
 
   cmd (cmd, args) {
+    args.labId = this.context.labId;
     const action = {
       type: 'QUEST',
       cmd: cmd,
