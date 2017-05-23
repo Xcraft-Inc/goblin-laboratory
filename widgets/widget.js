@@ -54,12 +54,20 @@ class Widget extends React.PureComponent {
     );
   }
 
+  /**
+   * Add the widget to the laboratory if necessary
+   */
   componentWillMount () {
     const {id} = this.props;
     console.log ('Widget will mount');
     console.dir (this.props);
     const widgetId = id || `${this.name}@${uuidV4 ()}`;
     this.setState ({widgetId, delete: !id});
+
+    /* Returns if this widget is already in the state.
+     * It happens for example with the virtual lists where only visible
+     * widgets are mount in the DOM and not the whole list.
+     */
     const state = this.context.store.getState ();
     if (state.backend.has (widgetId)) {
       return;
@@ -79,6 +87,9 @@ class Widget extends React.PureComponent {
     });
   }
 
+  /**
+   * Remove the widget from the laboratory if it's was mount by itself.
+   */
   componentWillUnmount () {
     const widgetId = this.state.widgetId;
     if (this.state.delete) {
