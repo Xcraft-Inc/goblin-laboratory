@@ -57,7 +57,7 @@ class Widget extends React.PureComponent {
     console.log ('Widget will mount');
     console.dir (this.props);
     const widgetId = id || `${this.name}@${uuidV4 ()}`;
-    this.setState ({widgetId});
+    this.setState ({widgetId, delete: !id});
 
     const questParams = {};
     Object.keys (this.props).filter (k => /^quest-/.test (k)).forEach (k => {
@@ -76,10 +76,11 @@ class Widget extends React.PureComponent {
 
   componentWillUnmount () {
     const widgetId = this.state.widgetId;
-    this.cmd (`${this.name}.delete`, {id: widgetId});
     this.cmd (`laboratory.widget.del`, {
       id: this.context.labId,
-      branch: widgetId,
+      widgetId: widgetId,
+      name: this.name,
+      delete: this.state.delete,
     });
   }
 

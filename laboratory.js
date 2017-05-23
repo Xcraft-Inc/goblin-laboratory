@@ -42,7 +42,15 @@ exports.xcraftCommands = function () {
         options: {
           params: {
             required: 'id',
-            optional: 'feed',
+          },
+        },
+      },
+      'widget.del': {
+        parallel: true,
+        desc: 'Delete a widget from a window',
+        options: {
+          params: {
+            required: 'id',
           },
         },
       },
