@@ -111,7 +111,7 @@ class Widget extends React.PureComponent {
       props => (props.id ? Widget (props) : <div>waiting {this.name}</div>)
     );
 
-    return <WiredWidget />;
+    return <WiredWidget {...this.props} />;
   }
 }
 
