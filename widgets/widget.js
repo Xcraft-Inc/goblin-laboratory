@@ -71,6 +71,7 @@ class Widget extends React.PureComponent {
     if (state.backend.has (widgetId)) {
       return;
     }
+
     const questParams = {};
     Object.keys (this.props).filter (k => /^quest-/.test (k)).forEach (k => {
       questParams[k.replace ('quest-', '')] = this.props[k];
@@ -82,7 +83,6 @@ class Widget extends React.PureComponent {
       name: this.name,
       create: !id,
       questParams,
-      // items: items ? items.select (i => i) : null,
     });
   }
 
@@ -91,27 +91,25 @@ class Widget extends React.PureComponent {
    */
   componentWillUnmount () {
     const widgetId = this.state.widgetId;
-    if (this.state.delete) {
-      this.cmd (`laboratory.widget.del`, {
-        id: this.context.labId,
-        widgetId: widgetId,
-        name: this.name,
-        delete: this.state.delete,
-      });
+    if (!this.state.delete) {
+      return;
     }
+
+    this.cmd (`laboratory.widget.del`, {
+      id: this.context.labId,
+      widgetId: widgetId,
+      name: this.name,
+      delete: this.state.delete,
+    });
   }
 
   render () {
     let Widget = this.widget ();
     const wiring = this.wiring (this.state.widgetId);
 
-    const WiredWidget = this.wire (wiring) (props => {
-      if (props.id) {
-        return Widget (props);
-      } else {
-        return <div>waiting {this.name}</div>;
-      }
-    });
+    const WiredWidget = this.wire (wiring) (
+      props => (props.id ? Widget (props) : <div>waiting {this.name}</div>)
+    );
 
     return <WiredWidget />;
   }
