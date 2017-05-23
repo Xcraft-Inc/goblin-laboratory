@@ -68,6 +68,7 @@ class Widget extends React.PureComponent {
       id: this.context.labId,
       widgetId,
       name: this.name,
+      create: !id,
       questParams,
       // items: items ? items.select (i => i) : null,
     });

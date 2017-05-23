@@ -8,7 +8,6 @@ import {AppContainer} from 'react-hot-loader';
 import Root from 'laboratory/root';
 import createHistory from 'history/createHashHistory';
 import {push} from 'react-router-redux';
-
 const history = createHistory ();
 //import Hello from 'venture-trade-company/hello';
 import configureStore from 'laboratory/store/store';
@@ -24,30 +23,24 @@ ipcRenderer.on ('DISPATCH_IN_APP', (event, action) => {
   store.dispatch (action);
 });
 
-let backendLoaded = false;
+const wid = require ('electron').remote.getCurrentWindow ().id;
+console.log ('Init WM');
+console.log (`Sending FRONT_END_READY for window ${wid}`);
+ipcRenderer.send ('FRONT_END_READY', wid);
+
 let rootMounted = false;
-let wid = null;
 let labId;
 
 // Must be the last event to subscribe because it sends the FRONT_END_READY msg
-ipcRenderer.on ('NEW_BACKEND_STATE', (event, transitState, from) => {
+ipcRenderer.on ('NEW_BACKEND_STATE', (event, transitState) => {
+  console.log ('Received new state from backend');
   const state = transit.fromJSON (transitState);
+  console.dir (state);
+
   store.dispatch ({
     type: 'NEW_BACKEND_STATE',
     newAppState: state,
   });
-  if (backendLoaded === false && from === 'main') {
-    console.log ('Init WM');
-    console.dir (state.toJS ());
-    wid = state.toJS ().wid;
-    if (!wid) {
-      throw new Error ('No window id provided');
-    }
-    console.log (`Sending FRONT_END_READY for window ${wid}`);
-    ipcRenderer.send ('FRONT_END_READY', wid);
-    backendLoaded = true;
-    return;
-  }
 
   if (!rootMounted) {
     if (
@@ -60,6 +53,7 @@ ipcRenderer.on ('NEW_BACKEND_STATE', (event, transitState, from) => {
         return true;
       })
     ) {
+      console.log ('Starting laboratory:');
       console.dir (labId);
       main (Root);
       rootMounted = true;
@@ -79,10 +73,7 @@ const main = Main => {
 
 if (module.hot) {
   module.hot.accept ();
-  if (wid) {
-    console.log ('Requesting a resend...');
-    ipcRenderer.send ('RESEND', wid);
-  }
+  ipcRenderer.send ('RESEND', wid);
 }
 
 main (() => <span>Empty Laboratory</span>);

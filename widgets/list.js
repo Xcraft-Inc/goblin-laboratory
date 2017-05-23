@@ -7,16 +7,10 @@ class List extends Widget {
     super (props);
   }
 
-  renderItem (index, key) {
-    return <div key={key}>Waiting for item {index}</div>;
-  }
-
-  Items () {
+  get items () {
     return props => {
-      const {type, length} = props;
-      return (
-        <ReactList itemRenderer={this.renderItem} length={length} type={type} />
-      );
+      const {type, length, item} = props;
+      return <ReactList length={length} type={type} itemRenderer={item} />;
     };
   }
 
