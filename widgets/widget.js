@@ -13,6 +13,7 @@ class Widget extends React.PureComponent {
     return {
       labId: PropTypes.string,
       dispatch: PropTypes.func,
+      store: PropTypes.object,
     };
   }
 
@@ -53,12 +54,15 @@ class Widget extends React.PureComponent {
   }
 
   componentWillMount () {
-    const {id, items} = this.props;
+    const {id} = this.props;
     console.log ('Widget will mount');
     console.dir (this.props);
     const widgetId = id || `${this.name}@${uuidV4 ()}`;
     this.setState ({widgetId, delete: !id});
-
+    const state = this.context.store.getState ();
+    if (state.backend.has (widgetId)) {
+      return;
+    }
     const questParams = {};
     Object.keys (this.props).filter (k => /^quest-/.test (k)).forEach (k => {
       questParams[k.replace ('quest-', '')] = this.props[k];
@@ -76,12 +80,14 @@ class Widget extends React.PureComponent {
 
   componentWillUnmount () {
     const widgetId = this.state.widgetId;
-    this.cmd (`laboratory.widget.del`, {
-      id: this.context.labId,
-      widgetId: widgetId,
-      name: this.name,
-      delete: this.state.delete,
-    });
+    if (this.state.delete) {
+      this.cmd (`laboratory.widget.del`, {
+        id: this.context.labId,
+        widgetId: widgetId,
+        name: this.name,
+        delete: this.state.delete,
+      });
+    }
   }
 
   render () {

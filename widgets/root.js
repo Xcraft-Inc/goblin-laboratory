@@ -14,13 +14,18 @@ import Hello from 'venture-trade-company/hello';
 // RespOf: Providing store and routes to a particular domain
 class Root extends React.PureComponent {
   getChildContext () {
-    return {labId: this.props.labId, dispatch: this.props.store.dispatch};
+    return {
+      labId: this.props.labId,
+      dispatch: this.props.store.dispatch,
+      store: this.props.store,
+    };
   }
 
   static get childContextTypes () {
     return {
       labId: PropTypes.string,
       dispatch: PropTypes.func,
+      store: PropTypes.object,
     };
   }
 
