@@ -59,8 +59,7 @@ class Widget extends React.PureComponent {
    */
   componentWillMount () {
     const {id} = this.props;
-    console.log ('Widget will mount');
-    console.dir (this.props);
+
     const widgetId = id || `${this.name}@${uuidV4 ()}`;
     this.setState ({widgetId, delete: !id});
 
