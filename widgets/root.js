@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 
 import {Provider} from 'react-redux';
 //import {ConnectedRouter} from 'react-router-redux';
-import Hello from 'venture-trade-company/hello';
+import Venture from 'venture-trade-company/venture';
 // ROUTES DEF
 //import Routes from 'laboratory/routes/default-routes';
 
@@ -34,7 +34,7 @@ class Root extends React.PureComponent {
 
     return (
       <Provider store={store}>
-        <Hello />
+        <Venture id="venture" />
       </Provider>
     );
   }

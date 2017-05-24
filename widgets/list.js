@@ -15,7 +15,7 @@ class List extends Widget {
   }
 
   widget () {
-    return <div>Missing widget implementation</div>;
+    return () => <div>Missing widget implementation</div>;
   }
 }
 

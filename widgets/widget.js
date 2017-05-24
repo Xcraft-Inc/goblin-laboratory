@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {reduxForm} from 'redux-form';
+import {reduxForm, Field} from 'redux-form';
 import PropTypes from 'prop-types';
 import Shredder from 'xcraft-core-shredder';
 import uuidV4 from 'uuid/v4';
@@ -39,12 +39,20 @@ class Widget extends React.PureComponent {
       state => {
         let mapState = {};
         if (state.backend && state.backend.toJS) {
-          const shredded = new Shredder (state.backend);
-          Object.keys (wires).forEach (wire => {
-            const val = shredded.get (wires[wire], null);
-            mapState[wire] = val;
-          });
+          if (wires) {
+            const shredded = new Shredder (state.backend);
+            Object.keys (wires).forEach (wire => {
+              const val = shredded.get (
+                `${this.state.widgetId}.${wires[wire]}`,
+                null
+              );
+              mapState[wire] = val;
+            });
+          }
           return mapState;
+        }
+        if (this.isForm) {
+          mapState.initialValues = mapState;
         }
 
         return {};
@@ -104,22 +112,32 @@ class Widget extends React.PureComponent {
     });
   }
 
-  render () {
-    let Widget = this.widget ();
-    const wiring = this.wiring (this.state.widgetId);
+  get Field () {
+    return Field;
+  }
 
-    const WiredWidget = this.wire (wiring) (props => {
+  get WiredWidget () {
+    let Widget = this.widget ();
+    const Wired = this.wire (this.wiring) (props => {
       if (props.id) {
-        if (this.isForm) {
-          return reduxForm ({form: `form-${this.state.widgetId}`}) (
-            Widget (props)
-          );
-        }
         return Widget (props);
       }
-      return <div>waiting {this.name}</div>;
+      return <span>waiting for {this.widgetId}</span>;
     });
+    if (this.isForm) {
+      return reduxForm ({
+        form: `form-${this.state.widgetId}`,
+        destroyOnUnmount: false,
+      }) (Wired);
+    }
+    return Wired;
+  }
 
+  render () {
+    const WiredWidget = this.WiredWidget;
+    if (this.isForm) {
+      return <WiredWidget {...this.props} />;
+    }
     return <WiredWidget {...this.props} />;
   }
 }
