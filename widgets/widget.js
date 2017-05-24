@@ -1,5 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import {reduxForm} from 'redux-form';
 import PropTypes from 'prop-types';
 import Shredder from 'xcraft-core-shredder';
 import uuidV4 from 'uuid/v4';
@@ -107,9 +108,17 @@ class Widget extends React.PureComponent {
     let Widget = this.widget ();
     const wiring = this.wiring (this.state.widgetId);
 
-    const WiredWidget = this.wire (wiring) (
-      props => (props.id ? Widget (props) : <div>waiting {this.name}</div>)
-    );
+    const WiredWidget = this.wire (wiring) (props => {
+      if (props.id) {
+        if (this.isForm) {
+          return reduxForm ({form: `form-${this.state.widgetId}`}) (
+            Widget (props)
+          );
+        }
+        return Widget (props);
+      }
+      return <div>waiting {this.name}</div>;
+    });
 
     return <WiredWidget {...this.props} />;
   }
