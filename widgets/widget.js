@@ -24,6 +24,10 @@ class Widget extends React.PureComponent {
       .toLowerCase ();
   }
 
+  get id () {
+    return this.state.widgetId;
+  }
+
   cmd (cmd, args) {
     args.labId = this.context.labId;
     const action = {
@@ -32,6 +36,10 @@ class Widget extends React.PureComponent {
       args: args,
     };
     this.context.dispatch (action);
+  }
+
+  do (action, args) {
+    this.cmd (`${this.name}.${action}`, Object.assign ({id: this.id}, args));
   }
 
   wire (wires) {
