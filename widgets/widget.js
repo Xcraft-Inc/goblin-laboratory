@@ -46,7 +46,9 @@ class Widget extends React.PureComponent {
                 `${this.state.widgetId}.${wires[wire]}`,
                 null
               );
-              mapState[wire] = val;
+              if (val !== undefined) {
+                mapState[wire] = val;
+              }
             });
           }
           return mapState;
@@ -112,6 +114,26 @@ class Widget extends React.PureComponent {
     });
   }
 
+  getStyles (props) {
+    if (!this.buildStyles) {
+      return {};
+    }
+
+    if (!this.styleProps) {
+      return this.buildStyles (null);
+    }
+
+    const styleProps = {};
+
+    this.styleProps.map (k => {
+      if (props[k]) {
+        styleProps[k] = props[k];
+      }
+    });
+
+    return this.buildStyles (styleProps);
+  }
+
   get Field () {
     return Field;
   }
@@ -119,25 +141,18 @@ class Widget extends React.PureComponent {
   get WiredWidget () {
     let Widget = this.widget ();
     const Wired = this.wire (this.wiring) (props => {
-      if (props.id) {
-        return Widget (props);
+      const newProps = Object.assign ({}, this.props, props);
+      if (newProps.id) {
+        this.styles = this.getStyles (newProps);
+        return Widget (newProps);
       }
       return <span>waiting for {this.widgetId}</span>;
     });
-    if (this.isForm) {
-      return reduxForm ({
-        form: `form-${this.state.widgetId}`,
-        destroyOnUnmount: false,
-      }) (Wired);
-    }
     return Wired;
   }
 
   render () {
     const WiredWidget = this.WiredWidget;
-    if (this.isForm) {
-      return <WiredWidget {...this.props} />;
-    }
     return <WiredWidget {...this.props} />;
   }
 }
