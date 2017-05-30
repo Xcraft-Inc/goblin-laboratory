@@ -1,6 +1,5 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {reduxForm, Field} from 'redux-form';
 import PropTypes from 'prop-types';
 import Shredder from 'xcraft-core-shredder';
 import uuidV4 from 'uuid/v4';
@@ -15,6 +14,7 @@ class Widget extends React.PureComponent {
       labId: PropTypes.string,
       dispatch: PropTypes.func,
       store: PropTypes.object,
+      theme: PropTypes.object,
     };
   }
 
@@ -128,7 +128,7 @@ class Widget extends React.PureComponent {
     }
 
     if (!this.styleProps) {
-      return this.buildStyles (null);
+      return this.buildStyles (null, this.context.theme);
     }
 
     const styleProps = {};
@@ -139,7 +139,7 @@ class Widget extends React.PureComponent {
       }
     });
 
-    return this.buildStyles (styleProps);
+    return this.buildStyles (styleProps, this.context.theme);
   }
 
   get Field () {

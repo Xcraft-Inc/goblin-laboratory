@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 
 import {Provider} from 'react-redux';
 //import {ConnectedRouter} from 'react-router-redux';
+
 import Venture from 'venture-trade-company/venture';
 // ROUTES DEF
 //import Routes from 'laboratory/routes/default-routes';
@@ -18,6 +19,7 @@ class Root extends React.PureComponent {
       labId: this.props.labId,
       dispatch: this.props.store.dispatch,
       store: this.props.store,
+      theme: this.props.theme,
     };
   }
 
@@ -26,12 +28,12 @@ class Root extends React.PureComponent {
       labId: PropTypes.string,
       dispatch: PropTypes.func,
       store: PropTypes.object,
+      theme: PropTypes.object,
     };
   }
 
   render () {
-    const {store, history, debug} = this.props;
-
+    const {store} = this.props;
     return (
       <Provider store={store}>
         <Venture id="venture" />
