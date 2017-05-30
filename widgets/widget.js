@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import Shredder from 'xcraft-core-shredder';
 import uuidV4 from 'uuid/v4';
+import {LocalForm} from 'react-redux-form';
 
 class Widget extends React.PureComponent {
   constructor (props) {
@@ -46,7 +47,7 @@ class Widget extends React.PureComponent {
     return connect (
       state => {
         let mapState = {};
-        if (state.backend && state.backend.toJS) {
+        if (state.backend) {
           if (wires) {
             const shredded = new Shredder (state.backend);
             Object.keys (wires).forEach (wire => {
@@ -87,7 +88,7 @@ class Widget extends React.PureComponent {
      * widgets are mount in the DOM and not the whole list.
      */
     const state = this.context.store.getState ();
-    if (state.backend.has (widgetId)) {
+    if (state.backend[widgetId]) {
       return;
     }
 
@@ -142,21 +143,41 @@ class Widget extends React.PureComponent {
     return this.buildStyles (styleProps, this.context.theme);
   }
 
-  get Field () {
-    return Field;
-  }
-
   get WiredWidget () {
     let Widget = this.widget ();
     const Wired = this.wire (this.wiring) (props => {
       const newProps = Object.assign ({}, this.props, props);
       if (newProps.id) {
         this.styles = this.getStyles (newProps);
+        if (this.isForm) {
+          let formInitialState = {};
+          Object.keys (this.wiring).forEach (
+            k => (formInitialState[k] = props[k])
+          );
+
+          return (
+            <LocalForm
+              model={this.state.widgetId}
+              onSubmit={values => this.handleFormSubmit (values)}
+              initialState={formInitialState}
+            >
+              <Widget {...newProps} />
+            </LocalForm>
+          );
+        }
         return Widget (newProps);
       }
       return <span>waiting for {this.widgetId}</span>;
     });
     return Wired;
+  }
+
+  attachFormDispatch (formDispatch) {
+    this.formDispatch = formDispatch;
+  }
+
+  handleFormSubmit (values) {
+    this.do ('submit', values);
   }
 
   render () {

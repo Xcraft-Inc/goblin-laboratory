@@ -26,10 +26,9 @@ export default function configureStore (initialState, history) {
   const store = finalCreateStore (rootReducer, initialState);
   if (module.hot) {
     module.hot.accept ('laboratory/store/root-reducer', () => {
-      const rootReducer = require ('laboratory/store/root-reducer').default;
+      const nextRootReducer = require ('laboratory/store/root-reducer').default;
       store.replaceReducer (nextRootReducer);
     });
   }
-  //console.dir (store.getState ());
   return store;
 }

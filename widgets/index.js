@@ -36,8 +36,8 @@ let labId;
 ipcRenderer.on ('NEW_BACKEND_STATE', (event, transitState) => {
   console.log ('Received new state from backend');
   const state = transit.fromJSON (transitState);
-  console.dir (state);
-
+  //const nextRootReducer = require ('laboratory/store/root-reducer').default;
+  //store.replaceReducer (nextRootReducer (state));
   store.dispatch ({
     type: 'NEW_BACKEND_STATE',
     newAppState: state,

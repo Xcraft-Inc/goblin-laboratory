@@ -1,10 +1,19 @@
 import {combineReducers} from 'redux';
 import {routerReducer} from 'react-router-redux';
-import {reducer as formReducer} from 'redux-form';
+import {combineForms} from 'react-redux-form/immutable';
 import backendReducer from 'laboratory/store/backend-reducer';
 
+/*export default widgets => {
+  let forms = {};
+  if (widgets) {
+    widgets.forEach ((v, k) => (forms[k] = v));
+  }
+  return combineReducers ({
+    routing: routerReducer,
+    backend: combineForms (forms, 'backend'),
+  });
+};*/
 export default combineReducers ({
-  backend: backendReducer,
   routing: routerReducer,
-  form: formReducer,
+  backend: backendReducer,
 });
