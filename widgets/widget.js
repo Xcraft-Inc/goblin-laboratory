@@ -19,8 +19,8 @@ const buildStyleProps = (styleProps, props) => {
 const fastBuildStyleProps = moize (buildStyleProps);
 
 class Widget extends React.PureComponent {
-  constructor (props) {
-    super (props);
+  constructor (cProps) {
+    super (cProps);
     if (this.buildStyles) {
       this.fastBuildStyles = moize (this.buildStyles);
     }
@@ -59,7 +59,7 @@ class Widget extends React.PureComponent {
     this.cmd (`${this.name}.${action}`, Object.assign ({id: this.id}, args));
   }
 
-  wire (wires) {
+  wire (connectId, wires) {
     return connect (
       state => {
         let mapState = {};
@@ -67,10 +67,7 @@ class Widget extends React.PureComponent {
           if (wires) {
             const shredded = new Shredder (state.backend);
             Object.keys (wires).forEach (wire => {
-              const val = shredded.get (
-                `${this.state.widgetId}.${wires[wire]}`,
-                null
-              );
+              const val = shredded.get (`${connectId}.${wires[wire]}`, null);
               if (val !== undefined) {
                 mapState[wire] = val;
               }
@@ -88,6 +85,33 @@ class Widget extends React.PureComponent {
       null,
       {pure: true}
     );
+  }
+
+  wired (connectId, otherProps) {
+    let Widget = this.widget ();
+    return this.wire (connectId, this.wiring) (props => {
+      const newProps = Object.assign ({}, otherProps, props);
+      if (props.id) {
+        this.styles = this.getStyles (newProps);
+        if (this.isForm) {
+          let formInitialState = {};
+          Object.keys (this.wiring).forEach (
+            k => (formInitialState[k] = props[k])
+          );
+
+          return (
+            <LocalForm
+              onSubmit={values => this.handleFormSubmit (values)}
+              initialState={formInitialState}
+            >
+              <Widget {...newProps} />
+            </LocalForm>
+          );
+        }
+        return Widget (newProps);
+      }
+      return <span>waiting for {this.id}</span>;
+    });
   }
 
   /**
@@ -153,35 +177,6 @@ class Widget extends React.PureComponent {
     return this.fastBuildStyles (styleProps, this.context.theme);
   }
 
-  get WiredWidget () {
-    let Widget = this.widget ();
-    const Wired = this.wire (this.wiring) (props => {
-      const newProps = Object.assign ({}, this.props, props);
-      if (newProps.id) {
-        this.styles = this.getStyles (newProps);
-        if (this.isForm) {
-          let formInitialState = {};
-          Object.keys (this.wiring).forEach (
-            k => (formInitialState[k] = props[k])
-          );
-
-          return (
-            <LocalForm
-              model={this.state.widgetId}
-              onSubmit={values => this.handleFormSubmit (values)}
-              initialState={formInitialState}
-            >
-              <Widget {...newProps} />
-            </LocalForm>
-          );
-        }
-        return Widget (newProps);
-      }
-      return <span>waiting for {this.widgetId}</span>;
-    });
-    return Wired;
-  }
-
   attachFormDispatch (formDispatch) {
     this.formDispatch = formDispatch;
   }
@@ -191,8 +186,9 @@ class Widget extends React.PureComponent {
   }
 
   render () {
-    const WiredWidget = this.WiredWidget;
-    return <WiredWidget {...this.props} />;
+    const connectId = this.props.id ? this.props.id : this.id;
+    const WiredWidget = this.wired (connectId, this.props);
+    return <WiredWidget />;
   }
 }
 
