@@ -3,11 +3,27 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import Shredder from 'xcraft-core-shredder';
 import uuidV4 from 'uuid/v4';
+import moize from 'moize';
 import {LocalForm} from 'react-redux-form';
+
+const buildStyleProps = (styleProps, props) => {
+  const result = {};
+
+  styleProps.map (k => {
+    if (props[k]) {
+      result[k] = props[k];
+    }
+  });
+  return result;
+};
+const fastBuildStyleProps = moize (buildStyleProps);
 
 class Widget extends React.PureComponent {
   constructor (props) {
     super (props);
+    if (this.buildStyles) {
+      this.fastBuildStyles = moize (this.buildStyles);
+    }
   }
 
   static get contextTypes () {
@@ -129,18 +145,12 @@ class Widget extends React.PureComponent {
     }
 
     if (!this.styleProps) {
-      return this.buildStyles (null, this.context.theme);
+      return this.fastBuildStyles (null, this.context.theme);
     }
 
-    const styleProps = {};
+    const styleProps = fastBuildStyleProps (this.styleProps, props);
 
-    this.styleProps.map (k => {
-      if (props[k]) {
-        styleProps[k] = props[k];
-      }
-    });
-
-    return this.buildStyles (styleProps, this.context.theme);
+    return this.fastBuildStyles (styleProps, this.context.theme);
   }
 
   get WiredWidget () {
