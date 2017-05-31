@@ -9,7 +9,7 @@ import Root from 'laboratory/root';
 import {Theme} from 'electrum-theme';
 import createHistory from 'history/createHashHistory';
 import {push} from 'react-router-redux';
-debugger;
+
 const history = createHistory ();
 //import Hello from 'venture-trade-company/hello';
 import configureStore from 'laboratory/store/store';
