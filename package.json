@@ -18,6 +18,7 @@
     "history": "^4.6.1",
     "immutable": "^4.0.0-rc.2",
     "immutable-devtools": "0.0.7",
+    "immutablepatch": "^0.4.1",
     "moize": "^2.3.3",
     "prop-types": "^15.5.10",
     "react": "^15.5.4",

@@ -9,6 +9,7 @@ import Root from 'laboratory/root';
 import {Theme} from 'electrum-theme';
 import createHistory from 'history/createHashHistory';
 import {push} from 'react-router-redux';
+debugger;
 const history = createHistory ();
 //import Hello from 'venture-trade-company/hello';
 import configureStore from 'laboratory/store/store';
@@ -35,15 +36,16 @@ let labId;
 // Must be the last event to subscribe because it sends the FRONT_END_READY msg
 ipcRenderer.on ('NEW_BACKEND_STATE', (event, transitState) => {
   console.log ('Received new state from backend');
-  const state = transit.fromJSON (transitState);
-  //const nextRootReducer = require ('laboratory/store/root-reducer').default;
-  //store.replaceReducer (nextRootReducer (state));
+  const diff = transit.fromJSON (transitState);
+
   store.dispatch ({
     type: 'NEW_BACKEND_STATE',
-    newAppState: state,
+    diff: diff,
   });
 
   if (!rootMounted) {
+    const state = store.getState ().backend;
+
     if (
       state.some ((v, k) => {
         const ns = k.replace (/([^@]+)@.*/, '$1');
