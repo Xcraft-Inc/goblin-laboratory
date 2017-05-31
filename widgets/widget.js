@@ -88,7 +88,7 @@ class Widget extends React.PureComponent {
      * widgets are mount in the DOM and not the whole list.
      */
     const state = this.context.store.getState ();
-    if (state.backend[widgetId]) {
+    if (state.backend.has (widgetId)) {
       return;
     }
 
