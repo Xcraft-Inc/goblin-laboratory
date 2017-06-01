@@ -157,19 +157,6 @@ class Widget extends React.PureComponent {
     }
   }
 
-  componentWillUnmount () {
-    if (this.props.id) {
-      const state = this.context.store.getState ();
-      if (!state.backend.has (this.props.id)) {
-        return;
-      }
-      this.cmd ('laboratory.del', {
-        id: this.context.labId,
-        widgetId: this.props.id,
-      });
-    }
-  }
-
   render () {
     if (this.props.id) {
       const WiredWidget = this.wired (this.props.id, this.props);
