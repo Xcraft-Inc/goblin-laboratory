@@ -20,7 +20,6 @@ exports.xcraftCommands = function () {
       },
       _ready: {
         parallel: true,
-        desc: 'internal ready',
         options: {
           params: {
             required: 'wid',
