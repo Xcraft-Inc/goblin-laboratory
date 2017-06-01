@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Shredder from 'xcraft-core-shredder';
 import uuidV4 from 'uuid/v4';
 import moize from 'moize';
+import {push} from 'react-router-redux';
 import {LocalForm} from 'react-redux-form';
 
 const buildStyleProps = (styleProps, props) => {
@@ -41,10 +42,6 @@ class Widget extends React.PureComponent {
       .toLowerCase ();
   }
 
-  get id () {
-    return this.state.widgetId;
-  }
-
   cmd (cmd, args) {
     args.labId = this.context.labId;
     const action = {
@@ -56,7 +53,18 @@ class Widget extends React.PureComponent {
   }
 
   do (action, args) {
-    this.cmd (`${this.name}.${action}`, Object.assign ({id: this.id}, args));
+    if (!this.props.id) {
+      console.error (`${this.name} is not a connected widget (need an id)`);
+      return;
+    }
+    this.cmd (
+      `${this.name}.${action}`,
+      Object.assign ({id: this.props.id}, args)
+    );
+  }
+
+  nav (path) {
+    this.context.dispatch (push (path));
   }
 
   wire (connectId, wires) {
@@ -110,56 +118,7 @@ class Widget extends React.PureComponent {
         }
         return Widget (newProps);
       }
-      return <span>waiting for {this.id}</span>;
-    });
-  }
-
-  /**
-   * Add the widget to the laboratory if necessary
-   */
-  componentWillMount () {
-    const {id} = this.props;
-
-    const widgetId = id || `${this.name}@${uuidV4 ()}`;
-    this.setState ({widgetId, delete: !id});
-
-    /* Returns if this widget is already in the state.
-     * It happens for example with the virtual lists where only visible
-     * widgets are mount in the DOM and not the whole list.
-     */
-    const state = this.context.store.getState ();
-    if (state.backend.has (widgetId)) {
-      return;
-    }
-
-    const questParams = {};
-    Object.keys (this.props).filter (k => /^quest-/.test (k)).forEach (k => {
-      questParams[k.replace ('quest-', '')] = this.props[k];
-    });
-
-    this.cmd (`laboratory.widget.add`, {
-      id: this.context.labId,
-      widgetId,
-      name: this.name,
-      create: !id,
-      questParams,
-    });
-  }
-
-  /**
-   * Remove the widget from the laboratory if it's was mount by itself.
-   */
-  componentWillUnmount () {
-    const widgetId = this.state.widgetId;
-    if (!this.state.delete) {
-      return;
-    }
-
-    this.cmd (`laboratory.widget.del`, {
-      id: this.context.labId,
-      widgetId: widgetId,
-      name: this.name,
-      delete: this.state.delete,
+      return <span>waiting for {this.props.id}</span>;
     });
   }
 
@@ -186,9 +145,14 @@ class Widget extends React.PureComponent {
   }
 
   render () {
-    const connectId = this.props.id ? this.props.id : this.id;
-    const WiredWidget = this.wired (connectId, this.props);
-    return <WiredWidget />;
+    if (this.props.id) {
+      const WiredWidget = this.wired (this.props.id, this.props);
+      return <WiredWidget />;
+    } else {
+      this.styles = this.getStyles (this.props);
+      const Widget = this.widget ();
+      return <Widget {...this.props} />;
+    }
   }
 }
 

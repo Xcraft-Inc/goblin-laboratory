@@ -1,18 +1,9 @@
-// MAIN
 import React from 'react';
-// UTILS
-import pure from 'recompose/pure';
 import PropTypes from 'prop-types';
 
 import {Provider} from 'react-redux';
-import {ConnectedRouter} from 'react-router-redux';
-import {Route, Switch} from 'react-router';
-import comp from './comp';
-// ROUTES DEF
-//import Routes from 'laboratory/routes/default-routes';
+import Laboratory from './laboratory';
 
-// ROOT component
-// RespOf: Providing store and routes to a particular domain
 class Root extends React.PureComponent {
   getChildContext () {
     return {
@@ -33,15 +24,10 @@ class Root extends React.PureComponent {
   }
 
   render () {
-    const {store, history} = this.props;
-    const Component = comp ('company');
+    const {store, history, labId} = this.props;
     return (
       <Provider store={store}>
-        <ConnectedRouter history={history}>
-          <Switch>
-            <Route path="/" component={Component} />
-          </Switch>
-        </ConnectedRouter>
+        <Laboratory id={labId} history={history} />
       </Provider>
     );
   }

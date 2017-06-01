@@ -11,10 +11,10 @@ exports.xcraftCommands = function () {
     rc: {
       create: {
         parallel: true,
-        desc: 'Create a widget',
+        desc: 'Create a laboratory',
         options: {
           params: {
-            optional: 'config...',
+            required: 'routes',
           },
         },
       },
@@ -27,27 +27,18 @@ exports.xcraftCommands = function () {
           },
         },
       },
-      open: {
+      add: {
         parallel: true,
-        desc: 'Open a widget',
-        options: {
-          params: {
-            required: 'route',
-          },
-        },
-      },
-      'widget.add': {
-        parallel: true,
-        desc: 'Add a widget to a window',
+        desc: 'Add a widget to a lab',
         options: {
           params: {
             required: 'id',
           },
         },
       },
-      'widget.del': {
+      del: {
         parallel: true,
-        desc: 'Delete a widget from a window',
+        desc: 'Delete a widget from a lab',
         options: {
           params: {
             required: 'id',
