@@ -118,7 +118,11 @@ class Widget extends React.PureComponent {
         }
         return Widget (newProps);
       }
-      return <span>waiting for {this.props.id}</span>;
+      this.cmd ('laboratory.add', {
+        id: this.context.labId,
+        widgetId: this.props.id,
+      });
+      return <span>requesting for {this.props.id}</span>;
     });
   }
 
