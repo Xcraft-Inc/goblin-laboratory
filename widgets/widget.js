@@ -118,10 +118,6 @@ class Widget extends React.PureComponent {
         }
         return Widget (newProps);
       }
-      this.cmd ('laboratory.add', {
-        id: this.context.labId,
-        widgetId: this.props.id,
-      });
       return <span>requesting for {this.props.id}</span>;
     });
   }
@@ -146,6 +142,32 @@ class Widget extends React.PureComponent {
 
   handleFormSubmit (values) {
     this.do ('submit', values);
+  }
+
+  componentWillMount () {
+    if (this.props.id) {
+      const state = this.context.store.getState ();
+      if (state.backend.has (this.props.id)) {
+        return;
+      }
+      this.cmd ('laboratory.add', {
+        id: this.context.labId,
+        widgetId: this.props.id,
+      });
+    }
+  }
+
+  componentWillUnmount () {
+    if (this.props.id) {
+      const state = this.context.store.getState ();
+      if (!state.backend.has (this.props.id)) {
+        return;
+      }
+      this.cmd ('laboratory.del', {
+        id: this.context.labId,
+        widgetId: this.props.id,
+      });
+    }
   }
 
   render () {
