@@ -5,9 +5,9 @@ import pure from 'recompose/pure';
 import PropTypes from 'prop-types';
 
 import {Provider} from 'react-redux';
-//import {ConnectedRouter} from 'react-router-redux';
-
-import Venture from 'venture-trade-company/venture';
+import {ConnectedRouter} from 'react-router-redux';
+import {Route, Switch} from 'react-router';
+import comp from './comp';
 // ROUTES DEF
 //import Routes from 'laboratory/routes/default-routes';
 
@@ -33,10 +33,15 @@ class Root extends React.PureComponent {
   }
 
   render () {
-    const {store} = this.props;
+    const {store, history} = this.props;
+    const Component = comp ('company');
     return (
       <Provider store={store}>
-        <Venture id="venture" />
+        <ConnectedRouter history={history}>
+          <Switch>
+            <Route path="/" component={Component} />
+          </Switch>
+        </ConnectedRouter>
       </Provider>
     );
   }
