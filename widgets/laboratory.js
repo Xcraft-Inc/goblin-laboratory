@@ -2,7 +2,8 @@ import React from 'react';
 import Widget from 'laboratory/widget';
 import {ConnectedRouter} from 'react-router-redux';
 import {Route} from 'react-router';
-import comp from './comp';
+import importer from './importer';
+const viewImporter = importer ('view');
 
 class Laboratory extends Widget {
   constructor (props) {
@@ -32,7 +33,7 @@ class Laboratory extends Widget {
                   <Route
                     key={i}
                     path={route.path}
-                    component={() => comp (route.component)}
+                    component={() => viewImporter (route.component)}
                   />
                 );
               })}

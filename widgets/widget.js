@@ -6,25 +6,21 @@ import uuidV4 from 'uuid/v4';
 import moize from 'moize';
 import {push} from 'react-router-redux';
 import {LocalForm} from 'react-redux-form';
+import importer from './importer';
+const stylesImporter = importer ('styles');
 
-const buildStyleProps = (styleProps, props) => {
-  const result = {};
-
-  styleProps.map (k => {
-    if (props[k]) {
-      result[k] = props[k];
-    }
+const jsifyPropsNames = props => {
+  const jsified = {};
+  Object.keys (props).forEach (k => {
+    jsified[k.replace (/-([a-z])/g, (m, g1) => g1.toUpperCase ())] = props[k];
   });
-  return result;
+  return jsified;
 };
-const fastBuildStyleProps = moize (buildStyleProps);
+const fastJsifyPropsName = moize (jsifyPropsNames);
 
 class Widget extends React.PureComponent {
   constructor (cProps) {
     super (cProps);
-    if (this.buildStyles) {
-      this.fastBuildStyles = moize (this.buildStyles);
-    }
   }
 
   static get contextTypes () {
@@ -122,18 +118,37 @@ class Widget extends React.PureComponent {
     });
   }
 
+  get myStyle () {
+    const styleSheet = stylesImporter (this.name);
+    if (styleSheet) {
+      return moize (styleSheet);
+    }
+    return null;
+  }
+
+  read (key) {
+    return this.props[key];
+  }
+
+  readActive () {
+    return this.props[key];
+  }
+
+  useMyStyle (styleProps, theme) {
+    return this.myStyle (theme, styleProps);
+  }
+
+  useStyle (name, styleProps, theme) {
+    return stylesImporter (name) (theme, styleProps);
+  }
+
   getStyles (props) {
-    if (!this.buildStyles) {
+    if (!this.myStyle) {
       return {};
     }
 
-    if (!this.styleProps) {
-      return this.fastBuildStyles (null, this.context.theme);
-    }
-
-    const styleProps = fastBuildStyleProps (this.styleProps, props);
-
-    return this.fastBuildStyles (styleProps, this.context.theme);
+    const styleProps = fastJsifyPropsName (props);
+    return this.useMyStyle (styleProps, this.context.theme);
   }
 
   attachFormDispatch (formDispatch) {
