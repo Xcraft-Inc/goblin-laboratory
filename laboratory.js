@@ -11,7 +11,7 @@ exports.xcraftCommands = function () {
     rc: {
       create: {
         parallel: true,
-        desc: 'Create a widget',
+        desc: 'create a widget',
         options: {
           params: {
             optional: 'config...',
@@ -29,7 +29,7 @@ exports.xcraftCommands = function () {
       },
       open: {
         parallel: true,
-        desc: 'Open a widget',
+        desc: 'open a widget',
         options: {
           params: {
             required: 'route',
@@ -38,7 +38,7 @@ exports.xcraftCommands = function () {
       },
       'widget.add': {
         parallel: true,
-        desc: 'Add a widget to a window',
+        desc: 'add a widget to a window',
         options: {
           params: {
             required: 'id',
@@ -47,7 +47,7 @@ exports.xcraftCommands = function () {
       },
       'widget.del': {
         parallel: true,
-        desc: 'Delete a widget from a window',
+        desc: 'delete a widget from a window',
         options: {
           params: {
             required: 'id',
