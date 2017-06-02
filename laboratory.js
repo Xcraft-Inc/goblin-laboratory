@@ -7,7 +7,8 @@
  */
 exports.xcraftCommands = function () {
   return {
-    handlers: require ('./lib/service.js'),
+    handlers: require ('./lib/service.js').handlers,
+    context: require ('./lib/service.js').context,
     rc: {
       create: {
         parallel: true,
@@ -15,6 +16,15 @@ exports.xcraftCommands = function () {
         options: {
           params: {
             required: 'routes',
+          },
+        },
+      },
+      duplicate: {
+        parallel: true,
+        desc: 'Duplicate a laboratory',
+        options: {
+          params: {
+            required: 'id',
           },
         },
       },

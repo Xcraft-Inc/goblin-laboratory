@@ -7,6 +7,7 @@ import moize from 'moize';
 import {push} from 'react-router-redux';
 import {LocalForm} from 'react-redux-form';
 import importer from './importer';
+
 const stylesImporter = importer ('styles');
 
 const jsifyPropsNames = props => {

@@ -33,7 +33,7 @@ class Laboratory extends Widget {
                   <Route
                     key={i}
                     path={route.path}
-                    component={() => viewImporter (route.component)}
+                    component={viewImporter (route.component)}
                   />
                 );
               })}
