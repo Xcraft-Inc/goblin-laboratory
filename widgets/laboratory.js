@@ -23,9 +23,25 @@ class Laboratory extends Widget {
   widget () {
     return props => {
       const {id, history, routesMap} = props;
-      const routes = routesMap.select ((k, v) => {
-        return {path: v, component: k};
+      const routes = {
+        '/': [],
+        '/task-bar/': [],
+        '/top-bar/': [],
+        '/content/': [],
+      };
+      routesMap.select ((k, v) => {
+        const ex = /^\/.*\//;
+        let mount = ex.exec (v);
+        if (!mount) {
+          mount = '/';
+        }
+        if (routes[mount]) {
+          routes[mount].push ({path: v.replace (mount, '/'), component: k});
+        } else {
+          console.warn (`Invalid mount point ${mount} for ${k}`);
+        }
       });
+      console.dir (routes);
       return (
         <ConnectedRouter history={history}>
           <Container kind="root">
@@ -36,12 +52,7 @@ class Laboratory extends Widget {
                   tooltip="Changer de mandat"
                   kind="task-logo"
                 />
-              </Container>
-            </Container>
-            <Container kind="right">
-              <Container kind="content">
-                <Container kind="top-bar" />
-                {routes.map ((route, i) => {
+                {routes['/task-bar/'].map ((route, i) => {
                   return (
                     <Route
                       key={i}
@@ -51,7 +62,42 @@ class Laboratory extends Widget {
                   );
                 })}
               </Container>
-              <span>{id}</span>
+            </Container>
+            <Container kind="right">
+              <Container kind="content">
+                <Container kind="top-bar">
+                  {routes['/top-bar/'].map ((route, i) => {
+                    return (
+                      <Route
+                        key={i}
+                        path={route.path}
+                        component={viewImporter (route.component)}
+                      />
+                    );
+                  })}
+                </Container>
+                {routes['/content/'].map ((route, i) => {
+                  return (
+                    <Route
+                      key={i}
+                      path={route.path}
+                      component={viewImporter (route.component)}
+                    />
+                  );
+                })}
+              </Container>
+              {routes['/'].map ((route, i) => {
+                return (
+                  <Route
+                    key={i}
+                    path={route.path}
+                    component={viewImporter (route.component)}
+                  />
+                );
+              })}
+              <Container kind="footer">
+                <span>{id}</span>
+              </Container>
             </Container>
           </Container>
         </ConnectedRouter>
