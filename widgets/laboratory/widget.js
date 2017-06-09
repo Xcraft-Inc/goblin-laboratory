@@ -32,10 +32,11 @@ class Laboratory extends Widget {
       const W = this.Widgets;
 
       routesMap.select ((k, v) => {
-        const ex = /^\/.*\//;
-        let mount = ex.exec (v);
-        if (!mount) {
-          mount = '/';
+        const ex = /^(\/.[:\-a-z]+\/).*/;
+        const res = ex.exec (v);
+        let mount = '/';
+        if (res) {
+          mount = res[1];
         }
         if (routes[mount]) {
           routes[mount].push ({path: v.replace (mount, '/'), component: k});
