@@ -6,7 +6,7 @@ import uuidV4 from 'uuid/v4';
 import moize from 'moize';
 import {push} from 'react-router-redux';
 import {LocalForm} from 'react-redux-form';
-import importer from './importer';
+import importer from '../importer/';
 
 const stylesImporter = importer ('styles');
 

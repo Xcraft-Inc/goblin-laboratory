@@ -1,12 +1,12 @@
+import path from 'path';
 let cache = {};
 
 const importAll = (kind, r) => {
   const files = r.keys ();
 
   files.forEach (file => {
-    const matches = file.match (/([^\/\\]+)\.jsx?$/);
-    const fileName = matches[1].replace (`.${kind}`, '');
-    cache[kind][fileName] = r (file);
+    const nameSpace = path.basename (path.dirname (file));
+    cache[kind][nameSpace] = r (file);
   });
 };
 
@@ -21,10 +21,13 @@ export default kind => {
   cache[kind] = {};
   switch (kind) {
     case 'view':
-      importAll (kind, require.context ('../../', true, /\.view\.jsx?$/));
+      importAll (kind, require.context ('../../../', true, /\/view\.js$/));
       break;
     case 'styles':
-      importAll (kind, require.context ('../../', true, /\.styles\.jsx?$/));
+      importAll (kind, require.context ('../../../', true, /\/styles\.js$/));
+      break;
+    case 'widget':
+      importAll (kind, require.context ('../../../', true, /\/widget\.js$/));
       break;
     default:
       throw new Error (`Unsupported kind: ${kind} for importer`);

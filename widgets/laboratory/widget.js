@@ -2,9 +2,9 @@ import React from 'react';
 import Widget from 'laboratory/widget';
 import {ConnectedRouter} from 'react-router-redux';
 import {Route} from 'react-router';
-import Container from 'gadgets/container';
-import Button from 'gadgets/button';
-import importer from './importer';
+import Container from 'gadgets/container/widget';
+import Button from 'gadgets/button/widget';
+import importer from '../importer/';
 
 const viewImporter = importer ('view');
 
@@ -29,6 +29,8 @@ class Laboratory extends Widget {
         '/top-bar/': [],
         '/content/': [],
       };
+      const W = this.Widgets;
+
       routesMap.select ((k, v) => {
         const ex = /^\/.*\//;
         let mount = ex.exec (v);
