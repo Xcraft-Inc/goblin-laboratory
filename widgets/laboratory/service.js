@@ -35,10 +35,10 @@ const readConfig = msg => {
 };
 let increment = 0;
 // Register quest's according rc.json
-Goblin.registerQuest (goblinName, 'create', function* (quest, msg, next) {
+Goblin.registerQuest (goblinName, 'create', function* (quest, url, routes) {
   const port = 3000 + increment++;
-  const existingUrl = msg.get ('url');
-  const url = existingUrl || `http://localhost:${port}`;
+  const existingUrl = url;
+  const _url = existingUrl || `http://localhost:${port}`;
 
   if (!existingUrl) {
     quest.cmd ('webpack.server.start', {
@@ -52,17 +52,17 @@ Goblin.registerQuest (goblinName, 'create', function* (quest, msg, next) {
 
   quest.log.info (`Opening a window`);
 
-  const config = readConfig (msg);
+  const config = {routes, feeds: []};
 
   let feeds = config.feeds;
   feeds.push (quest.goblin.id);
 
   const wid = yield quest.cmd ('wm.win.create', {
-    url,
+    url: _url,
     feeds,
   });
 
-  quest.do ({id: quest.goblin.id, wid, url});
+  quest.do ({id: quest.goblin.id, wid, url: _url});
   yield quest.cmd ('wm.win.feed.sub', {wid, feeds});
 
   quest.log.info (`Laboratory ${quest.goblin.id} created!`);
@@ -77,23 +77,25 @@ Goblin.registerQuest (goblinName, 'duplicate', function* (quest) {
   return labId;
 });
 
-Goblin.registerQuest (goblinName, '_ready', function* (quest, msg) {
-  const wid = msg.get ('wid');
+Goblin.registerQuest (goblinName, '_ready', function* (quest, wid) {
   // todo: find route
   // quest.cmd ('wm.win.nav', {wid, route: '/vtc'});
 });
 
-Goblin.registerQuest (goblinName, 'open', function* (quest, msg) {
+Goblin.registerQuest (goblinName, 'open', function (quest, route) {
   quest.log.info ('Laboratory opening:');
-  quest.log.info (msg.get ('route'));
+  quest.log.info (route);
 });
 
-Goblin.registerQuest (goblinName, 'add', function* (quest, msg) {
+Goblin.registerQuest (goblinName, 'add', function* (
+  quest,
+  widgetId,
+  name,
+  create,
+  questParams
+) {
   const state = quest.goblin.getState ();
   const wid = state.get ('wid');
-  const widgetId = msg.get ('widgetId');
-  const name = msg.get ('name');
-  const create = msg.get ('create');
   const branch = widgetId;
 
   quest.log.info (`Laboratory adding widget ${widgetId} to window ${wid}`);
@@ -101,24 +103,25 @@ Goblin.registerQuest (goblinName, 'add', function* (quest, msg) {
   const added = yield quest.cmd ('warehouse.feed.add', {feed: wid, branch});
   quest.log.info (`feed added: ${added}`);
   if (added && create) {
-    const questParams = msg.get ('questParams');
     const args = Object.assign ({id: widgetId}, questParams);
     quest.cmd (`${name}.create`, args);
   }
 });
 
-Goblin.registerQuest (goblinName, 'del', function* (quest, msg) {
+Goblin.registerQuest (goblinName, 'del', function* (
+  quest,
+  widgetId,
+  name,
+  mustDelete,
+  questParams
+) {
   const state = quest.goblin.getState ();
   const wid = state.get ('wid');
-  const widgetId = msg.get ('widgetId');
-  const name = msg.get ('name');
-  const mustDelete = msg.get ('delete');
   const branch = widgetId;
   quest.log.info (`Laboratory deleting widget ${widgetId} from window ${wid}`);
   const deleted = yield quest.cmd ('warehouse.feed.del', {feed: wid, branch});
   quest.log.info (`feed deleted: ${deleted}`);
   if (mustDelete) {
-    const questParams = msg.get ('questParams');
     const args = Object.assign ({id: widgetId}, questParams);
     quest.cmd (`${name}.delete`, args);
   }
