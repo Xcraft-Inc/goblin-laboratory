@@ -57,10 +57,12 @@ Goblin.registerQuest (goblinName, 'create', function* (quest, url, routes) {
   let feeds = config.feeds;
   feeds.push (quest.goblin.id);
 
-  const wid = yield quest.cmd ('wm.win.create', {
+  const win = yield quest.cmd ('wm.win.create', {
     url: _url,
     feeds,
   });
+  const wid = win.id;
+  quest.goblin.defer (win.dispose);
 
   quest.do ({id: quest.goblin.id, wid, url: _url});
   yield quest.cmd ('wm.win.feed.sub', {wid, feeds});
@@ -73,8 +75,8 @@ Goblin.registerQuest (goblinName, 'duplicate', function* (quest) {
   const state = quest.goblin.getState ();
   const url = state.get ('url');
   const routes = state.get ('routes').toJS ();
-  const labId = yield quest.cmd ('laboratory.create', {url, routes});
-  return labId;
+  const lab = yield quest.cmd ('laboratory.create', {url, routes});
+  return lab.id;
 });
 
 Goblin.registerQuest (goblinName, '_ready', function* (quest, wid) {
