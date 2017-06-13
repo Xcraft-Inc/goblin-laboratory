@@ -2,11 +2,11 @@ import React from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import Shredder from 'xcraft-core-shredder';
-import uuidV4 from 'uuid/v4';
 import moize from 'moize';
 import {push} from 'react-router-redux';
 import {LocalForm} from 'react-redux-form';
 import importer from '../importer/';
+import Radium from 'radium';
 
 const stylesImporter = importer ('styles');
 
@@ -176,11 +176,13 @@ class Widget extends React.PureComponent {
   render () {
     if (this.props.id) {
       const WiredWidget = this.wired (this.props.id, this.props);
-      return <WiredWidget />;
+      const FinalWidget = Radium (WiredWidget);
+      return <FinalWidget />;
     } else {
       this.styles = this.getStyles (this.props);
       const Widget = this.widget ();
-      return <Widget {...this.props} />;
+      const FinalWidget = Radium (Widget);
+      return <FinalWidget {...this.props} />;
     }
   }
 }
