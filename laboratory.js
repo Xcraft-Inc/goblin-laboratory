@@ -5,56 +5,6 @@
  *
  * @returns {Object} The list and definitions of commands.
  */
-const servicePath = './widgets/laboratory/service.js';
 exports.xcraftCommands = function () {
-  return {
-    handlers: require (servicePath).handlers,
-    context: require (servicePath).context,
-    rc: {
-      create: {
-        parallel: true,
-        desc: 'Create a laboratory',
-        options: {
-          params: {
-            required: 'routes',
-          },
-        },
-      },
-      duplicate: {
-        parallel: true,
-        desc: 'Duplicate a laboratory',
-        options: {
-          params: {
-            required: 'id',
-          },
-        },
-      },
-      _ready: {
-        parallel: true,
-        options: {
-          params: {
-            required: 'wid',
-          },
-        },
-      },
-      add: {
-        parallel: true,
-        desc: 'Add a widget to a lab',
-        options: {
-          params: {
-            required: 'id',
-          },
-        },
-      },
-      del: {
-        parallel: true,
-        desc: 'Delete a widget from a lab',
-        options: {
-          params: {
-            required: 'id',
-          },
-        },
-      },
-    },
-  };
+  return require (`./widgets/${require ('path').basename (__filename, '.js')}/service.js`);
 };
