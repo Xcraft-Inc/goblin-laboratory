@@ -61,6 +61,8 @@ Goblin.registerQuest (goblinName, 'create', function* (quest, url, routes) {
     url: _url,
     feeds,
   });
+  quest.goblin.setX ('window', win);
+  quest.goblin.defer (() => quest.goblin.delX ('window'));
   const wid = win.id;
   quest.goblin.defer (win.delete);
 
@@ -68,12 +70,24 @@ Goblin.registerQuest (goblinName, 'create', function* (quest, url, routes) {
   yield quest.cmd ('wm.win.feed.sub', {wid, feeds});
 
   // CREATE DEFAULT CONTEXT MANAGER
-  const contexts = yield quest.create ('contexts', {id: 'contexts@default'});
+  const contexts = yield quest.create ('contexts', {
+    id: `contexts@default`,
+  });
   quest.goblin.defer (contexts.delete);
-  contexts.add ({name: 'Company'});
-
+  quest.goblin.setX ('contexts', contexts);
+  quest.goblin.defer (() => quest.goblin.delX ('contexts'));
   quest.log.info (`Laboratory ${quest.goblin.id} created!`);
   return quest.goblin.id;
+});
+
+Goblin.registerQuest (goblinName, 'add-context', function (quest, name) {
+  const contexts = quest.goblin.getX ('contexts');
+  contexts.add ({name});
+});
+
+Goblin.registerQuest (goblinName, 'nav-to-context', function (quest, name) {
+  const win = quest.goblin.getX ('window');
+  win.nav ({route: `/${name}`});
 });
 
 Goblin.registerQuest (goblinName, 'duplicate', function* (quest) {

@@ -29,7 +29,6 @@ class Laboratory extends Widget {
         '/top-bar/': [],
         '/content/': [],
       };
-      const W = this.Widgets;
 
       routesMap.select ((k, v) => {
         const ex = /^(\/.[:\-a-z]+\/).*/;
@@ -60,6 +59,7 @@ class Laboratory extends Widget {
                     <Route
                       key={i}
                       path={route.path}
+                      labId={props.id}
                       component={viewImporter (route.component)}
                     />
                   );
@@ -74,6 +74,7 @@ class Laboratory extends Widget {
                       <Route
                         key={i}
                         path={route.path}
+                        labId={props.id}
                         component={viewImporter (route.component)}
                       />
                     );
@@ -84,6 +85,7 @@ class Laboratory extends Widget {
                     <Route
                       key={i}
                       path={route.path}
+                      labId={props.id}
                       component={viewImporter (route.component)}
                     />
                   );
@@ -94,6 +96,7 @@ class Laboratory extends Widget {
                   <Route
                     key={i}
                     path={route.path}
+                    labId={props.id}
                     component={viewImporter (route.component)}
                   />
                 );
