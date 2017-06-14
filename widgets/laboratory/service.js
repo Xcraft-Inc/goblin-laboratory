@@ -5,13 +5,22 @@ const Goblin = require ('xcraft-core-goblin');
 const uuidV4 = require ('uuid/v4');
 const goblinName = path.basename (module.parent.filename, '.js');
 
+// Default route/view mapping
+// /mountpoint/:context/:workitem/
+const defaultRoutes = {
+  tabs: '/content/:context',
+  workitem: '/content/:context/:workitem',
+  tasks: '/task-bar/:context',
+  contexts: '/top-bar/',
+};
+
 // Define initial logic values
 const logicState = {};
 
 // Define logic handlers according rc.json
 const logicHandlers = {
   create: (state, action) => {
-    const conf = readConfig (action);
+    const conf = action.get ('config');
     const id = action.get ('id');
     return state.set ('', {
       id: id,
@@ -26,19 +35,16 @@ const logicHandlers = {
   },
 };
 
-const readConfig = msg => {
-  const routes = msg.get ('routes');
-  return {
-    routes,
-    feeds: [],
-  };
-};
 let increment = 0;
 // Register quest's according rc.json
 Goblin.registerQuest (goblinName, 'create', function* (quest, url, routes) {
   const port = 3000 + increment++;
   const existingUrl = url;
   const _url = existingUrl || `http://localhost:${port}`;
+
+  if (!routes) {
+    routes = defaultRoutes;
+  }
 
   if (!existingUrl) {
     quest.cmd ('webpack.server.start', {
@@ -66,7 +72,7 @@ Goblin.registerQuest (goblinName, 'create', function* (quest, url, routes) {
   const wid = win.id;
   quest.goblin.defer (win.delete);
 
-  quest.do ({id: quest.goblin.id, wid, url: _url});
+  quest.do ({id: quest.goblin.id, wid, url: _url, config});
   yield quest.cmd ('wm.win.feed.sub', {wid, feeds});
 
   // CREATE DEFAULT CONTEXT MANAGER
