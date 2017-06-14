@@ -43,7 +43,11 @@ Goblin.registerQuest (goblinName, 'delete', function (quest, id) {
 });
 
 Goblin.registerQuest (goblinName, 'add', function* (quest, name) {
-  const ctx = yield quest.create ('button', {text: name, kind: 'main-tab'});
+  const ctx = yield quest.create ('button', {
+    id: `context@${name}`,
+    text: name,
+    kind: 'main-tab',
+  });
   quest.do ({ctxId: ctx.id, name});
   quest.goblin.defer (ctx.delete);
   return ctx.id;

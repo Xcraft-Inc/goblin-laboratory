@@ -86,9 +86,9 @@ Goblin.registerQuest (goblinName, 'create', function* (quest, url, routes) {
   return quest.goblin.id;
 });
 
-Goblin.registerQuest (goblinName, 'add-context', function (quest, name) {
+Goblin.registerQuest (goblinName, 'add-context', function* (quest, name) {
   const contexts = quest.goblin.getX ('contexts');
-  contexts.add ({name});
+  yield contexts.add ({name});
 });
 
 Goblin.registerQuest (goblinName, 'nav-to-context', function (quest, name) {
