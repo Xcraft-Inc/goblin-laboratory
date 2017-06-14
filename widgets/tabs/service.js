@@ -21,6 +21,12 @@ const logicHandlers = {
   add: (state, action) => {
     const tabId = action.get ('tabId');
     const contextId = action.get ('contextId');
+    const current = state.get ('current');
+    if (!current) {
+      return state
+        .set ('current', tabId)
+        .set (`tabs.${contextId}.${tabId}`, action.get ('workItemId'));
+    }
     return state.set (`tabs.${contextId}.${tabId}`, action.get ('workItemId'));
   },
   remove: (state, action) => {

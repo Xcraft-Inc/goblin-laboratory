@@ -96,9 +96,13 @@ Goblin.registerQuest (goblinName, 'create', function* (quest, url, routes) {
   return quest.goblin.id;
 });
 
-Goblin.registerQuest (goblinName, 'add-context', function* (quest, name) {
+Goblin.registerQuest (goblinName, 'add-context', function* (
+  quest,
+  contextId,
+  name
+) {
   const contexts = quest.goblin.getX ('contexts');
-  yield contexts.add ({name});
+  yield contexts.add ({contextId, name});
 });
 
 Goblin.registerQuest (goblinName, 'add-tab', function* (
@@ -111,9 +115,21 @@ Goblin.registerQuest (goblinName, 'add-tab', function* (
   yield tabs.add ({name, contextId, workItemId});
 });
 
-Goblin.registerQuest (goblinName, 'nav-to-context', function (quest, name) {
+Goblin.registerQuest (goblinName, 'nav-to-context', function (
+  quest,
+  contextId
+) {
   const win = quest.goblin.getX ('window');
-  win.nav ({route: `/${name}`});
+  win.nav ({route: `/${contextId}`});
+});
+
+Goblin.registerQuest (goblinName, 'nav-to-workitem', function (
+  quest,
+  contextId,
+  workitemId
+) {
+  const win = quest.goblin.getX ('window');
+  win.nav ({route: `/${contextId}/${workitemId}`});
 });
 
 Goblin.registerQuest (goblinName, 'duplicate', function* (quest) {

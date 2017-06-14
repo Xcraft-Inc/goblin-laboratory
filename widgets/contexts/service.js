@@ -19,12 +19,19 @@ const logicHandlers = {
     });
   },
   add: (state, action) => {
-    const ctxId = action.get ('ctxId');
-    return state.set (`contexts.${ctxId}`, action.get ('name'));
+    const widgetId = action.get ('widgetId');
+    const contextId = action.get ('contextId');
+    const current = state.get ('current');
+    if (!current) {
+      return state
+        .set ('current', contextId)
+        .set (`contexts.${widgetId}`, contextId);
+    }
+    return state.set (`contexts.${widgetId}`, contextId);
   },
   remove: (state, action) => {
-    const ctxId = action.get ('ctxId');
-    return state.del (`contexts.${ctxId}`);
+    const widgetId = action.get ('widgetId');
+    return state.del (`contexts.${widgetId}`);
   },
   delete: state => {
     return state.set ('', {});
@@ -42,19 +49,20 @@ Goblin.registerQuest (goblinName, 'delete', function (quest, id) {
   quest.do ({id});
 });
 
-Goblin.registerQuest (goblinName, 'add', function* (quest, name) {
+Goblin.registerQuest (goblinName, 'add', function* (quest, contextId, name) {
   const ctx = yield quest.create ('button', {
-    id: `context@${name}`,
+    id: `context@${contextId}`,
     text: name,
     kind: 'main-tab',
   });
-  quest.do ({ctxId: ctx.id, name});
+  quest.do ({widgetId: ctx.id, contextId, name});
   quest.goblin.defer (ctx.delete);
   return ctx.id;
 });
 
-Goblin.registerQuest (goblinName, 'remove', function (quest, ctxId) {
-  quest.do ({ctxId});
+Goblin.registerQuest (goblinName, 'remove', function (quest, widgetId) {
+  //TODO: look for widgetId
+  quest.do ({widgetId});
 });
 
 // Create a Goblin with initial state and handlers

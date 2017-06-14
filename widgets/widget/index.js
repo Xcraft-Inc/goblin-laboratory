@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import Shredder from 'xcraft-core-shredder';
 import moize from 'moize';
-import {push} from 'react-router-redux';
+import {push, replace} from 'react-router-redux';
 import {LocalForm} from 'react-redux-form';
 import importer from '../importer/';
 import Radium from 'radium';
@@ -62,6 +62,10 @@ class Widget extends React.PureComponent {
 
   nav (path) {
     this.context.dispatch (push (path));
+  }
+
+  replaceNav (path) {
+    this.context.dispatch (replace (path));
   }
 
   wire (connectId, wires) {
