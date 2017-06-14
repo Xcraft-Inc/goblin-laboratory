@@ -15,23 +15,24 @@ const logicHandlers = {
       id: id,
       tabs: {},
       labId,
-      current: null,
+      current: {},
     });
   },
   add: (state, action) => {
     const tabId = action.get ('tabId');
     const contextId = action.get ('contextId');
-    const current = state.get ('current');
+    const current = state.get (`current.${contextId}`, null);
     if (!current) {
       return state
-        .set ('current', action.get ('workItemId'))
+        .set (`current.${contextId}`, action.get ('workItemId'))
         .set (`tabs.${contextId}.${tabId}`, action.get ('workItemId'));
     }
     return state.set (`tabs.${contextId}.${tabId}`, action.get ('workItemId'));
   },
   'set-current': (state, action) => {
     const wid = action.get ('workItemId');
-    return state.set ('current', wid);
+    const contextId = action.get ('contextId');
+    return state.set (`current.${contextId}`, wid);
   },
   remove: (state, action) => {
     const tabId = action.get ('tabId');
@@ -54,8 +55,12 @@ Goblin.registerQuest (goblinName, 'delete', function (quest, id) {
   quest.do ({id});
 });
 
-Goblin.registerQuest (goblinName, 'set-current', function (quest, workItemId) {
-  quest.do ({workItemId});
+Goblin.registerQuest (goblinName, 'set-current', function (
+  quest,
+  contextId,
+  workItemId
+) {
+  quest.do ({contextId, workItemId});
 });
 
 Goblin.registerQuest (goblinName, 'add', function* (
