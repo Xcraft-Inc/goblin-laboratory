@@ -28,6 +28,11 @@ class Tabs extends Widget {
               text={`${context} - Activity 2`}
               onClick={() => this.goToWorkItem (context, 'company')}
             />
+            <Button
+              kind="view-tab"
+              text={`${context} - Activity 3`}
+              onClick={() => this.goToWorkItem (context, 'test')}
+            />
           </Container>
         </Container>
       );
