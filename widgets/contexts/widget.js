@@ -18,6 +18,7 @@ class Contexts extends Widget {
 
   goToContext (context) {
     this.nav (`/${context}`);
+    //TODO: this.do ('setCurrent', {context});
   }
 
   widget () {
@@ -27,7 +28,12 @@ class Contexts extends Widget {
         <Container kind="main-tab">
           {contexts.map ((v, k) => {
             return (
-              <Button key={k} id={k} onClick={() => this.goToContext (v)} />
+              <Button
+                key={k}
+                id={k}
+                onClick={() => this.goToContext (v)}
+                selected={current === k}
+              />
             );
           })}
         </Container>

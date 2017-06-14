@@ -63,6 +63,7 @@ Goblin.registerQuest (goblinName, 'create', function* (quest, url, routes) {
   let feeds = config.feeds;
   feeds.push (quest.goblin.id);
 
+  //CREATE A WINDOW
   const win = yield quest.create ('wm.win', {
     url: _url,
     feeds,
@@ -82,6 +83,15 @@ Goblin.registerQuest (goblinName, 'create', function* (quest, url, routes) {
   quest.goblin.defer (contexts.delete);
   quest.goblin.setX ('contexts', contexts);
   quest.goblin.defer (() => quest.goblin.delX ('contexts'));
+
+  // CREATE DEFAULT TABS MANAGER
+  const tabs = yield quest.create ('tabs', {
+    id: `tabs@default`,
+  });
+  quest.goblin.defer (tabs.delete);
+  quest.goblin.setX ('tabs', tabs);
+  quest.goblin.defer (() => quest.goblin.delX ('tabs'));
+
   quest.log.info (`Laboratory ${quest.goblin.id} created!`);
   return quest.goblin.id;
 });
@@ -89,6 +99,16 @@ Goblin.registerQuest (goblinName, 'create', function* (quest, url, routes) {
 Goblin.registerQuest (goblinName, 'add-context', function* (quest, name) {
   const contexts = quest.goblin.getX ('contexts');
   yield contexts.add ({name});
+});
+
+Goblin.registerQuest (goblinName, 'add-tab', function* (
+  quest,
+  name,
+  contextId,
+  workItemId
+) {
+  const tabs = quest.goblin.getX ('tabs');
+  yield tabs.add ({name, contextId, workItemId});
 });
 
 Goblin.registerQuest (goblinName, 'nav-to-context', function (quest, name) {

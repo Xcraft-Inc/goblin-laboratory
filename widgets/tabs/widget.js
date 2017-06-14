@@ -8,31 +8,35 @@ class Tabs extends Widget {
     super (props, context);
   }
 
+  get wiring () {
+    return {
+      id: 'id',
+      tabs: 'tabs',
+      current: 'current',
+    };
+  }
+
   goToWorkItem (context, wid) {
     this.nav (`/${context}/${wid}`);
   }
 
   widget () {
     return props => {
-      const context = props.context;
+      const {context, current, tabs} = props;
+      const contextTabs = tabs.get (context, []);
       return (
         <Container kind="second-bar">
           <Container kind="view-tab">
-            <Button
-              kind="view-tab"
-              text={`${context} - Activity 1`}
-              onClick={() => this.goToWorkItem (context, 'venture')}
-            />
-            <Button
-              kind="view-tab"
-              text={`${context} - Activity 2`}
-              onClick={() => this.goToWorkItem (context, 'company')}
-            />
-            <Button
-              kind="view-tab"
-              text={`${context} - Activity 3`}
-              onClick={() => this.goToWorkItem (context, 'test')}
-            />
+            {contextTabs.map ((v, k) => {
+              return (
+                <Button
+                  key={k}
+                  id={k}
+                  onClick={() => this.goToWorkItem (context, v)}
+                  selected={current === k}
+                />
+              );
+            })}
           </Container>
         </Container>
       );
