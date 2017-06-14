@@ -146,11 +146,15 @@ Goblin.registerQuest (goblinName, 'nav-to-context', function (
 Goblin.registerQuest (goblinName, 'nav-to-workitem', function (
   quest,
   contextId,
-  workItemId
+  workItemId,
+  skipNav
 ) {
   const win = quest.goblin.getX ('window');
-  win.nav ({route: `/${contextId}/${workItemId}`});
   quest.dispatch ('setCurrentWorkItemByContext', {contextId, workItemId});
+  if (skipNav) {
+    return;
+  }
+  win.nav ({route: `/${contextId}/${workItemId}`});
 });
 
 Goblin.registerQuest (goblinName, 'duplicate', function* (quest) {
