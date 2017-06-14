@@ -17,13 +17,17 @@ class Tabs extends Widget {
   }
 
   goToWorkItem (contextId, workItemId) {
-    this.do ('set-current', {workItemId});
+    this.do ('set-current', {contextId, workItemId});
     this.navToWorkItem (contextId, workItemId);
   }
 
   widget () {
     return props => {
       const {context, current, tabs} = props;
+      let currentTab = null;
+      if (current) {
+        currentTab = current.get (context, null);
+      }
       const contextTabs = tabs.get (context, []);
       return (
         <Container kind="second-bar">
@@ -34,7 +38,7 @@ class Tabs extends Widget {
                   key={k}
                   id={k}
                   onClick={() => this.goToWorkItem (context, v)}
-                  selected={current === k}
+                  active={currentTab === v ? 'true' : 'false'}
                 />
               );
             })}

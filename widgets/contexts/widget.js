@@ -32,7 +32,7 @@ class Contexts extends Widget {
                 key={k}
                 id={k}
                 onClick={() => this.goToContext (v)}
-                selected={current === k}
+                active={current === v ? 'true' : 'false'}
               />
             );
           })}
