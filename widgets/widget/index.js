@@ -96,6 +96,7 @@ class Widget extends React.PureComponent {
     let Widget = this.widget ();
     return this.wire (connectId, this.wiring) (props => {
       const newProps = Object.assign ({}, otherProps, props);
+      this.mergedProps = newProps;
       if (props.id) {
         this.styles = this.getStyles (newProps);
         if (this.isForm) {
@@ -128,6 +129,9 @@ class Widget extends React.PureComponent {
   }
 
   read (key) {
+    if (this.props.id) {
+      return this.mergedProps[key];
+    }
     return this.props[key];
   }
 
