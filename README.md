@@ -1,5 +1,62 @@
+# Laboratory
+> Bienvenue dans le labo des gobelins!
 
-# goblin-laboratory
+Le labo offre un espace de travail facilitant la construction d'application UI.
+
+Il instancie pour vous une fenêtre electron et se connecte au contenu du laboratoire 
+en ouvrant le bundle webpack à une URL donnée.
+
+Il optimise la communication avec les gobelins en s'occupant de souscrire aux state des différents gobelins dans l'entrepôt de states (voir. gobelin-warehouse).
+
+En créant un labo, vous optenez un espace de travail utilisateur prêt à l'emploi.
+
+Cet espace est pré-découpé en zone de montages stratégiques:
+
+- root
+- top-bar
+- task-bar
+- content
+
+Par défaut, un laboratoire va monter un gestionnaire de travaux utilisateurs qui permet un routage des tâches utilisateurs dans la UI. Ce comportement par défaut peut-être remplacé en explicitant le mapping montage/vue à la création du laboratoire.
+
+
+## Widget
+
+Un labo est automatiquement cablé pour écouter les changements d'états des widgets dans le state. 
+
+Un composant react `Widget` de base permet d'écrire des composant connecté pour vos gobelins.
+
+### Formulaires
+
+Si votre widget doit se comporter en formulaire de saisies, il faut exposer un getter spécifique:
+
+```js
+ get isForm () {
+    return true;
+  }
+```
+
+### Wiring (cablâge des propriétés)
+
+Un widget est dit cablé lorsqu'on fournit un `id` à celui-ci lors de son utilisation.
+
+Dans ce cas, les propriétés cablée respecterons l'état du widget dans le state.
+
+Un widget cablé doit être créé par un goblin, et ces propriétés cablée doivent être définie via son API.
+Certaine propriétés du widget ne sont pas cablée sur le state est peuvent être définie au rendu.
+
+Si le widget n'est pas cablé par id, il peut-être utilisé librement en définissant ces propriétés au rendu.
+
+### Styling
+
+Tout widget peut-être accompagné d'un fichier de style permettant de calculer le style du widget à l'aide du theme courant.
+
+## List
+
+Un widget spécial permettant l'affichage de liste très longues de manière efficace.
+
+
+## specs goblin-laboratory
 
 - routage et composition de vues inter-app
 - pilotage du goblin wm
@@ -8,7 +65,7 @@
 - persistance de settings de fenêtre inter-gadgets (écoute events wm)
 - lazy loading des gagdgets https://webpack.js.org/guides/lazy-load-react/
 
-### Exemple de quest:
+### Exemple de quest
 
 crée des gadgets avec leurs states:
 
