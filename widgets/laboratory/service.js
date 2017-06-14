@@ -28,7 +28,16 @@ const logicHandlers = {
       wid: action.get ('wid'),
       feeds: conf.feeds,
       routes: conf.routes,
+      current: {
+        workitems: {},
+      },
     });
+  },
+  setCurrentWorkItemByContext: (state, action) => {
+    return state.set (
+      `current.workitems.${action.get ('contextId')}`,
+      action.get ('workItemId')
+    );
   },
   'update-feeds': (state, action) => {
     return state.set ('feeds', action.get ('feeds'));
@@ -111,6 +120,11 @@ Goblin.registerQuest (goblinName, 'add-tab', function* (
   contextId,
   workItemId
 ) {
+  const state = quest.goblin.getState ();
+  const workItem = state.get (`current.workitems.${contextId}`, null);
+  if (!workItem) {
+    quest.dispatch ('setCurrentWorkItemByContext', {contextId, workItemId});
+  }
   const tabs = quest.goblin.getX ('tabs');
   yield tabs.add ({name, contextId, workItemId});
 });
@@ -120,16 +134,23 @@ Goblin.registerQuest (goblinName, 'nav-to-context', function (
   contextId
 ) {
   const win = quest.goblin.getX ('window');
-  win.nav ({route: `/${contextId}`});
+  const state = quest.goblin.getState ();
+  const workItem = state.get (`current.workitems.${contextId}`, null);
+  if (workItem) {
+    win.nav ({route: `/${contextId}/${workItem}`});
+  } else {
+    win.nav ({route: `/${contextId}`});
+  }
 });
 
 Goblin.registerQuest (goblinName, 'nav-to-workitem', function (
   quest,
   contextId,
-  workitemId
+  workItemId
 ) {
   const win = quest.goblin.getX ('window');
-  win.nav ({route: `/${contextId}/${workitemId}`});
+  win.nav ({route: `/${contextId}/${workItemId}`});
+  quest.dispatch ('setCurrentWorkItemByContext', {contextId, workItemId});
 });
 
 Goblin.registerQuest (goblinName, 'duplicate', function* (quest) {

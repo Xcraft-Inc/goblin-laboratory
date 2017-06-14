@@ -24,10 +24,14 @@ const logicHandlers = {
     const current = state.get ('current');
     if (!current) {
       return state
-        .set ('current', tabId)
+        .set ('current', action.get ('workItemId'))
         .set (`tabs.${contextId}.${tabId}`, action.get ('workItemId'));
     }
     return state.set (`tabs.${contextId}.${tabId}`, action.get ('workItemId'));
+  },
+  'set-current': (state, action) => {
+    const wid = action.get ('workItemId');
+    return state.set ('current', wid);
   },
   remove: (state, action) => {
     const tabId = action.get ('tabId');
@@ -48,6 +52,10 @@ Goblin.registerQuest (goblinName, 'create', function (quest, id, labId) {
 
 Goblin.registerQuest (goblinName, 'delete', function (quest, id) {
   quest.do ({id});
+});
+
+Goblin.registerQuest (goblinName, 'set-current', function (quest, workItemId) {
+  quest.do ({workItemId});
 });
 
 Goblin.registerQuest (goblinName, 'add', function* (

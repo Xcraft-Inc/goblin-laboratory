@@ -64,6 +64,21 @@ class Widget extends React.PureComponent {
     this.context.dispatch (push (path));
   }
 
+  navToContext (contextId) {
+    this.cmd ('laboratory.nav-to-context', {
+      id: this.context.labId,
+      contextId,
+    });
+  }
+
+  navToWorkItem (contextId, workItemId) {
+    this.cmd ('laboratory.nav-to-workitem', {
+      id: this.context.labId,
+      contextId,
+      workItemId,
+    });
+  }
+
   replaceNav (path) {
     this.context.dispatch (replace (path));
   }

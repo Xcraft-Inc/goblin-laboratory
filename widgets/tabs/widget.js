@@ -16,8 +16,9 @@ class Tabs extends Widget {
     };
   }
 
-  goToWorkItem (context, wid) {
-    this.nav (`/${context}/${wid}`);
+  goToWorkItem (contextId, workItemId) {
+    this.do ('set-current', {workItemId});
+    this.navToWorkItem (contextId, workItemId);
   }
 
   widget () {

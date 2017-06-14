@@ -33,6 +33,10 @@ const logicHandlers = {
     const widgetId = action.get ('widgetId');
     return state.del (`contexts.${widgetId}`);
   },
+  'set-current': (state, action) => {
+    const contextId = action.get ('contextId');
+    return state.set ('current', contextId);
+  },
   delete: state => {
     return state.set ('', {});
   },
@@ -47,6 +51,10 @@ Goblin.registerQuest (goblinName, 'create', function (quest, id, labId) {
 
 Goblin.registerQuest (goblinName, 'delete', function (quest, id) {
   quest.do ({id});
+});
+
+Goblin.registerQuest (goblinName, 'set-current', function (quest, contextId) {
+  quest.do ({contextId});
 });
 
 Goblin.registerQuest (goblinName, 'add', function* (quest, contextId, name) {

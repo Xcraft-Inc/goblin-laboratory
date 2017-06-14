@@ -16,9 +16,9 @@ class Contexts extends Widget {
     };
   }
 
-  goToContext (context) {
-    this.nav (`/${context}`);
-    //TODO: this.do ('setCurrent', {context});
+  goToContext (contextId) {
+    this.do ('set-current', {contextId});
+    this.navToContext (contextId);
   }
 
   widget () {
