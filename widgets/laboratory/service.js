@@ -67,6 +67,11 @@ Goblin.registerQuest (goblinName, 'create', function* (quest, url, routes) {
   quest.do ({id: quest.goblin.id, wid, url: _url});
   yield quest.cmd ('wm.win.feed.sub', {wid, feeds});
 
+  // CREATE DEFAULT CONTEXT MANAGER
+  const contexts = yield quest.create ('contexts', {id: 'contexts@default'});
+  quest.goblin.defer (contexts.delete);
+  contexts.add ({name: 'Company'});
+
   quest.log.info (`Laboratory ${quest.goblin.id} created!`);
   return quest.goblin.id;
 });
