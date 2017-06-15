@@ -61,9 +61,15 @@ Goblin.registerQuest (goblinName, 'create', function* (quest, url, routes) {
       jobId: quest.goblin.id,
       port: port,
     });
-    quest.log.info (`Waiting for webpack goblin`);
-    yield quest.sub.wait (`webpack.${quest.goblin.id}.done`);
+  } else {
+    quest.cmd ('webpack.pack', {
+      goblin: 'laboratory',
+      jobId: quest.goblin.id,
+    });
   }
+
+  quest.log.info (`Waiting for webpack goblin`);
+  yield quest.sub.wait (`webpack.${quest.goblin.id}.done`);
 
   quest.log.info (`Opening a window`);
 
