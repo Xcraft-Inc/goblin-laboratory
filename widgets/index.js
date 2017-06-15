@@ -1,5 +1,8 @@
 require ('react-hot-loader/patch');
-require ('./devtools.js');
+
+if (process.env.NODE_ENV === 'development') {
+  require ('./devtools.js');
+}
 
 import transit from 'transit-immutable-js';
 import React from 'react';
