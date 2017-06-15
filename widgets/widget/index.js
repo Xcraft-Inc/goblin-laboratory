@@ -2,7 +2,6 @@ import React from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import Shredder from 'xcraft-core-shredder';
-import moize from 'moize';
 import {push, replace} from 'react-router-redux';
 import {LocalForm} from 'react-redux-form';
 import importer from '../importer/';
@@ -16,7 +15,6 @@ const jsifyPropsNames = props => {
   });
   return jsified;
 };
-const fastJsifyPropsName = moize (jsifyPropsNames);
 
 class Widget extends React.PureComponent {
   constructor (cProps) {
@@ -168,7 +166,7 @@ class Widget extends React.PureComponent {
       return {};
     }
 
-    const styleProps = fastJsifyPropsName (props);
+    const styleProps = jsifyPropsNames (props);
     return this.useMyStyle (styleProps, this.context.theme);
   }
 
