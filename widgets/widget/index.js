@@ -142,11 +142,7 @@ class Widget extends React.PureComponent {
   }
 
   get myStyle () {
-    const styleSheet = stylesImporter (this.name);
-    if (styleSheet) {
-      return moize (styleSheet);
-    }
-    return null;
+    return stylesImporter (this.name);
   }
 
   read (key) {
