@@ -47,7 +47,7 @@ const logicHandlers = {
 let increment = 0;
 // Register quest's according rc.json
 Goblin.registerQuest (goblinName, 'create', function* (quest, url, routes) {
-  const port = 3000 + increment++;
+  const port = 4000 + increment++;
   const existingUrl = url;
   const _url = existingUrl || `http://localhost:${port}`;
 

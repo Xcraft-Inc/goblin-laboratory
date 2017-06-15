@@ -14,7 +14,7 @@
     }
   },
   "dependencies": {
-    "electrum-theme": "^4.6.1",
+    "electrum-theme": "^4.6.2",
     "history": "^4.6.1",
     "immutable": "^4.0.0-rc.2",
     "immutable-devtools": "0.0.7",
