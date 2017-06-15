@@ -111,7 +111,8 @@ Goblin.registerQuest (goblinName, 'add-context', function* (
   name
 ) {
   const contexts = quest.goblin.getX ('contexts');
-  yield contexts.add ({contextId, name});
+  const widgetId = yield contexts.add ({contextId, name});
+  quest.cmd ('laboratory.add', {id: quest.goblin.id, widgetId});
 });
 
 Goblin.registerQuest (goblinName, 'add-tab', function* (
@@ -126,7 +127,8 @@ Goblin.registerQuest (goblinName, 'add-tab', function* (
     quest.dispatch ('setCurrentWorkItemByContext', {contextId, workItemId});
   }
   const tabs = quest.goblin.getX ('tabs');
-  yield tabs.add ({name, contextId, workItemId});
+  const widgetId = yield tabs.add ({name, contextId, workItemId});
+  quest.cmd ('laboratory.add', {id: quest.goblin.id, widgetId});
 });
 
 Goblin.registerQuest (goblinName, 'nav-to-context', function (
