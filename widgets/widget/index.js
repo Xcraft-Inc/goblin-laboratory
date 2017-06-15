@@ -6,7 +6,6 @@ import moize from 'moize';
 import {push, replace} from 'react-router-redux';
 import {LocalForm} from 'react-redux-form';
 import importer from '../importer/';
-import Radium from 'radium';
 
 const stylesImporter = importer ('styles');
 
@@ -197,13 +196,11 @@ class Widget extends React.PureComponent {
   render () {
     if (this.props.id) {
       const WiredWidget = this.wired (this.props.id, this.props);
-      const FinalWidget = Radium (WiredWidget);
-      return <FinalWidget />;
+      return <WiredWidget />;
     } else {
       this.styles = this.getStyles (this.props);
       const Widget = this.widget ();
-      const FinalWidget = Radium (Widget);
-      return <FinalWidget {...this.props} />;
+      return <Widget {...this.props} />;
     }
   }
 }
