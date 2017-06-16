@@ -18,13 +18,7 @@ class WorkItem extends Widget {
         return null;
       }
       const WorkItemView = viewImporter (workitem);
-      return (
-        <Container kind="views">
-          <Container kind="view" width="800px">
-            <WorkItemView />
-          </Container>
-        </Container>
-      );
+      return <WorkItemView />;
     };
   }
 }
