@@ -203,4 +203,8 @@ class Widget extends React.PureComponent {
   }
 }
 
+Widget.propTypes = {
+  id: PropTypes.string
+};
+
 export default Widget;
