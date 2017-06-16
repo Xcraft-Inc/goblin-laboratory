@@ -43,7 +43,7 @@ class Laboratory extends Widget {
           console.warn (`Invalid mount point ${mount} for ${k}`);
         }
       });
-      console.dir (routes);
+
       return (
         <ConnectedRouter history={history}>
           <Container kind="root">
