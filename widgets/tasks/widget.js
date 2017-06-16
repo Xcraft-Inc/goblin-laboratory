@@ -11,16 +11,7 @@ class Tasks extends Widget {
   widget () {
     return props => {
       const context = props.context;
-      return (
-        <Container kind="task-bar">
-          <Button
-            glyph="clock-o"
-            text={context}
-            kind="task-bar"
-            badge-value="54"
-          />
-        </Container>
-      );
+      return <Container kind="task-bar" />;
     };
   }
 }
