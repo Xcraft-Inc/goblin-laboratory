@@ -49,7 +49,7 @@ let increment = 0;
 Goblin.registerQuest (goblinName, 'create', function* (quest, url, routes) {
   const port = 4000 + increment++;
   const existingUrl = url;
-  const _url = existingUrl || `http://localhost:${port}`;
+  let _url = existingUrl || `http://localhost:${port}`;
 
   if (!routes) {
     routes = defaultRoutes;
@@ -79,11 +79,16 @@ Goblin.registerQuest (goblinName, 'create', function* (quest, url, routes) {
   let feeds = config.feeds;
   feeds.push (quest.goblin.id);
 
+  if (process.env.NODE_ENV === 'development') {
+    _url += '?react_perf';
+  }
+
   //CREATE A WINDOW
   const win = yield quest.create ('wm.win', {
     url: _url,
     feeds,
   });
+
   quest.goblin.setX ('window', win);
   quest.goblin.defer (() => quest.goblin.delX ('window'));
   const wid = win.id;
