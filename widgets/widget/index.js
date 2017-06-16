@@ -149,10 +149,6 @@ class Widget extends React.PureComponent {
     return this.props[key];
   }
 
-  readActive () {
-    return this.props[key];
-  }
-
   useMyStyle (styleProps, theme) {
     return this.myStyle (theme, styleProps);
   }
