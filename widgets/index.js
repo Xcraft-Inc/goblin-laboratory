@@ -10,7 +10,7 @@ import ReactDOM from 'react-dom';
 import {AppContainer} from 'react-hot-loader';
 import Root from 'laboratory/root';
 import {Theme} from 'electrum-theme';
-import createHistory from 'history/createBrowserHistory';
+import createHistory from 'history/createHashHistory';
 import {push} from 'react-router-redux';
 
 const history = createHistory ();
