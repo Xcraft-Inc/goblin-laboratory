@@ -17,13 +17,6 @@ const history = createHistory ();
 import configureStore from 'laboratory/store/store';
 const store = configureStore (window.__INITIAL_STATE__, history);
 
-//LYDIA TEST PURPOSE
-import LydiaProxy from 'lydia-workflow/lydia-proxy/widget';
-
-LydiaProxy ('http://localhost:7777/', post => {
-  //post ('CreateWorkflowCommand', {});
-});
-
 const ipcRenderer = require ('electron').ipcRenderer;
 ipcRenderer.on ('PUSH_PATH', (event, path) => {
   console.log (`Received a PUSH_PATH to ${path}`);
