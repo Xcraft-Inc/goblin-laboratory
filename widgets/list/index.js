@@ -7,9 +7,10 @@ class List extends Widget {
     super (props);
   }
 
-  get items () {
-    const {type, length, item} = this.props;
-    return <ReactList length={length} type={type} itemRenderer={item} />;
+  getList (item, type, length) {
+    return props => (
+      <ReactList length={length} type={type} itemRenderer={item} {...props} />
+    );
   }
 
   render () {
