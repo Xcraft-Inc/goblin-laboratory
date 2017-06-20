@@ -19,10 +19,10 @@ const store = configureStore (window.__INITIAL_STATE__, history);
 
 //LYDIA TEST PURPOSE
 import LydiaProxy from 'lydia-workflow/lydia-proxy/widget';
-let res = null;
-/*LydiaProxy ('http://localhost:7777/', methods => {
-  res = methods;
-}).then (hub => hub.send ('Ping', 'Hello from goblins!'));*/
+
+LydiaProxy ('http://localhost:7777/', post => {
+  //post ('CreateWorkflowCommand', {});
+});
 
 const ipcRenderer = require ('electron').ipcRenderer;
 ipcRenderer.on ('PUSH_PATH', (event, path) => {
