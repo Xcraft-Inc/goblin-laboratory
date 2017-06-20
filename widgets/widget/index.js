@@ -65,10 +65,9 @@ class Widget extends React.PureComponent {
   }
 
   static Wired (component) {
-    return (id, otherProps) =>
+    return id =>
       Widget.wire (id, component.wiring) (props => {
         const Component = component;
-        const newProps = Object.assign ({}, otherProps, props);
         if (props.id) {
           if (component.isForm) {
             let formInitialState = {};
@@ -77,14 +76,14 @@ class Widget extends React.PureComponent {
             );
             return (
               <LocalForm
-                onSubmit={values => component.handleFormSubmit (values)}
+                onSubmit={values => console.dir (values)}
                 initialState={formInitialState}
               >
-                <Component {...newProps} />
+                <Component {...props} />
               </LocalForm>
             );
           }
-          return <Component {...newProps} />;
+          return <Component {...props} />;
         }
         return <span>requesting for {id}</span>;
       });

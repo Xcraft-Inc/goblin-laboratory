@@ -8,7 +8,7 @@ const goblinName = path.basename (module.parent.filename, '.js');
 // Default route/view mapping
 // /mountpoint/:context/:workitem/
 const defaultRoutes = {
-  tabs: '/content/:context',
+  tabs: '/before-content/:context',
   workitem: '/content/:context/:workitem',
   tasks: '/task-bar/:context',
   contexts: '/top-bar/',

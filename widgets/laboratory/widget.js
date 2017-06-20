@@ -1,6 +1,5 @@
 import React from 'react';
 import Widget from 'laboratory/widget';
-import {ConnectedRouter} from 'react-router-redux';
 import {Route} from 'react-router';
 import Container from 'gadgets/container/widget';
 import Button from 'gadgets/button/widget';
@@ -13,6 +12,10 @@ class Laboratory extends Widget {
     super (props);
   }
 
+  shouldComponentUpdate (nP) {
+    return nP.location !== this.props.location;
+  }
+
   static get wiring () {
     return {
       id: 'id',
@@ -21,12 +24,13 @@ class Laboratory extends Widget {
   }
 
   render () {
-    const {id, history, routesMap} = this.props;
+    const {id, routesMap} = this.props;
     const routes = {
-      '/': [],
-      '/task-bar/': [],
-      '/top-bar/': [],
-      '/content/': [],
+      '/': {},
+      '/task-bar/': {},
+      '/top-bar/': {},
+      '/before-content/': {},
+      '/content/': {},
     };
 
     routesMap.select ((k, v) => {
@@ -37,75 +41,59 @@ class Laboratory extends Widget {
         mount = res[1];
       }
       if (routes[mount]) {
-        routes[mount].push ({path: v.replace (mount, '/'), component: k});
+        routes[mount] = {path: v.replace (mount, '/'), component: k};
       } else {
         console.warn (`Invalid mount point ${mount} for ${k}`);
       }
     });
 
+    console.log ('RENDERING LABORATORY');
     return (
-      <ConnectedRouter history={history}>
-        <Container kind="root">
-          <Container kind="left-bar">
-            <Container kind="task-bar">
-              <Button
-                text-transform="none"
-                tooltip="Changer de mandat"
-                kind="task-logo"
-              />
-              {routes['/task-bar/'].map ((route, i) => {
-                return (
-                  <Route
-                    key={i}
-                    path={route.path}
-                    labId={this.props.id}
-                    component={viewImporter (route.component)}
-                  />
-                );
-              })}
-            </Container>
-          </Container>
-          <Container kind="right">
-            <Container kind="content">
-              <Container kind="top-bar">
-                {routes['/top-bar/'].map ((route, i) => {
-                  return (
-                    <Route
-                      key={i}
-                      path={route.path}
-                      labId={this.props.id}
-                      component={viewImporter (route.component)}
-                    />
-                  );
-                })}
-              </Container>
-              {routes['/content/'].map ((route, i) => {
-                return (
-                  <Route
-                    key={i}
-                    path={route.path}
-                    labId={this.props.id}
-                    component={viewImporter (route.component)}
-                  />
-                );
-              })}
-            </Container>
-            {routes['/'].map ((route, i) => {
-              return (
-                <Route
-                  key={i}
-                  path={route.path}
-                  labId={this.props.id}
-                  component={viewImporter (route.component)}
-                />
-              );
-            })}
-            <Container kind="footer">
-              <span>{id}</span>
-            </Container>
+      <Container kind="root">
+        <Container kind="left-bar">
+          <Container kind="task-bar">
+            <Button
+              text-transform="none"
+              tooltip="Changer de mandat"
+              kind="task-logo"
+            />
+            <Route
+              path={routes['/task-bar/'].path}
+              labId={this.props.id}
+              component={viewImporter (routes['/task-bar/'].component)}
+            />
           </Container>
         </Container>
-      </ConnectedRouter>
+        <Container kind="right">
+          <Container kind="content">
+            <Container kind="top-bar">
+              <Route
+                path={routes['/top-bar/'].path}
+                labId={this.props.id}
+                component={viewImporter (routes['/top-bar/'].component)}
+              />
+            </Container>
+            <Route
+              path={routes['/before-content/'].path}
+              labId={this.props.id}
+              component={viewImporter (routes['/before-content/'].component)}
+            />
+            <Route
+              path={routes['/content/'].path}
+              labId={this.props.id}
+              component={viewImporter (routes['/content/'].component)}
+            />
+          </Container>
+          <Route
+            path={routes['/'].path}
+            labId={this.props.id}
+            component={viewImporter (routes['/'].component)}
+          />
+          <Container kind="footer">
+            <span>{id}</span>
+          </Container>
+        </Container>
+      </Container>
     );
   }
 }
