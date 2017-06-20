@@ -58,7 +58,7 @@ class Laboratory extends Widget {
                   <Route
                     key={i}
                     path={route.path}
-                    labId={props.id}
+                    labId={this.props.id}
                     component={viewImporter (route.component)}
                   />
                 );
