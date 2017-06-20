@@ -65,8 +65,6 @@ ipcRenderer.on ('NEW_BACKEND_STATE', (event, transitState) => {
         return true;
       })
     ) {
-      console.log ('Starting laboratory:');
-      console.dir (labId);
       main (Root);
       rootMounted = true;
       ipcRenderer.send ('LABORATORY_READY', labId, wid);

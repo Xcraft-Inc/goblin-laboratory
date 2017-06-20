@@ -47,7 +47,6 @@ class Laboratory extends Widget {
       }
     });
 
-    console.log ('RENDERING LABORATORY');
     return (
       <Container kind="root">
         <Container kind="left-bar">
