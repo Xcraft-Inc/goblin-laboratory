@@ -1,5 +1,4 @@
 require ('react-hot-loader/patch');
-
 if (process.env.NODE_ENV === 'development') {
   require ('./devtools.js');
 }
@@ -10,13 +9,20 @@ import ReactDOM from 'react-dom';
 import {AppContainer} from 'react-hot-loader';
 import Root from 'laboratory/root';
 import {Theme} from 'electrum-theme';
-import createHistory from 'history/createBrowserHistory';
+import createHistory from 'history/createHashHistory';
 import {push} from 'react-router-redux';
 
 const history = createHistory ();
 //import Hello from 'venture-trade-company/hello';
 import configureStore from 'laboratory/store/store';
 const store = configureStore (window.__INITIAL_STATE__, history);
+
+//LYDIA TEST PURPOSE
+import LydiaProxy from 'lydia-workflow/lydia-proxy/widget';
+let res = null;
+/*LydiaProxy ('http://localhost:7777/', methods => {
+  res = methods;
+}).then (hub => hub.send ('Ping', 'Hello from goblins!'));*/
 
 const ipcRenderer = require ('electron').ipcRenderer;
 ipcRenderer.on ('PUSH_PATH', (event, path) => {

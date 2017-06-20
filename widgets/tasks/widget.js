@@ -8,11 +8,9 @@ class Tasks extends Widget {
     super (props, context);
   }
 
-  widget () {
-    return props => {
-      const context = props.context;
-      return <Container kind="task-bar" />;
-    };
+  render () {
+    const context = this.props.context;
+    return <Container kind="task-bar" />;
   }
 }
 

@@ -8,14 +8,12 @@ class List extends Widget {
   }
 
   get items () {
-    return props => {
-      const {type, length, item} = props;
-      return <ReactList length={length} type={type} itemRenderer={item} />;
-    };
+    const {type, length, item} = this.props;
+    return <ReactList length={length} type={type} itemRenderer={item} />;
   }
 
-  widget () {
-    return () => <div>Missing widget implementation</div>;
+  render () {
+    return <div>Missing widget implementation</div>;
   }
 }
 

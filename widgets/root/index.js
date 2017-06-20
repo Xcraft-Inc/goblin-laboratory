@@ -2,7 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import {Provider} from 'react-redux';
+
+import Widget from 'laboratory/widget/index';
 import Laboratory from '../laboratory/widget';
+const Wired = Widget.Wired (Laboratory);
 
 class Root extends React.PureComponent {
   getChildContext () {
@@ -25,9 +28,10 @@ class Root extends React.PureComponent {
 
   render () {
     const {store, history, labId} = this.props;
+    const WiredLaboratory = Wired (labId, this.props);
     return (
       <Provider store={store}>
-        <Laboratory id={labId} history={history} />
+        <WiredLaboratory />
       </Provider>
     );
   }

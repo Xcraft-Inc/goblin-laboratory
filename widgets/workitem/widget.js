@@ -11,15 +11,13 @@ class WorkItem extends Widget {
     super (props, context);
   }
 
-  widget () {
-    return props => {
-      const {context, workitem} = props;
-      if (!workitem) {
-        return null;
-      }
-      const WorkItemView = viewImporter (workitem);
-      return <WorkItemView />;
-    };
+  render () {
+    const {context, workitem} = this.props;
+    if (!workitem) {
+      return null;
+    }
+    const WorkItemView = viewImporter (workitem);
+    return <WorkItemView />;
   }
 }
 

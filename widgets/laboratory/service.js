@@ -104,7 +104,10 @@ Goblin.registerQuest (goblinName, 'create', function* (quest, url, routes) {
   quest.goblin.defer (contexts.delete);
   quest.goblin.setX ('contexts', contexts);
   quest.goblin.defer (() => quest.goblin.delX ('contexts'));
-
+  quest.cmd ('laboratory.add', {
+    id: quest.goblin.id,
+    widgetId: `contexts@default`,
+  });
   // CREATE DEFAULT TABS MANAGER
   const tabs = yield quest.create ('tabs', {
     id: `tabs@default`,
@@ -112,7 +115,10 @@ Goblin.registerQuest (goblinName, 'create', function* (quest, url, routes) {
   quest.goblin.defer (tabs.delete);
   quest.goblin.setX ('tabs', tabs);
   quest.goblin.defer (() => quest.goblin.delX ('tabs'));
-
+  quest.cmd ('laboratory.add', {
+    id: quest.goblin.id,
+    widgetId: `tabs@default`,
+  });
   quest.log.info (`Laboratory ${quest.goblin.id} created!`);
   return quest.goblin.id;
 });

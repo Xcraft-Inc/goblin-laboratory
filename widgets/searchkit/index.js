@@ -28,39 +28,37 @@ class SearchKit extends Widget {
     );
   }
 
-  widget () {
-    return props => {
-      const {index, fields} = props;
-      this.searchkit = new SearchkitManager (`http://localhost:9200/${index}/`);
-      this.searchkit.setQueryProcessor (q => {
-        if (!q.query) {
-          return q;
-        }
-        const query = {
-          query: {
-            multi_match: {
-              query: q.query.simple_query_string.query,
-              fields: q.query.simple_query_string.fields,
-            },
+  render () {
+    const {index, fields} = this.props;
+    this.searchkit = new SearchkitManager (`http://localhost:9200/${index}/`);
+    this.searchkit.setQueryProcessor (q => {
+      if (!q.query) {
+        return q;
+      }
+      const query = {
+        query: {
+          multi_match: {
+            query: q.query.simple_query_string.query,
+            fields: q.query.simple_query_string.fields,
           },
-        };
-        console.dir (query);
-        return query;
-      });
-      return (
-        <SearchkitProvider searchkit={this.searchkit}>
-          <div>
-            <SearchBox searchOnChange={true} queryFields={fields} />
-            <HitsStats />
-            <Hits
-              hitsPerPage={50}
-              listComponent={this.renderHits}
-              highlightFields={fields}
-            />
-          </div>
-        </SearchkitProvider>
-      );
-    };
+        },
+      };
+      console.dir (query);
+      return query;
+    });
+    return (
+      <SearchkitProvider searchkit={this.searchkit}>
+        <div>
+          <SearchBox searchOnChange={true} queryFields={fields} />
+          <HitsStats />
+          <Hits
+            hitsPerPage={50}
+            listComponent={this.renderHits}
+            highlightFields={fields}
+          />
+        </div>
+      </SearchkitProvider>
+    );
   }
 }
 
