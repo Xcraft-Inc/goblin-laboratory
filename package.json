@@ -29,6 +29,7 @@
     "react-redux": "^5.0.4",
     "react-redux-form": "^1.11.2",
     "react-router": "^4.1.1",
+    "react-router-dom": "^4.1.1",
     "react-router-redux": "^5.0.0-alpha.6",
     "recompose": "^0.23.3",
     "redux-form": "^6.7.0",
