@@ -36,6 +36,60 @@ class Widget extends React.PureComponent {
       .toLowerCase ();
   }
 
+  static wire (connectId, wires) {
+    return connect (
+      state => {
+        let mapState = {};
+        if (state.backend) {
+          if (wires) {
+            const shredded = new Shredder (state.backend);
+            Object.keys (wires).forEach (wire => {
+              const val = shredded.get (`${connectId}.${wires[wire]}`, null);
+              if (val !== undefined) {
+                mapState[wire] = val;
+              }
+            });
+          }
+          return mapState;
+        }
+        if (this.isForm) {
+          mapState.initialValues = mapState;
+        }
+
+        return {};
+      },
+      null,
+      null,
+      {pure: true}
+    );
+  }
+
+  static Wired (component) {
+    return (id, otherProps) =>
+      Widget.wire (id, component.wiring) (props => {
+        const Component = component;
+        const newProps = Object.assign ({}, otherProps, props);
+        if (props.id) {
+          if (component.isForm) {
+            let formInitialState = {};
+            Object.keys (component.wiring).forEach (
+              k => (formInitialState[k] = props[k])
+            );
+            return (
+              <LocalForm
+                onSubmit={values => component.handleFormSubmit (values)}
+                initialState={formInitialState}
+              >
+                <Component {...newProps} />
+              </LocalForm>
+            );
+          }
+          return <Component {...newProps} />;
+        }
+        return <span>requesting for {id}</span>;
+      });
+  }
+
   cmd (cmd, args) {
     args.labId = this.context.labId;
     const action = {
@@ -82,79 +136,27 @@ class Widget extends React.PureComponent {
     this.context.dispatch (replace (path));
   }
 
-  wire (connectId, wires) {
-    return connect (
-      state => {
-        let mapState = {};
-        if (state.backend) {
-          if (wires) {
-            const shredded = new Shredder (state.backend);
-            Object.keys (wires).forEach (wire => {
-              const val = shredded.get (`${connectId}.${wires[wire]}`, null);
-              if (val !== undefined) {
-                mapState[wire] = val;
-              }
-            });
-          }
-          return mapState;
-        }
-        if (this.isForm) {
-          mapState.initialValues = mapState;
-        }
-
-        return {};
-      },
-      null,
-      null,
-      {pure: true}
-    );
-  }
-
-  wired (connectId, otherProps) {
-    let Widget = this.widget ();
-    return this.wire (connectId, this.wiring) (props => {
-      const newProps = Object.assign ({}, otherProps, props);
-      this.mergedProps = newProps;
-      if (props.id) {
-        this.styles = this.getStyles (newProps);
-        if (this.isForm) {
-          let formInitialState = {};
-          Object.keys (this.wiring).forEach (
-            k => (formInitialState[k] = props[k])
-          );
-
-          return (
-            <LocalForm
-              onSubmit={values => this.handleFormSubmit (values)}
-              initialState={formInitialState}
-            >
-              <Widget {...newProps} />
-            </LocalForm>
-          );
-        }
-        return Widget (newProps);
-      }
-      return <span>requesting for {this.props.id}</span>;
-    });
-  }
-
   get myStyle () {
     return stylesImporter (this.name);
   }
 
-  read (key) {
-    if (this.props.id) {
-      return this.mergedProps[key];
+  set styles (value) {
+    this._styles = value;
+  }
+
+  get styles () {
+    if (!this._styles) {
+      this._styles = this.getStyles (this.props);
     }
+    return this._styles;
+  }
+
+  read (key) {
     return this.props[key];
   }
 
   useMyStyle (styleProps, theme) {
     return this.myStyle (theme, styleProps);
-  }
-
-  useStyle (name, styleProps, theme) {
-    return stylesImporter (name) (theme, styleProps);
   }
 
   getStyles (props) {
@@ -173,34 +175,10 @@ class Widget extends React.PureComponent {
   handleFormSubmit (values) {
     this.do ('submit', values);
   }
-
-  componentWillMount () {
-    if (this.props.id) {
-      const state = this.context.store.getState ();
-      if (state.backend.has (this.props.id)) {
-        return;
-      }
-      this.cmd ('laboratory.add', {
-        id: this.context.labId,
-        widgetId: this.props.id,
-      });
-    }
-  }
-
-  render () {
-    if (this.props.id) {
-      const WiredWidget = this.wired (this.props.id, this.props);
-      return <WiredWidget />;
-    } else {
-      this.styles = this.getStyles (this.props);
-      const Widget = this.widget ();
-      return <Widget {...this.props} />;
-    }
-  }
 }
 
 Widget.propTypes = {
-  id: PropTypes.string
+  id: PropTypes.string,
 };
 
 export default Widget;
