@@ -1,20 +1,29 @@
 import React from 'react';
-import WorkItem from 'laboratory/workitem/widget';
-import View from 'laboratory/view';
+import Widget from 'laboratory/widget';
+import Container from 'gadgets/container/widget';
+import Button from 'gadgets/button/widget';
+import Label from 'gadgets/label/widget';
+import importer from 'laboratory/importer/';
 
-class WorkItemView extends View {
+const viewImporter = importer ('view');
+class WorkItem extends Widget {
+  constructor (props, context) {
+    super (props, context);
+  }
+
   shouldComponentUpdate (nP) {
     return nP.match.params.workitem !== this.props.match.params.workitem;
   }
+
   render () {
     const {match} = this.props;
-    return (
-      <WorkItem
-        workitem={match.params.workitem}
-        context={match.params.context}
-      />
-    );
+    const workitem = match.params.workitem;
+    if (!workitem) {
+      return null;
+    }
+    const WorkItemView = viewImporter (workitem);
+    return <WorkItemView />;
   }
 }
 
-export default WorkItemView;
+export default WorkItem;

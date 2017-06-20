@@ -1,14 +1,45 @@
 import React from 'react';
-import Widget from 'laboratory/widget/index';
-import Contexts from 'laboratory/contexts/widget';
-const Wired = Widget.Wired (Contexts);
-const WiredContext = Wired ('contexts@default');
-import View from 'laboratory/view';
+import Button from 'gadgets/button/widget';
+import Widget from 'laboratory/widget';
+import Container from 'gadgets/container/widget';
+const Wired = Widget.Wired (Button);
 
-class ContextsView extends View {
+class Contexts extends Widget {
+  constructor (props, context) {
+    super (props, context);
+  }
+
+  static get wiring () {
+    return {
+      id: 'id',
+      contexts: 'contexts',
+      current: 'current',
+    };
+  }
+
+  goToContext (contextId) {
+    this.do ('set-current', {contextId});
+    this.navToContext (contextId);
+  }
+
   render () {
-    return <WiredContext />;
+    const {contexts, current} = this.props;
+    return (
+      <Container kind="main-tab">
+        {contexts.map ((v, k) => {
+          const WiredButton = Wired (k);
+          return (
+            <WiredButton
+              key={k}
+              id={k}
+              onClick={() => this.goToContext (v)}
+              active={current === v ? 'true' : 'false'}
+            />
+          );
+        })}
+      </Container>
+    );
   }
 }
 
-export default ContextsView;
+export default Widget.Wired (Contexts) ('contexts@default');
