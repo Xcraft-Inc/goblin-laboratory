@@ -44,8 +44,8 @@ class Tabs extends Widget {
               <WiredButton
                 key={k}
                 id={k}
-                onClick={() => this.goToWorkItem (context, v)}
-                active={currentTab === v ? 'true' : 'false'}
+                onClick={() => this.goToWorkItem (context, v.get ('view'))}
+                active={currentTab === v.get ('workItemId') ? 'true' : 'false'}
               />
             );
           })}

@@ -22,12 +22,17 @@ const logicHandlers = {
     const tabId = action.get ('tabId');
     const contextId = action.get ('contextId');
     const current = state.get (`current.${contextId}`, null);
+    const tab = {
+      id: tabId,
+      view: action.get ('view'),
+      workItemId: action.get ('workItemId'),
+    };
     if (!current) {
       return state
         .set (`current.${contextId}`, action.get ('workItemId'))
-        .set (`tabs.${contextId}.${tabId}`, action.get ('workItemId'));
+        .set (`tabs.${contextId}.${tabId}`, tab);
     }
-    return state.set (`tabs.${contextId}.${tabId}`, action.get ('workItemId'));
+    return state.set (`tabs.${contextId}.${tabId}`, tab);
   },
   'set-current': (state, action) => {
     const wid = action.get ('workItemId');
@@ -67,6 +72,7 @@ Goblin.registerQuest (goblinName, 'add', function* (
   quest,
   contextId,
   name,
+  view,
   workItemId
 ) {
   const tab = yield quest.create ('button', {
@@ -74,7 +80,7 @@ Goblin.registerQuest (goblinName, 'add', function* (
     text: name,
     kind: 'view-tab',
   });
-  quest.do ({tabId: tab.id, contextId, name, workItemId});
+  quest.do ({tabId: tab.id, contextId, view, name, workItemId});
   quest.goblin.defer (tab.delete);
   return tab.id;
 });

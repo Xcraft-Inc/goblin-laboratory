@@ -137,6 +137,7 @@ Goblin.registerQuest (goblinName, 'add-tab', function* (
   quest,
   name,
   contextId,
+  view,
   workItemId
 ) {
   const state = quest.goblin.getState ();
@@ -145,7 +146,7 @@ Goblin.registerQuest (goblinName, 'add-tab', function* (
     quest.dispatch ('setCurrentWorkItemByContext', {contextId, workItemId});
   }
   const tabs = quest.goblin.getX ('tabs');
-  const widgetId = yield tabs.add ({name, contextId, workItemId});
+  const widgetId = yield tabs.add ({name, contextId, view, workItemId});
   quest.cmd ('laboratory.add', {id: quest.goblin.id, widgetId});
 });
 
