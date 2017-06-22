@@ -27,6 +27,9 @@ const getter = kind => name => {
 export default kind => {
   cache[kind] = {};
   switch (kind) {
+    case 'tasks':
+      importAll (kind, require.context ('../../../', true, /\/tasks\.js$/));
+      break;
     case 'view':
       importAll (kind, require.context ('../../../', true, /\/view\.js$/));
       break;
