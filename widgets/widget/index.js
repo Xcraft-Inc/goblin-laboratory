@@ -43,6 +43,9 @@ class Widget extends React.PureComponent {
         if (state.backend) {
           if (wires) {
             const shredded = new Shredder (state.backend);
+            if (!shredded.has (connectId)) {
+              return {_no_props_: true};
+            }
             Object.keys (wires).forEach (wire => {
               const val = shredded.get (`${connectId}.${wires[wire]}`, null);
               if (val !== undefined) {
@@ -68,24 +71,27 @@ class Widget extends React.PureComponent {
     return id =>
       Widget.wire (id, component.wiring) (props => {
         const Component = component;
-        if (props.id) {
-          if (component.isForm) {
-            let formInitialState = {};
-            Object.keys (component.wiring).forEach (
-              k => (formInitialState[k] = props[k])
-            );
-            return (
-              <LocalForm
-                onSubmit={values => console.dir (values)}
-                initialState={formInitialState}
-              >
-                <Component {...props} />
-              </LocalForm>
-            );
-          }
-          return <Component {...props} />;
+        if (props._no_props_) {
+          console.warn (
+            `No props wired for component ${component.name} with id ${id}`
+          );
+          return null;
         }
-        return <span>requesting for {id}</span>;
+        if (component.isForm) {
+          let formInitialState = {};
+          Object.keys (component.wiring).forEach (
+            k => (formInitialState[k] = props[k])
+          );
+          return (
+            <LocalForm
+              onSubmit={values => console.dir (values)}
+              initialState={formInitialState}
+            >
+              <Component {...props} />
+            </LocalForm>
+          );
+        }
+        return <Component {...props} />;
       });
   }
 
@@ -122,7 +128,7 @@ class Widget extends React.PureComponent {
   }
 
   navToWorkItem (contextId, view, workItemId) {
-    this.nav (`/${contextId}/${view}/${workItemId}`);
+    this.nav (`/${contextId}/${view}?wid=${workItemId}`);
     this.cmd ('laboratory.nav-to-workitem', {
       id: this.context.labId,
       contextId,

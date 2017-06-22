@@ -21,11 +21,6 @@ class Tabs extends Widget {
     this.navToWorkItem (contextId, view, workItemId);
   }
 
-  shouldComponentUpdate (nP) {
-    if (nP.current !== this.props.current) return true;
-    return nP.match.params.context !== this.props.match.params.context;
-  }
-
   render () {
     const {match, current, tabs} = this.props;
     const context = match.params.context;

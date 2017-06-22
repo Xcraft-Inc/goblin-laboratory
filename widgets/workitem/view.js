@@ -8,10 +8,6 @@ class WorkItem extends Widget {
     super (props, context);
   }
 
-  shouldComponentUpdate (nP) {
-    return nP.match.params.view !== this.props.match.params.view;
-  }
-
   getParameter (search, name) {
     const query = search.substring (1);
     const vars = query.split ('&');

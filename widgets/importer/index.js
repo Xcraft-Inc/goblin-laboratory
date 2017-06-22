@@ -12,12 +12,6 @@ const importAll = (kind, r) => {
 };
 
 const getter = kind => name => {
-  if (kind === 'wired') {
-    if (!cache['widget'][name]) {
-      return null;
-    }
-    return Widget.Wired (cache['widget'][name].default);
-  }
   if (!cache[kind][name]) {
     return null;
   }

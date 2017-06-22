@@ -131,8 +131,12 @@ Goblin.registerQuest (goblinName, 'add-context', function* (
   name
 ) {
   const contexts = quest.goblin.getX ('contexts');
-  const widgetId = yield contexts.add ({contextId, name});
-  quest.cmd ('laboratory.add', {id: quest.goblin.id, widgetId});
+  const widgetId = yield contexts.add ({
+    labId: quest.goblin.id,
+    contextId,
+    name,
+  });
+  yield quest.cmd ('laboratory.add', {id: quest.goblin.id, widgetId});
 });
 
 Goblin.registerQuest (goblinName, 'add-tab', function* (
@@ -140,7 +144,8 @@ Goblin.registerQuest (goblinName, 'add-tab', function* (
   name,
   contextId,
   view,
-  workItemId
+  workItemId,
+  navigate
 ) {
   const state = quest.goblin.getState ();
   const workItem = state.get (`current.workitems.${contextId}`, null);
@@ -153,7 +158,21 @@ Goblin.registerQuest (goblinName, 'add-tab', function* (
   }
   const tabs = quest.goblin.getX ('tabs');
   const widgetId = yield tabs.add ({name, contextId, view, workItemId});
-  quest.cmd ('laboratory.add', {id: quest.goblin.id, widgetId});
+  //Add tab
+  yield quest.cmd ('laboratory.add', {id: quest.goblin.id, widgetId});
+  //Add workitem
+  yield quest.cmd ('laboratory.add', {
+    id: quest.goblin.id,
+    widgetId: workItemId,
+  });
+  if (navigate) {
+    yield quest.cmd ('laboratory.nav-to-workitem', {
+      id: quest.goblin.id,
+      contextId,
+      view,
+      workItemId,
+    });
+  }
 });
 
 Goblin.registerQuest (goblinName, 'nav-to-context', function (
@@ -176,7 +195,7 @@ Goblin.registerQuest (goblinName, 'nav-to-context', function (
   }
 });
 
-Goblin.registerQuest (goblinName, 'nav-to-workitem', function (
+Goblin.registerQuest (goblinName, 'nav-to-workitem', function* (
   quest,
   contextId,
   view,
@@ -185,10 +204,12 @@ Goblin.registerQuest (goblinName, 'nav-to-workitem', function (
 ) {
   const win = quest.goblin.getX ('window');
   quest.dispatch ('setCurrentWorkItemByContext', {contextId, view, workItemId});
+  const tabs = quest.goblin.getX ('tabs');
+  yield tabs.setCurrent ({contextId, workItemId});
   if (skipNav) {
     return;
   }
-  win.nav ({route: `/${contextId}/${view}?wid=${workItemId}`});
+  yield win.nav ({route: `/${contextId}/${view}?wid=${workItemId}`});
 });
 
 Goblin.registerQuest (goblinName, 'duplicate', function* (quest) {

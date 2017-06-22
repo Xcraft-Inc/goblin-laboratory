@@ -57,15 +57,21 @@ Goblin.registerQuest (goblinName, 'set-current', function (quest, contextId) {
   quest.do ({contextId});
 });
 
-Goblin.registerQuest (goblinName, 'add', function* (quest, contextId, name) {
+Goblin.registerQuest (goblinName, 'add', function* (
+  quest,
+  labId,
+  contextId,
+  name
+) {
+  const widgetId = `context@${contextId}`;
   const ctx = yield quest.create ('button', {
-    id: `context@${contextId}`,
+    id: widgetId,
     text: name,
     kind: 'main-tab',
   });
-  quest.do ({widgetId: ctx.id, contextId, name});
+  quest.do ({widgetId, contextId, name});
   quest.goblin.defer (ctx.delete);
-  return ctx.id;
+  return widgetId;
 });
 
 Goblin.registerQuest (goblinName, 'remove', function (quest, widgetId) {
