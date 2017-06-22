@@ -9,7 +9,7 @@ const goblinName = path.basename (module.parent.filename, '.js');
 // /mountpoint/:context/:workitem/
 const defaultRoutes = {
   tabs: '/before-content/:context',
-  workitem: '/content/:context/:workitem',
+  workitem: '/content/:context/:view',
   tasks: '/task-bar/:context',
   contexts: '/top-bar/',
 };
@@ -34,10 +34,12 @@ const logicHandlers = {
     });
   },
   setCurrentWorkItemByContext: (state, action) => {
-    return state.set (
-      `current.workitems.${action.get ('contextId')}`,
-      action.get ('workItemId')
-    );
+    return state
+      .set (
+        `current.workitems.${action.get ('contextId')}`,
+        action.get ('workItemId')
+      )
+      .set (`current.views.${action.get ('contextId')}`, action.get ('view'));
   },
   'update-feeds': (state, action) => {
     return state.set ('feeds', action.get ('feeds'));
@@ -143,7 +145,11 @@ Goblin.registerQuest (goblinName, 'add-tab', function* (
   const state = quest.goblin.getState ();
   const workItem = state.get (`current.workitems.${contextId}`, null);
   if (!workItem) {
-    quest.dispatch ('setCurrentWorkItemByContext', {contextId, workItemId});
+    quest.dispatch ('setCurrentWorkItemByContext', {
+      contextId,
+      view,
+      workItemId,
+    });
   }
   const tabs = quest.goblin.getX ('tabs');
   const widgetId = yield tabs.add ({name, contextId, view, workItemId});
@@ -156,9 +162,15 @@ Goblin.registerQuest (goblinName, 'nav-to-context', function (
 ) {
   const win = quest.goblin.getX ('window');
   const state = quest.goblin.getState ();
-  const workItem = state.get (`current.workitems.${contextId}`, null);
-  if (workItem) {
-    win.nav ({route: `/${contextId}/${workItem}`});
+  const view = state.get (`current.views.${contextId}`, null);
+
+  if (view) {
+    const workItem = state.get (`current.workitems.${contextId}`, null);
+    if (workItem) {
+      win.nav ({route: `/${contextId}/${view}?wid=${workItem}`});
+    } else {
+      win.nav ({route: `/${contextId}/${view}`});
+    }
   } else {
     win.nav ({route: `/${contextId}`});
   }
@@ -167,15 +179,16 @@ Goblin.registerQuest (goblinName, 'nav-to-context', function (
 Goblin.registerQuest (goblinName, 'nav-to-workitem', function (
   quest,
   contextId,
+  view,
   workItemId,
   skipNav
 ) {
   const win = quest.goblin.getX ('window');
-  quest.dispatch ('setCurrentWorkItemByContext', {contextId, workItemId});
+  quest.dispatch ('setCurrentWorkItemByContext', {contextId, view, workItemId});
   if (skipNav) {
     return;
   }
-  win.nav ({route: `/${contextId}/${workItemId}`});
+  win.nav ({route: `/${contextId}/${view}?wid=${workItemId}`});
 });
 
 Goblin.registerQuest (goblinName, 'duplicate', function* (quest) {

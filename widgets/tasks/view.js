@@ -11,7 +11,7 @@ class Tasks extends Widget {
   }
 
   doQuest (quest) {
-    this.cmd (quest);
+    this.cmd (quest, {});
   }
 
   render () {

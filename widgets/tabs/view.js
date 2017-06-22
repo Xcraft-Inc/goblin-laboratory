@@ -16,9 +16,9 @@ class Tabs extends Widget {
     };
   }
 
-  goToWorkItem (contextId, workItemId) {
+  goToWorkItem (contextId, view, workItemId) {
     this.do ('set-current', {contextId, workItemId});
-    this.navToWorkItem (contextId, workItemId);
+    this.navToWorkItem (contextId, view, workItemId);
   }
 
   shouldComponentUpdate (nP) {
@@ -40,12 +40,13 @@ class Tabs extends Widget {
         <Container kind="view-tab">
           {contextTabs.map ((v, k) => {
             const WiredButton = Wired (k);
+            const wid = v.get ('workItemId');
             return (
               <WiredButton
                 key={k}
                 id={k}
-                onClick={() => this.goToWorkItem (context, v.get ('view'))}
-                active={currentTab === v.get ('workItemId') ? 'true' : 'false'}
+                onClick={() => this.goToWorkItem (context, v.get ('view'), wid)}
+                active={currentTab === wid ? 'true' : 'false'}
               />
             );
           })}
