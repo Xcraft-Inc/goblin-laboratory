@@ -138,15 +138,171 @@ class Widget extends React.PureComponent {
     });
   }
 
-  navToHinter (contextId, view, workItemId, hinter) {
-    this.nav (`/${contextId}/${view}/${hinter}?wid=${workItemId}`);
-    this.cmd ('laboratory.nav-to-workitem', {
-      id: this.context.labId,
-      contextId,
-      view,
-      workItemId,
-      skipNav: true,
-    });
+  getParameter (search, name) {
+    const query = search.substring (1);
+    const vars = query.split ('&');
+    for (var i = 0; i < vars.length; i++) {
+      var pair = vars[i].split ('=');
+      if (decodeURIComponent (pair[0]) === name) {
+        return decodeURIComponent (pair[1]);
+      }
+    }
+    return null;
+  }
+
+  replaceParameter (search, name, value) {
+    let query = search.substring (1);
+    const vars = query.split ('&');
+    for (var i = 0; i < vars.length; i++) {
+      let pair = vars[i].split ('=');
+      if (decodeURIComponent (pair[0]) === name) {
+        const toReplace = `${pair[0]}=${pair[1]}`;
+        return (
+          '?' +
+          query.replace (toReplace, `${pair[0]}=${encodeURIComponent (value)}`)
+        );
+      }
+    }
+    return search;
+  }
+
+  removeParameter (search, name) {
+    let query = search.substring (1);
+    const vars = query.split ('&');
+    for (var i = 0; i < vars.length; i++) {
+      let pair = vars[i].split ('=');
+      if (decodeURIComponent (pair[0]) === name) {
+        let toReplace = `${pair[0]}=${pair[1]}`;
+        const raw = '?' + query.replace (toReplace, '');
+        if (raw.endsWith ('&')) {
+          return raw.substr (0, raw.length - 1);
+        }
+        return raw;
+      }
+    }
+    return search;
+  }
+
+  addParameter (search, name, value) {
+    return (
+      search + `&${encodeURIComponent (name)}=${encodeURIComponent (value)}`
+    );
+  }
+
+  getWorkItemId () {
+    const search = this.context.store.getState ().routing.location.search;
+    if (search) {
+      return this.getParameter (search, 'wid');
+    }
+  }
+
+  getHinterId () {
+    const search = this.context.store.getState ().routing.location.search;
+    if (search) {
+      return this.getParameter (search, 'hid');
+    }
+  }
+
+  getSelectionState (target) {
+    if (target.type !== 'text') {
+      return null;
+    }
+    return {
+      ss: target.selectionStart,
+      se: target.selectionEnd,
+      sd: target.selectionDirection,
+    };
+  }
+
+  getSelectionStateInParams () {
+    const search = this.context.store.getState ().routing.location.search;
+    if (search) {
+      return {
+        ss: this.getParameter (search, 'ss'),
+        se: this.getParameter (search, 'ss'),
+        sd: this.getParameter (search, 'sd'),
+      };
+    }
+  }
+
+  getHinterType (hinterId) {
+    let type = hinterId;
+    if (!type || type === '') {
+      return null;
+    }
+    const index = hinterId.indexOf ('@');
+    if (index !== -1) {
+      type = hinterId.substr (0, index);
+    }
+    return type;
+  }
+
+  replaceOrAddParameter (search, name, value) {
+    if (this.getParameter (search, name)) {
+      return this.replaceParameter (search, name, value);
+    } else {
+      return this.addParameter (search, name, value);
+    }
+  }
+
+  onFocusHinter (e) {
+    const hid = this.getHinterId ();
+    if (hid) {
+      if (hid === this.props.hinter) {
+        console.log (this.props.hinter);
+        console.log ('no nav needed');
+        return;
+      }
+    }
+    this.navToHinter (this.props.hinter, this.getSelectionState (e.target));
+  }
+
+  navToHinter (hinterId, selectionState) {
+    const location = this.context.store.getState ().routing.location;
+    let path = location.pathname;
+
+    if (path.split ('/').length === 4) {
+      path = path.substr (0, path.lastIndexOf ('/'));
+    }
+
+    const hinterType = this.getHinterType (hinterId);
+
+    if (!hinterType) {
+      let newSearch = this.removeParameter (location.search, 'hid');
+      newSearch = this.removeParameter (newSearch, 'ss');
+      newSearch = this.removeParameter (newSearch, 'se');
+      newSearch = this.removeParameter (newSearch, 'sd');
+      this.nav (`${path}${newSearch}`);
+      console.log (`${path}${newSearch}`);
+      return;
+    }
+
+    let newSearch = this.replaceOrAddParameter (
+      location.search,
+      'hid',
+      hinterId
+    );
+
+    if (selectionState) {
+      newSearch = this.replaceOrAddParameter (
+        newSearch,
+        'ss',
+        selectionState.ss
+      );
+      newSearch = this.replaceOrAddParameter (
+        newSearch,
+        'se',
+        selectionState.se
+      );
+      newSearch = this.replaceOrAddParameter (
+        newSearch,
+        'sd',
+        selectionState.sd
+      );
+    }
+
+    this.nav (`${path}/${hinterType}${newSearch}`);
+    console.log (`${path}/${hinterType}${newSearch}`);
   }
 
   replaceNav (path) {
