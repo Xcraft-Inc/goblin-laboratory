@@ -1,6 +1,7 @@
 import React from 'react';
 import Widget from 'laboratory/widget';
 import {Route} from 'react-router';
+import {withRouter} from 'react-router';
 import Container from 'gadgets/container/widget';
 import Button from 'gadgets/button/widget';
 import importer from '../importer/';
@@ -26,7 +27,7 @@ class Laboratory extends Widget {
   render () {
     const {id, routesMap} = this.props;
     const routes = {
-      '/': {},
+      '/hinter/': {},
       '/task-bar/': {},
       '/top-bar/': {},
       '/before-content/': {},
@@ -80,14 +81,11 @@ class Laboratory extends Widget {
             <Route
               path={routes['/content/'].path}
               labId={this.props.id}
-              component={viewImporter (routes['/content/'].component)}
+              component={withRouter (
+                viewImporter (routes['/content/'].component)
+              )}
             />
           </Container>
-          <Route
-            path={routes['/'].path}
-            labId={this.props.id}
-            component={viewImporter (routes['/'].component)}
-          />
           <Container kind="footer">
             <span>{id}</span>
           </Container>

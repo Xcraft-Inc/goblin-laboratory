@@ -138,6 +138,17 @@ class Widget extends React.PureComponent {
     });
   }
 
+  navToHinter (contextId, view, workItemId, hinter) {
+    this.nav (`/${contextId}/${view}/${hinter}?wid=${workItemId}`);
+    this.cmd ('laboratory.nav-to-workitem', {
+      id: this.context.labId,
+      contextId,
+      view,
+      workItemId,
+      skipNav: true,
+    });
+  }
+
   replaceNav (path) {
     this.context.dispatch (replace (path));
   }

@@ -10,6 +10,7 @@ const goblinName = path.basename (module.parent.filename, '.js');
 const defaultRoutes = {
   tabs: '/before-content/:context',
   workitem: '/content/:context/:view',
+  hinter: '/hinter/:context/:view/:hinter',
   tasks: '/task-bar/:context',
   contexts: '/top-bar/',
 };
