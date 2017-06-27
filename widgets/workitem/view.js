@@ -8,11 +8,7 @@ class WorkItem extends Widget {
   }
 
   render () {
-    const {params} = this.props;
-    if (!params) {
-      return null;
-    }
-    const view = params.view;
+    const {view} = this.props;
 
     if (!view) {
       return null;

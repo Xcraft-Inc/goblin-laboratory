@@ -23,8 +23,8 @@ class Contexts extends Widget {
   }
 
   render () {
-    const {params, contexts, current} = this.props;
-    if (!params) {
+    const {isDisplayed, contexts, current} = this.props;
+    if (!isDisplayed) {
       return null;
     }
     return (
@@ -34,7 +34,6 @@ class Contexts extends Widget {
           return (
             <WiredButton
               key={k}
-              id={k}
               onClick={() => this.goToContext (v)}
               active={current === v ? 'true' : 'false'}
             />

@@ -37,7 +37,7 @@ class Widget extends React.PureComponent {
       .toLowerCase ();
   }
 
-  static withRoute (path) {
+  static withRoute (path, watchedParams) {
     return connect (
       state => {
         const routing = new Shredder (state.routing);
@@ -48,7 +48,8 @@ class Widget extends React.PureComponent {
           strict: false,
         });
         return {
-          params: !match ? null : match.params,
+          isDisplayed: !!match,
+          [watchedParams]: !match ? null : match.params[watchedParams],
         };
       },
       null,
@@ -57,9 +58,9 @@ class Widget extends React.PureComponent {
     );
   }
 
-  static WithRoute (component) {
+  static WithRoute (component, watchedParams) {
     return path => {
-      return Widget.withRoute (path) (props => {
+      return Widget.withRoute (path, watchedParams) (props => {
         const Component = component;
         return <Component {...props} />;
       });
@@ -78,8 +79,12 @@ class Widget extends React.PureComponent {
             }
             Object.keys (wires).forEach (wire => {
               const val = shredded.get (`${connectId}.${wires[wire]}`, null);
-              if (val !== undefined) {
-                mapState[wire] = val;
+              if (val) {
+                if (val._isSuperReaper6000) {
+                  mapState[wire] = val.state;
+                } else {
+                  mapState[wire] = val;
+                }
               }
             });
           }
@@ -98,31 +103,11 @@ class Widget extends React.PureComponent {
   }
 
   static Wired (component) {
-    return id =>
-      Widget.wire (id, component.wiring) (props => {
-        const Component = component;
-        if (props._no_props_) {
-          console.warn (
-            `No props wired for component ${component.name} with id ${id}`
-          );
-          return null;
-        }
-        if (component.isForm) {
-          let formInitialState = {};
-          Object.keys (component.wiring).forEach (
-            k => (formInitialState[k] = props[k])
-          );
-          return (
-            <LocalForm
-              onSubmit={values => console.dir (values)}
-              initialState={formInitialState}
-            >
-              <Component {...props} />
-            </LocalForm>
-          );
-        }
-        return <Component {...props} />;
-      });
+    return id => Widget.wire (id, component.wiring) (component);
+  }
+
+  shred (state) {
+    return new Shredder (state);
   }
 
   cmd (cmd, args) {

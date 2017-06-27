@@ -15,11 +15,14 @@ class Tasks extends Widget {
   }
 
   render () {
-    const {params} = this.props;
-    if (!params) {
+    const {isDisplayed, context} = this.props;
+    if (!isDisplayed) {
       return null;
     }
-    const context = params.context;
+
+    console.log ('RENDER TASK');
+    console.dir (this.props);
+
     const contextTasks = tasksImporter (context);
     if (!contextTasks) {
       return null;

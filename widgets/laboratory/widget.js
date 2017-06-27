@@ -13,10 +13,6 @@ class Laboratory extends Widget {
     super (props);
   }
 
-  shouldComponentUpdate (nP) {
-    return nP.location !== this.props.location;
-  }
-
   static get wiring () {
     return {
       id: 'id',
@@ -34,7 +30,7 @@ class Laboratory extends Widget {
       '/content/': {},
     };
 
-    routesMap.select ((k, v) => {
+    this.shred (routesMap).select ((k, v) => {
       const ex = /^(\/.[:\-a-z]+\/).*/;
       const res = ex.exec (v);
       let mount = '/';
@@ -49,16 +45,22 @@ class Laboratory extends Widget {
     });
 
     const taskView = viewImporter (routes['/task-bar/'].component);
-    const Tasks = Widget.WithRoute (taskView) (routes['/task-bar/'].path);
+    const Tasks = Widget.WithRoute (taskView, 'context') (
+      routes['/task-bar/'].path
+    );
 
     const contentView = viewImporter (routes['/content/'].component);
-    const Content = Widget.WithRoute (contentView) (routes['/content/'].path);
+    const Content = Widget.WithRoute (contentView, 'view') (
+      routes['/content/'].path
+    );
 
     const topbarView = viewImporter (routes['/top-bar/'].component);
-    const TopBar = Widget.WithRoute (topbarView) (routes['/top-bar/'].path);
+    const TopBar = Widget.WithRoute (topbarView, 'context') (
+      routes['/top-bar/'].path
+    );
 
     const beforeView = viewImporter (routes['/before-content/'].component);
-    const BeforeContent = Widget.WithRoute (beforeView) (
+    const BeforeContent = Widget.WithRoute (beforeView, 'context') (
       routes['/before-content/'].path
     );
 

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 import {Provider} from 'react-redux';
 import {ConnectedRouter} from 'react-router-redux';
-import {withRouter} from 'react-router';
 import Widget from 'laboratory/widget/index';
 import Laboratory from '../laboratory/widget';
 const Wired = Widget.Wired (Laboratory);
@@ -29,7 +28,7 @@ class Root extends React.PureComponent {
 
   render () {
     const {store, history, labId} = this.props;
-    const WiredLaboratory = withRouter (Wired (labId));
+    const WiredLaboratory = Widget.withRoute ('/') (Wired (labId));
     return (
       <Provider store={store}>
         <ConnectedRouter history={history}>

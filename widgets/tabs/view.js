@@ -22,13 +22,12 @@ class Tabs extends Widget {
   }
 
   render () {
-    const {params, current, tabs} = this.props;
-
-    if (!params) {
+    const {isDisplayed, context, current, tabs} = this.props;
+    console.log ('RENDER TABS');
+    console.dir (this.props);
+    if (!isDisplayed) {
       return null;
     }
-
-    const context = params.context;
 
     let currentTab = null;
     if (current) {
