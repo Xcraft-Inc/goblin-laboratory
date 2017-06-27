@@ -1,6 +1,6 @@
 import path from 'path';
-import Widget from '../widget/index.js';
-let cache = {};
+
+const cache = {};
 
 const importAll = (kind, r) => {
   const files = r.keys ();
