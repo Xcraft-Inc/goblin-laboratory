@@ -23,8 +23,7 @@ class Tabs extends Widget {
 
   render () {
     const {isDisplayed, context, current, tabs} = this.props;
-    console.log ('RENDER TABS');
-    console.dir (this.props);
+
     if (!isDisplayed) {
       return null;
     }
@@ -33,6 +32,7 @@ class Tabs extends Widget {
     if (current) {
       currentTab = current.get (context, null);
     }
+
     const contextTabs = tabs.get (context, []);
     return (
       <Container kind="second-bar">

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Shredder from 'xcraft-core-shredder';
 import {push, replace} from 'react-router-redux';
 import {matchPath} from 'react-router';
-import {LocalForm, actions} from 'react-redux-form';
+import {actions} from 'react-redux-form';
 import importer from '../importer/';
 
 const stylesImporter = importer ('styles');
@@ -212,20 +212,6 @@ class Widget extends React.PureComponent {
       type = hinterId.substr (0, index);
     }
     return type;
-  }
-
-  onFocusHinter (e) {
-    e.persist ();
-    console.dir (e);
-    const hid = this.getHinterId ();
-    if (hid) {
-      if (hid === this.props.hinter) {
-        console.log (this.props.hinter);
-        console.log ('no nav needed');
-        return;
-      }
-    }
-    this.navToHinter ();
   }
 
   navToHinter () {

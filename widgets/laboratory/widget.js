@@ -1,7 +1,5 @@
 import React from 'react';
 import Widget from 'laboratory/widget';
-import {Route} from 'react-router';
-import {withRouter} from 'react-router';
 import Container from 'gadgets/container/widget';
 import Button from 'gadgets/button/widget';
 import importer from '../importer/';
