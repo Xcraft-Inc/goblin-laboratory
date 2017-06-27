@@ -11,7 +11,7 @@ const stylesImporter = importer ('styles');
 
 const jsifyPropsNames = props => {
   const jsified = {};
-  Object.keys (props).forEach (k => {
+  Object.keys (props).filter (k => k.indexOf ('-') < 0).forEach (k => {
     jsified[k.replace (/-([a-z])/g, (m, g1) => g1.toUpperCase ())] = props[k];
   });
   return jsified;
