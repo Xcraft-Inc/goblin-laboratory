@@ -19,7 +19,6 @@ const store = configureStore (window.__INITIAL_STATE__, history);
 
 const ipcRenderer = require ('electron').ipcRenderer;
 ipcRenderer.on ('PUSH_PATH', (event, path) => {
-  console.log (`Received a PUSH_PATH to ${path}`);
   store.dispatch (push (path));
 });
 
@@ -28,8 +27,6 @@ ipcRenderer.on ('DISPATCH_IN_APP', (event, action) => {
 });
 
 const wid = require ('electron').remote.getCurrentWindow ().id;
-console.log ('Init WM');
-console.log (`Sending FRONT_END_READY for window ${wid}`);
 ipcRenderer.send ('FRONT_END_READY', wid);
 
 let rootMounted = false;
@@ -37,7 +34,6 @@ let labId;
 
 // Must be the last event to subscribe because it sends the FRONT_END_READY msg
 ipcRenderer.on ('NEW_BACKEND_STATE', (event, transitState) => {
-  console.log ('Received new state from backend');
   const diff = transit.fromJSON (transitState);
 
   store.dispatch ({
