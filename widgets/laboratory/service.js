@@ -111,6 +111,7 @@ Goblin.registerQuest (goblinName, 'create', function* (quest, url, routes) {
     id: quest.goblin.id,
     widgetId: `contexts@default`,
   });
+
   // CREATE DEFAULT TABS MANAGER
   const tabs = yield quest.create ('tabs', {
     id: `tabs@default`,
@@ -124,6 +125,17 @@ Goblin.registerQuest (goblinName, 'create', function* (quest, url, routes) {
   });
   quest.log.info (`Laboratory ${quest.goblin.id} created!`);
   return quest.goblin.id;
+});
+
+Goblin.registerQuest (goblinName, 'create-hinter-for', function* (
+  quest,
+  workItemId,
+  type
+) {
+  const widgetId = `${type}-hinter@${workItemId}`;
+  const hinter = yield quest.create ('hinter', {id: widgetId, type: type});
+  yield quest.cmd ('laboratory.add', {id: quest.goblin.id, widgetId});
+  return hinter.id;
 });
 
 Goblin.registerQuest (goblinName, 'add-context', function* (
