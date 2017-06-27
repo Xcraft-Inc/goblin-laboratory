@@ -3,7 +3,8 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import Shredder from 'xcraft-core-shredder';
 import {push, replace} from 'react-router-redux';
-import {LocalForm} from 'react-redux-form';
+import {matchPath} from 'react-router';
+import {LocalForm, actions} from 'react-redux-form';
 import importer from '../importer/';
 
 const stylesImporter = importer ('styles');
@@ -34,6 +35,35 @@ class Widget extends React.PureComponent {
     return this.constructor.name
       .replace (/([a-z])([A-Z])/g, '$1-$2')
       .toLowerCase ();
+  }
+
+  static withRoute (path) {
+    return connect (
+      state => {
+        const routing = new Shredder (state.routing);
+        const pathName = routing.get ('location.pathname');
+        const match = matchPath (pathName, {
+          path,
+          exact: false,
+          strict: false,
+        });
+        return {
+          params: !match ? null : match.params,
+        };
+      },
+      null,
+      null,
+      {pure: true}
+    );
+  }
+
+  static WithRoute (component) {
+    return path => {
+      return Widget.withRoute (path) (props => {
+        const Component = component;
+        return <Component {...props} />;
+      });
+    };
   }
 
   static wire (connectId, wires) {
@@ -117,6 +147,7 @@ class Widget extends React.PureComponent {
   }
 
   nav (path) {
+    console.log (`push (${path})`);
     this.context.dispatch (push (path));
   }
 
@@ -138,7 +169,7 @@ class Widget extends React.PureComponent {
     });
   }
 
-  getParameter (search, name) {
+  _getParameter (search, name) {
     const query = search.substring (1);
     const vars = query.split ('&');
     for (var i = 0; i < vars.length; i++) {
@@ -150,57 +181,29 @@ class Widget extends React.PureComponent {
     return null;
   }
 
-  replaceParameter (search, name, value) {
-    let query = search.substring (1);
-    const vars = query.split ('&');
-    for (var i = 0; i < vars.length; i++) {
-      let pair = vars[i].split ('=');
-      if (decodeURIComponent (pair[0]) === name) {
-        const toReplace = `${pair[0]}=${pair[1]}`;
-        return (
-          '?' +
-          query.replace (toReplace, `${pair[0]}=${encodeURIComponent (value)}`)
-        );
-      }
-    }
-    return search;
-  }
-
-  removeParameter (search, name) {
-    let query = search.substring (1);
-    const vars = query.split ('&');
-    for (var i = 0; i < vars.length; i++) {
-      let pair = vars[i].split ('=');
-      if (decodeURIComponent (pair[0]) === name) {
-        let toReplace = `${pair[0]}=${pair[1]}`;
-        const raw = '?' + query.replace (toReplace, '');
-        if (raw.endsWith ('&')) {
-          return raw.substr (0, raw.length - 1);
-        }
-        return raw;
-      }
-    }
-    return search;
-  }
-
-  addParameter (search, name, value) {
-    return (
-      search + `&${encodeURIComponent (name)}=${encodeURIComponent (value)}`
-    );
-  }
-
   getWorkItemId () {
-    const search = this.context.store.getState ().routing.location.search;
+    const search = this.getRouting ().get ('location.search');
     if (search) {
-      return this.getParameter (search, 'wid');
+      return this._getParameter (search, 'wid');
+    }
+  }
+
+  getModelId () {
+    const search = this.getRouting ().get ('location.search');
+    if (search) {
+      return this._getParameter (search, 'mid');
     }
   }
 
   getHinterId () {
-    const search = this.context.store.getState ().routing.location.search;
+    const search = this.getRouting ().get ('location.search');
     if (search) {
-      return this.getParameter (search, 'hid');
+      return this._getParameter (search, 'hid');
     }
+  }
+
+  getRouting () {
+    return new Shredder (this.context.store.getState ().routing);
   }
 
   getSelectionState (target) {
@@ -212,17 +215,6 @@ class Widget extends React.PureComponent {
       se: target.selectionEnd,
       sd: target.selectionDirection,
     };
-  }
-
-  getSelectionStateInParams () {
-    const search = this.context.store.getState ().routing.location.search;
-    if (search) {
-      return {
-        ss: this.getParameter (search, 'ss'),
-        se: this.getParameter (search, 'ss'),
-        sd: this.getParameter (search, 'sd'),
-      };
-    }
   }
 
   getHinterType (hinterId) {
@@ -237,15 +229,9 @@ class Widget extends React.PureComponent {
     return type;
   }
 
-  replaceOrAddParameter (search, name, value) {
-    if (this.getParameter (search, name)) {
-      return this.replaceParameter (search, name, value);
-    } else {
-      return this.addParameter (search, name, value);
-    }
-  }
-
   onFocusHinter (e) {
+    e.persist ();
+    console.dir (e);
     const hid = this.getHinterId ();
     if (hid) {
       if (hid === this.props.hinter) {
@@ -254,59 +240,38 @@ class Widget extends React.PureComponent {
         return;
       }
     }
-    this.navToHinter (this.props.hinter, this.getSelectionState (e.target));
+    this.navToHinter ();
   }
 
-  navToHinter (hinterId, selectionState) {
-    const location = this.context.store.getState ().routing.location;
-    let path = location.pathname;
-
+  navToHinter () {
+    let path = this.getRouting ().get ('location.pathname');
+    const search = this.getRouting ().get ('location.search');
     if (path.split ('/').length === 4) {
       path = path.substr (0, path.lastIndexOf ('/'));
     }
 
-    const hinterType = this.getHinterType (hinterId);
+    const hinterType = this.getHinterType (this.props.hinter);
 
     if (!hinterType) {
-      let newSearch = this.removeParameter (location.search, 'hid');
-      newSearch = this.removeParameter (newSearch, 'ss');
-      newSearch = this.removeParameter (newSearch, 'se');
-      newSearch = this.removeParameter (newSearch, 'sd');
-      this.nav (`${path}${newSearch}`);
-      console.log (`${path}${newSearch}`);
+      this.nav (`${path}${search}`);
       return;
     }
 
-    let newSearch = this.replaceOrAddParameter (
-      location.search,
-      'hid',
-      hinterId
-    );
-
-    if (selectionState) {
-      newSearch = this.replaceOrAddParameter (
-        newSearch,
-        'ss',
-        selectionState.ss
-      );
-      newSearch = this.replaceOrAddParameter (
-        newSearch,
-        'se',
-        selectionState.se
-      );
-      newSearch = this.replaceOrAddParameter (
-        newSearch,
-        'sd',
-        selectionState.sd
-      );
-    }
-
-    this.nav (`${path}/${hinterType}${newSearch}`);
-    console.log (`${path}/${hinterType}${newSearch}`);
+    this.nav (`${path}/${hinterType}${search}`);
   }
 
   replaceNav (path) {
     this.context.dispatch (replace (path));
+  }
+
+  attachDispatch (dispatch) {
+    this.formDispatch = dispatch;
+  }
+
+  formFocus () {
+    if (this.formDispatch) {
+      this.formDispatch (actions.focus (this.props.model));
+    }
   }
 
   get myStyle () {

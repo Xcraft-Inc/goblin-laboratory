@@ -23,7 +23,10 @@ class Contexts extends Widget {
   }
 
   render () {
-    const {contexts, current} = this.props;
+    const {params, contexts, current} = this.props;
+    if (!params) {
+      return null;
+    }
     return (
       <Container kind="main-tab">
         {contexts.map ((v, k) => {

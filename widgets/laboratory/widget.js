@@ -48,6 +48,20 @@ class Laboratory extends Widget {
       }
     });
 
+    const taskView = viewImporter (routes['/task-bar/'].component);
+    const Tasks = Widget.WithRoute (taskView) (routes['/task-bar/'].path);
+
+    const contentView = viewImporter (routes['/content/'].component);
+    const Content = Widget.WithRoute (contentView) (routes['/content/'].path);
+
+    const topbarView = viewImporter (routes['/top-bar/'].component);
+    const TopBar = Widget.WithRoute (topbarView) (routes['/top-bar/'].path);
+
+    const beforeView = viewImporter (routes['/before-content/'].component);
+    const BeforeContent = Widget.WithRoute (beforeView) (
+      routes['/before-content/'].path
+    );
+
     return (
       <Container kind="root">
         <Container kind="left-bar">
@@ -57,34 +71,16 @@ class Laboratory extends Widget {
               tooltip="Changer de mandat"
               kind="task-logo"
             />
-            <Route
-              path={routes['/task-bar/'].path}
-              labId={this.props.id}
-              component={viewImporter (routes['/task-bar/'].component)}
-            />
+            <Tasks />
           </Container>
         </Container>
         <Container kind="right">
           <Container kind="content">
             <Container kind="top-bar">
-              <Route
-                path={routes['/top-bar/'].path}
-                labId={this.props.id}
-                component={viewImporter (routes['/top-bar/'].component)}
-              />
+              <TopBar />
             </Container>
-            <Route
-              path={routes['/before-content/'].path}
-              labId={this.props.id}
-              component={viewImporter (routes['/before-content/'].component)}
-            />
-            <Route
-              path={routes['/content/'].path}
-              labId={this.props.id}
-              component={withRouter (
-                viewImporter (routes['/content/'].component)
-              )}
-            />
+            <BeforeContent />
+            <Content />
           </Container>
           <Container kind="footer">
             <span>{id}</span>

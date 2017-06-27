@@ -22,8 +22,13 @@ class Tabs extends Widget {
   }
 
   render () {
-    const {match, current, tabs} = this.props;
-    const context = match.params.context;
+    const {params, current, tabs} = this.props;
+
+    if (!params) {
+      return null;
+    }
+
+    const context = params.context;
 
     let currentTab = null;
     if (current) {

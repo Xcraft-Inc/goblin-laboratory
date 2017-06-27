@@ -1,7 +1,6 @@
 import React from 'react';
 import Widget from 'laboratory/widget';
 import importer from 'laboratory/importer/';
-
 const viewImporter = importer ('view');
 class WorkItem extends Widget {
   constructor (props, context) {
@@ -9,17 +8,19 @@ class WorkItem extends Widget {
   }
 
   render () {
-    const {match} = this.props;
-    const view = match.params.view;
+    const {params} = this.props;
+    if (!params) {
+      return null;
+    }
+    const view = params.view;
 
     if (!view) {
       return null;
     }
 
     const View = viewImporter (view);
-    return (
-      <View workitem={this.getWorkItemId ()} hinterid={this.getHinterId} />
-    );
+    const wid = this.getWorkItemId ();
+    return <View workitem={wid} />;
   }
 }
 
