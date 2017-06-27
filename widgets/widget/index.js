@@ -254,10 +254,8 @@ class Widget extends React.PureComponent {
   }
 
   get styles () {
-    if (!this._styles) {
-      this._styles = this.getStyles (this.props);
-    }
-    return this._styles;
+    /* for the moment recalculate the styles each time */
+    return this.getStyles (this.props);
   }
 
   read (key) {
