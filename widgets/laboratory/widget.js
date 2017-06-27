@@ -48,7 +48,7 @@ class Laboratory extends Widget {
     );
 
     const contentView = viewImporter (routes['/content/'].component);
-    const Content = Widget.WithRoute (contentView, 'view') (
+    const Content = Widget.WithRoute (contentView, 'view', 'wid') (
       routes['/content/'].path
     );
 

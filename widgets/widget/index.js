@@ -37,19 +37,28 @@ class Widget extends React.PureComponent {
       .toLowerCase ();
   }
 
-  static withRoute (path, watchedParams) {
+  static withRoute (path, watchedParams, watchedSearchs) {
     return connect (
       state => {
         const routing = new Shredder (state.routing);
         const pathName = routing.get ('location.pathname');
+        const search = routing.get ('location.search');
         const match = matchPath (pathName, {
           path,
           exact: false,
           strict: false,
         });
+
+        let withSearch = null;
+        if (watchedSearchs) {
+          withSearch = {
+            [watchedSearchs]: Widget.GetParameter (search, watchedSearchs),
+          };
+        }
         return {
           isDisplayed: !!match,
           [watchedParams]: !match ? null : match.params[watchedParams],
+          ...withSearch,
         };
       },
       null,
@@ -58,9 +67,9 @@ class Widget extends React.PureComponent {
     );
   }
 
-  static WithRoute (component, watchedParams) {
+  static WithRoute (component, watchedParams, watchedSearchs) {
     return path => {
-      return Widget.withRoute (path, watchedParams) (props => {
+      return Widget.withRoute (path, watchedParams, watchedSearchs) (props => {
         const Component = component;
         return <Component {...props} />;
       });
@@ -132,7 +141,6 @@ class Widget extends React.PureComponent {
   }
 
   nav (path) {
-    console.log (`push (${path})`);
     this.context.dispatch (push (path));
   }
 
@@ -154,7 +162,10 @@ class Widget extends React.PureComponent {
     });
   }
 
-  _getParameter (search, name) {
+  static GetParameter (search, name) {
+    if (!search) {
+      return null;
+    }
     const query = search.substring (1);
     const vars = query.split ('&');
     for (var i = 0; i < vars.length; i++) {
@@ -169,21 +180,21 @@ class Widget extends React.PureComponent {
   getWorkItemId () {
     const search = this.getRouting ().get ('location.search');
     if (search) {
-      return this._getParameter (search, 'wid');
+      return Widget.GetParameter (search, 'wid');
     }
   }
 
   getModelId () {
     const search = this.getRouting ().get ('location.search');
     if (search) {
-      return this._getParameter (search, 'mid');
+      return Widget.GetParameter (search, 'mid');
     }
   }
 
   getHinterId () {
     const search = this.getRouting ().get ('location.search');
     if (search) {
-      return this._getParameter (search, 'hid');
+      return Widget.GetParameter (search, 'hid');
     }
   }
 

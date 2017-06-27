@@ -8,14 +8,13 @@ class WorkItem extends Widget {
   }
 
   render () {
-    const {view} = this.props;
+    const {view, wid} = this.props;
 
     if (!view) {
       return null;
     }
 
     const View = viewImporter (view);
-    const wid = this.getWorkItemId ();
     return <View workitem={wid} />;
   }
 }
