@@ -17,6 +17,7 @@ class GenericHinter extends Widget {
       title: 'title',
       glyph: 'glyph',
       rows: 'rows',
+      query: 'query',
     };
   }
 

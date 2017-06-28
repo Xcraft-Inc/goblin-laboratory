@@ -17,7 +17,11 @@ const logicHandlers = {
       title: action.get ('title'),
       glyph: action.get ('glyph'),
       rows: [],
+      query: '',
     });
+  },
+  search: (state, action) => {
+    return state.set ('query', action.get ('query'));
   },
   delete: state => {
     return state.set ('', {});
@@ -36,6 +40,10 @@ Goblin.registerQuest (goblinName, 'create', function (
 ) {
   quest.do ({id, type, title, glyph, kind});
   return quest.goblin.id;
+});
+
+Goblin.registerQuest (goblinName, 'search', function (quest, query) {
+  quest.do ({query});
 });
 
 Goblin.registerQuest (goblinName, 'delete', function (quest, id) {
