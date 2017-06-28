@@ -12,9 +12,9 @@ class Form extends Widget {
     this.formDispatch = dispatch;
   }
 
-  formFocus () {
+  formFocus (model) {
     if (this.formDispatch) {
-      this.formDispatch (actions.focus (this.props.model));
+      this.formDispatch (actions.focus (model));
     }
   }
 
