@@ -8,11 +8,17 @@ import importer from '../importer/';
 
 const stylesImporter = importer ('styles');
 
+const hashStyles = {};
+
 const jsifyPropsNames = props => {
   const jsified = {};
-  Object.keys (props).filter (k => k.indexOf ('-') < 0).forEach (k => {
-    jsified[k.replace (/-([a-z])/g, (m, g1) => g1.toUpperCase ())] = props[k];
-  });
+  Object.keys (props)
+    .filter (
+      (k, v) => v !== undefined && k.indexOf ('-') < 0 && k !== 'children'
+    )
+    .forEach (k => {
+      jsified[k.replace (/-([a-z])/g, (m, g1) => g1.toUpperCase ())] = props[k];
+    });
   return jsified;
 };
 
@@ -271,7 +277,17 @@ class Widget extends React.PureComponent {
   }
 
   useMyStyle (styleProps, theme) {
-    return this.myStyle (theme, styleProps);
+    if (!hashStyles[this.name]) {
+      hashStyles[this.name] = {};
+    }
+    if (!hashStyles[this.name][theme._name]) {
+      hashStyles[this.name][theme._name] = {};
+    }
+    const h = JSON.stringify (styleProps); //hash (styleProps);
+    if (!hashStyles[this.name][theme._name][h]) {
+      hashStyles[this.name][theme._name][h] = this.myStyle (theme, styleProps);
+    }
+    return hashStyles[this.name][theme._name][h];
   }
 
   getStyles (props) {
