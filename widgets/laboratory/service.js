@@ -130,11 +130,37 @@ Goblin.registerQuest (goblinName, 'create', function* (quest, url, routes) {
 Goblin.registerQuest (goblinName, 'create-hinter-for', function* (
   quest,
   workItemId,
-  type
+  type,
+  title,
+  glyph,
+  kind
 ) {
-  const widgetId = `${type}-hinter@${workItemId}`;
-  const hinter = yield quest.create ('hinter', {id: widgetId, type: type});
-  yield quest.cmd ('laboratory.add', {id: quest.goblin.id, widgetId});
+  const widgetId = workItemId ? `${type}-hinter@${workItemId}` : null;
+
+  if (!type) {
+    throw new Error ('Hinter type required');
+  }
+
+  if (!kind) {
+    kind = 'list';
+  }
+
+  if (!title) {
+    title = type;
+  }
+
+  const hinter = yield quest.create ('hinter', {
+    id: widgetId,
+    type,
+    title,
+    glyph,
+    kind,
+  });
+
+  yield quest.cmd ('laboratory.add', {
+    id: quest.goblin.id,
+    widgetId: hinter.id,
+  });
   return hinter.id;
 });
 
