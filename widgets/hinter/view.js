@@ -19,4 +19,6 @@ class HinterView extends Widget {
   }
 }
 
-export default HinterView;
+export default Widget.WithRoute (HinterView, 'hinter') (
+  '/:context/:view/:hinter'
+);

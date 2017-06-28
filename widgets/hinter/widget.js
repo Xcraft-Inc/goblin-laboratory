@@ -1,27 +1,48 @@
 import React from 'react';
 import Widget from 'laboratory/widget';
 import importer from 'laboratory/importer/';
+import Hinter from 'gadgets/hinter/widget';
 const widgetImporter = importer ('widget');
 
-class Hinter extends Widget {
-  constructor (props, context) {
-    super (props, context);
+class GenericHinter extends Widget {
+  constructor (props) {
+    super (props);
   }
 
   static get wiring () {
     return {
       id: 'id',
       type: 'type',
+      kind: 'kind',
+      title: 'title',
+      glyph: 'glyph',
+      rows: 'rows',
     };
   }
 
   render () {
-    const {id, type} = this.props;
-    const ResultView = widgetImporter (`${type}-hinter`);
-    const wireResultView = Widget.Wired (ResultView);
-    const WiredResultView = wireResultView (id);
-    return <WiredResultView />;
+    const {id, type, kind, title, glyph, rows} = this.props;
+
+    if (!id) {
+      return null;
+    }
+
+    const DedicatedWidget = widgetImporter (`${type}-hinter`);
+    if (DedicatedWidget) {
+      const wireDedicatedHinter = Widget.Wired (DedicatedWidget);
+      const WiredDedicatedWidget = wireDedicatedHinter (id);
+      return <WiredDedicatedWidget />;
+    } else {
+      return (
+        <Hinter
+          kind={kind}
+          title-text={title}
+          title-glyph={glyph}
+          rows={rows}
+        />
+      );
+    }
   }
 }
 
-export default Hinter;
+export default GenericHinter;

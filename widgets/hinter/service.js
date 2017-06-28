@@ -13,6 +13,10 @@ const logicHandlers = {
     return state.set ('', {
       id: id,
       type: action.get ('type'),
+      kind: action.get ('kind'),
+      title: action.get ('title'),
+      glyph: action.get ('glyph'),
+      rows: [],
     });
   },
   delete: state => {
@@ -22,8 +26,15 @@ const logicHandlers = {
 
 // Register quest's according rc.json
 
-Goblin.registerQuest (goblinName, 'create', function (quest, id, type) {
-  quest.do ({id, type});
+Goblin.registerQuest (goblinName, 'create', function (
+  quest,
+  id,
+  type,
+  title,
+  glyph,
+  kind
+) {
+  quest.do ({id, type, title, glyph, kind});
   return quest.goblin.id;
 });
 
