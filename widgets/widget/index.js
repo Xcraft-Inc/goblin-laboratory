@@ -6,6 +6,7 @@ import {push, replace} from 'react-router-redux';
 import {matchPath} from 'react-router';
 import {actions} from 'react-redux-form';
 import importer from '../importer/';
+import _ from 'lodash';
 
 const stylesImporter = importer ('styles');
 
@@ -20,6 +21,7 @@ const jsifyPropsNames = props => {
 class Widget extends React.PureComponent {
   constructor (cProps) {
     super (cProps);
+    this._forms = {};
   }
 
   static get contextTypes () {
@@ -37,6 +39,7 @@ class Widget extends React.PureComponent {
       .toLowerCase ();
   }
 
+  ///////////STATE MGMT:
   static withRoute (path, watchedParams, watchedSearchs) {
     return connect (
       state => {
@@ -119,6 +122,8 @@ class Widget extends React.PureComponent {
     return new Shredder (state);
   }
 
+  ///////////GOBLIN BUS:
+
   cmd (cmd, args) {
     args.labId = this.context.labId;
     const action = {
@@ -139,6 +144,8 @@ class Widget extends React.PureComponent {
       Object.assign ({id: this.props.id}, args)
     );
   }
+
+  ///////////NAVIGATION:
 
   nav (path) {
     this.context.dispatch (push (path));
@@ -246,6 +253,8 @@ class Widget extends React.PureComponent {
     this.context.dispatch (replace (path));
   }
 
+  ///////////FORMS:
+
   attachDispatch (dispatch) {
     this.formDispatch = dispatch;
   }
@@ -255,6 +264,72 @@ class Widget extends React.PureComponent {
       this.formDispatch (actions.focus (this.props.model));
     }
   }
+
+  attachFormDispatch (formDispatch) {
+    this.formDispatch = formDispatch;
+  }
+
+  handleFormSubmit (values) {
+    this.do ('submit', values);
+  }
+
+  debounceUpdates (func) {
+    return _.debounce (func, 500);
+  }
+
+  handleFormUpdates (model, data) {
+    if (!model) {
+      return;
+    }
+
+    if (data.$form.model !== model) {
+      return;
+    }
+
+    if (!this._forms[model]) {
+      this._forms[model] = {};
+    }
+
+    const form = this._forms[model];
+    if (!form.value) {
+      form.value = data.$form.initialValue;
+      /* we can leave this round */
+      return;
+    }
+
+    const modelValues = this.extractModelValues (data);
+    if (modelValues) {
+      if (JSON.stringify (modelValues) !== JSON.stringify (form.value)) {
+        for (const fieldName in modelValues) {
+          if (form.value[fieldName] !== modelValues[fieldName]) {
+            form.value[fieldName] = modelValues[fieldName];
+            const call = fieldName
+              .replace (/([a-z])([A-Z])/g, '$1-$2')
+              .toLowerCase ();
+            this.do (`change-${call}`, {newValue: modelValues[fieldName]});
+          }
+        }
+      }
+    }
+  }
+
+  extractModelValues (data) {
+    let map = null;
+    for (const fieldName in data) {
+      if (fieldName !== '$form') {
+        const field = data[fieldName];
+        if (field.valid) {
+          if (!map) {
+            map = {};
+          }
+          map[fieldName] = field.value;
+        }
+      }
+    }
+    return map;
+  }
+
+  ///////////STYLES:
 
   get myStyle () {
     return stylesImporter (this.name);
@@ -284,14 +359,6 @@ class Widget extends React.PureComponent {
 
     const styleProps = jsifyPropsNames (props);
     return this.useMyStyle (styleProps, this.context.theme);
-  }
-
-  attachFormDispatch (formDispatch) {
-    this.formDispatch = formDispatch;
-  }
-
-  handleFormSubmit (values) {
-    this.do ('submit', values);
   }
 }
 
