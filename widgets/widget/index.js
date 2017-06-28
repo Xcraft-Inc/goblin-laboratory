@@ -303,9 +303,10 @@ class Widget extends React.PureComponent {
         for (const fieldName in modelValues) {
           if (form.value[fieldName] !== modelValues[fieldName]) {
             form.value[fieldName] = modelValues[fieldName];
-            const call = fieldName
-              .replace (/([a-z])([A-Z])/g, '$1-$2')
-              .toLowerCase ();
+            const call = fieldName.replace (
+              /([A-Z])/g,
+              g => `-${g[0].toLowerCase ()}`
+            );
             this.do (`change-${call}`, {newValue: modelValues[fieldName]});
           }
         }
