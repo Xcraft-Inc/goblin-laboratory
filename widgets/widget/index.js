@@ -42,7 +42,11 @@ const injectCSS = classes => {
 class Widget extends React.PureComponent {
   constructor (cProps) {
     super (cProps);
+
     this._forms = {};
+    this._name = this.constructor.name
+      .replace (/([a-z])([A-Z])/g, '$1-$2')
+      .toLowerCase ();
   }
 
   static get contextTypes () {
@@ -55,9 +59,7 @@ class Widget extends React.PureComponent {
   }
 
   get name () {
-    return this.constructor.name
-      .replace (/([a-z])([A-Z])/g, '$1-$2')
-      .toLowerCase ();
+    return this._name;
   }
 
   get styles () {
