@@ -4,22 +4,49 @@ import PropTypes from 'prop-types';
 import Shredder from 'xcraft-core-shredder';
 import {push, replace} from 'react-router-redux';
 import {matchPath} from 'react-router';
+import fasterStringify from 'faster-stable-stringify';
+import {StyleSheet, css} from 'aphrodite/no-important';
+import traverse from 'traverse';
+import deepFreeze from 'deep-freeze';
 import importer from '../importer/';
 
 const stylesImporter = importer ('styles');
 
+const hashStyles = {};
+
 const jsifyPropsNames = props => {
   const jsified = {};
-  Object.keys (props).filter (k => k.indexOf ('-') < 0).forEach (k => {
-    jsified[k.replace (/-([a-z])/g, (m, g1) => g1.toUpperCase ())] = props[k];
+  Object.keys (props).filter (k => props[k] && k !== 'children').forEach (k => {
+    jsified[
+      k.indexOf ('-') >= 0
+        ? k.replace (/-([a-z])/g, (m, g1) => g1.toUpperCase ())
+        : k
+    ] =
+      props[k];
   });
   return jsified;
+};
+
+const injectCSS = classes => {
+  traverse (classes).forEach (function (style) {
+    if (style === undefined || style === null) {
+      this.delete ();
+    }
+  });
+
+  const sheet = StyleSheet.create (classes);
+  Object.keys (sheet).forEach (key => (sheet[key] = css (sheet[key])));
+  return sheet;
 };
 
 class Widget extends React.PureComponent {
   constructor (cProps) {
     super (cProps);
+
     this._forms = {};
+    this._name = this.constructor.name
+      .replace (/([a-z])([A-Z])/g, '$1-$2')
+      .toLowerCase ();
   }
 
   static get contextTypes () {
@@ -32,9 +59,32 @@ class Widget extends React.PureComponent {
   }
 
   get name () {
-    return this.constructor.name
-      .replace (/([a-z])([A-Z])/g, '$1-$2')
-      .toLowerCase ();
+    return this._name;
+  }
+
+  get styles () {
+    const myStyle = stylesImporter (this.name);
+    if (!myStyle) {
+      return {};
+    }
+
+    const styleProps = jsifyPropsNames (this.props);
+    const h = fasterStringify (styleProps);
+    const k = `${this.name}${this.context.theme.name}${h}`;
+
+    if (hashStyles[k]) {
+      return hashStyles[k];
+    }
+
+    const styles = myStyle (this.context.theme, styleProps);
+    return (hashStyles[k] = {
+      classNames: injectCSS (styles),
+      props: deepFreeze (styles),
+    });
+  }
+
+  read (key) {
+    return this.props[key];
   }
 
   ///////////STATE MGMT:
@@ -249,38 +299,6 @@ class Widget extends React.PureComponent {
 
   replaceNav (path) {
     this.context.dispatch (replace (path));
-  }
-
-  ///////////STYLES:
-
-  get myStyle () {
-    return stylesImporter (this.name);
-  }
-
-  set styles (value) {
-    this._styles = value;
-  }
-
-  get styles () {
-    /* for the moment recalculate the styles each time */
-    return this.getStyles (this.props);
-  }
-
-  read (key) {
-    return this.props[key];
-  }
-
-  useMyStyle (styleProps, theme) {
-    return this.myStyle (theme, styleProps);
-  }
-
-  getStyles (props) {
-    if (!this.myStyle) {
-      return {};
-    }
-
-    const styleProps = jsifyPropsNames (props);
-    return this.useMyStyle (styleProps, this.context.theme);
   }
 }
 
