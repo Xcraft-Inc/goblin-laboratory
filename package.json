@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "aphrodite": "^1.2.1",
+    "deep-freeze": "0.0.1",
     "electrum-theme": "^4.6.2",
     "faster-stable-stringify": "^1.0.0",
     "history": "^4.6.1",

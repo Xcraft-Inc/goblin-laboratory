@@ -5,6 +5,9 @@ import Shredder from 'xcraft-core-shredder';
 import {push, replace} from 'react-router-redux';
 import {matchPath} from 'react-router';
 import fasterStringify from 'faster-stable-stringify';
+import {StyleSheet, css} from 'aphrodite/no-important';
+import traverse from 'traverse';
+import deepFreeze from 'deep-freeze';
 import importer from '../importer/';
 
 const stylesImporter = importer ('styles');
@@ -22,6 +25,18 @@ const jsifyPropsNames = props => {
     });
   return jsified;
 };
+
+function injectCSS (classes) {
+  traverse (classes).forEach (function (style) {
+    if (style === undefined || style === null) {
+      this.delete ();
+    }
+  });
+
+  const sheet = StyleSheet.create (classes);
+  Object.keys (sheet).forEach (key => (sheet[key] = css (sheet[key])));
+  return sheet;
+}
 
 class Widget extends React.PureComponent {
   constructor (cProps) {
@@ -281,7 +296,13 @@ class Widget extends React.PureComponent {
     const h = fasterStringify (styleProps);
     const k = `${this.name}${theme.name}${h}`;
     if (!hashStyles[k]) {
-      hashStyles[k] = this.myStyle (theme, styleProps);
+      const styles = this.myStyle (theme, styleProps);
+      const css = injectCSS (styles);
+
+      hashStyles[k] = {
+        props: deepFreeze (styles),
+        classNames: css,
+      };
     }
     return hashStyles[k];
   }
