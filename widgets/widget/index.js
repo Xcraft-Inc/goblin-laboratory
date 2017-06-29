@@ -16,13 +16,14 @@ const hashStyles = {};
 
 const jsifyPropsNames = props => {
   const jsified = {};
-  Object.keys (props)
-    .filter (
-      (k, v) => v !== undefined && k.indexOf ('-') < 0 && k !== 'children'
-    )
-    .forEach (k => {
-      jsified[k.replace (/-([a-z])/g, (m, g1) => g1.toUpperCase ())] = props[k];
-    });
+  Object.keys (props).filter (k => props[k] && k !== 'children').forEach (k => {
+    jsified[
+      k.indexOf ('-') >= 0
+        ? k.replace (/-([a-z])/g, (m, g1) => g1.toUpperCase ())
+        : k
+    ] =
+      props[k];
+  });
   return jsified;
 };
 
