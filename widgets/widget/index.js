@@ -59,6 +59,31 @@ class Widget extends React.PureComponent {
       .toLowerCase ();
   }
 
+  get styles () {
+    const myStyle = stylesImporter (this.name);
+    if (!myStyle) {
+      return {};
+    }
+
+    const styleProps = jsifyPropsNames (this.props);
+    const h = fasterStringify (styleProps);
+    const k = `${this.name}${this.context.theme.name}${h}`;
+
+    if (hashStyles[k]) {
+      return hashStyles[k];
+    }
+
+    const styles = myStyle (this.context.theme, styleProps);
+    return (hashStyles[k] = {
+      classNames: injectCSS (styles),
+      props: deepFreeze (styles),
+    });
+  }
+
+  read (key) {
+    return this.props[key];
+  }
+
   ///////////STATE MGMT:
   static withRoute (path, watchedParams, watchedSearchs) {
     return connect (
@@ -271,31 +296,6 @@ class Widget extends React.PureComponent {
 
   replaceNav (path) {
     this.context.dispatch (replace (path));
-  }
-
-  get styles () {
-    const myStyle = stylesImporter (this.name);
-    if (!myStyle) {
-      return {};
-    }
-
-    const styleProps = jsifyPropsNames (this.props);
-    const h = fasterStringify (styleProps);
-    const k = `${this.name}${this.context.theme.name}${h}`;
-
-    if (hashStyles[k]) {
-      return hashStyles[k];
-    }
-
-    const styles = myStyle (this.context.theme, styleProps);
-    return (hashStyles[k] = {
-      classNames: injectCSS (styles),
-      props: deepFreeze (styles),
-    });
-  }
-
-  read (key) {
-    return this.props[key];
   }
 }
 
