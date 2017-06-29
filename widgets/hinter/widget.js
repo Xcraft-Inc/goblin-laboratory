@@ -1,7 +1,7 @@
 import React from 'react';
 import Widget from 'laboratory/widget';
 import importer from 'laboratory/importer/';
-import Hinter from 'gadgets/hinter/widget';
+import HinterColumn from 'gadgets/hinter-column/widget';
 const widgetImporter = importer ('widget');
 
 class GenericHinter extends Widget {
@@ -35,7 +35,7 @@ class GenericHinter extends Widget {
       return <WiredDedicatedWidget />;
     } else {
       return (
-        <Hinter
+        <HinterColumn
           kind={kind}
           title-text={title}
           title-glyph={glyph}
