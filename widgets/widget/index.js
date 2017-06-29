@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Shredder from 'xcraft-core-shredder';
 import {push, replace} from 'react-router-redux';
 import {matchPath} from 'react-router';
+import fasterStringify from 'faster-stable-stringify';
 import importer from '../importer/';
 
 const stylesImporter = importer ('styles');
@@ -277,17 +278,12 @@ class Widget extends React.PureComponent {
   }
 
   useMyStyle (styleProps, theme) {
-    if (!hashStyles[this.name]) {
-      hashStyles[this.name] = {};
+    const h = fasterStringify (styleProps);
+    const k = `${this.name}${theme.name}${h}`;
+    if (!hashStyles[k]) {
+      hashStyles[k] = this.myStyle (theme, styleProps);
     }
-    if (!hashStyles[this.name][theme._name]) {
-      hashStyles[this.name][theme._name] = {};
-    }
-    const h = JSON.stringify (styleProps); //hash (styleProps);
-    if (!hashStyles[this.name][theme._name][h]) {
-      hashStyles[this.name][theme._name][h] = this.myStyle (theme, styleProps);
-    }
-    return hashStyles[this.name][theme._name][h];
+    return hashStyles[k];
   }
 
   getStyles (props) {
