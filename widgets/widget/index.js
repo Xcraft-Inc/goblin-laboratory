@@ -273,30 +273,18 @@ class Widget extends React.PureComponent {
     this.context.dispatch (replace (path));
   }
 
-  ///////////STYLES:
-
-  get myStyle () {
-    return stylesImporter (this.name);
-  }
-
-  set styles (value) {
-    this._styles = value;
-  }
-
   get styles () {
-    /* for the moment recalculate the styles each time */
-    return this.getStyles (this.props);
-  }
+    const myStyle = stylesImporter (this.name);
+    if (!myStyle) {
+      return {};
+    }
 
-  read (key) {
-    return this.props[key];
-  }
-
-  useMyStyle (styleProps, theme) {
+    const styleProps = jsifyPropsNames (this.props);
     const h = fasterStringify (styleProps);
-    const k = `${this.name}${theme.name}${h}`;
+    const k = `${this.name}${this.context.theme.name}${h}`;
+
     if (!hashStyles[k]) {
-      const styles = this.myStyle (theme, styleProps);
+      const styles = myStyle (this.context.theme, styleProps);
       const css = injectCSS (styles);
 
       hashStyles[k] = {
@@ -307,13 +295,8 @@ class Widget extends React.PureComponent {
     return hashStyles[k];
   }
 
-  getStyles (props) {
-    if (!this.myStyle) {
-      return {};
-    }
-
-    const styleProps = jsifyPropsNames (props);
-    return this.useMyStyle (styleProps, this.context.theme);
+  read (key) {
+    return this.props[key];
   }
 }
 
