@@ -283,16 +283,15 @@ class Widget extends React.PureComponent {
     const h = fasterStringify (styleProps);
     const k = `${this.name}${this.context.theme.name}${h}`;
 
-    if (!hashStyles[k]) {
-      const styles = myStyle (this.context.theme, styleProps);
-      const css = injectCSS (styles);
-
-      hashStyles[k] = {
-        props: deepFreeze (styles),
-        classNames: css,
-      };
+    if (hashStyles[k]) {
+      return hashStyles[k];
     }
-    return hashStyles[k];
+
+    const styles = myStyle (this.context.theme, styleProps);
+    return (hashStyles[k] = {
+      classNames: injectCSS (styles),
+      props: deepFreeze (styles),
+    });
   }
 
   read (key) {
