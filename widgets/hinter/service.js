@@ -20,8 +20,8 @@ const logicHandlers = {
       query: '',
     });
   },
-  search: (state, action) => {
-    return state.set ('query', action.get ('query'));
+  'set-rows': (state, action) => {
+    return state.set ('rows', action.get ('rows'));
   },
   delete: state => {
     return state.set ('', {});
@@ -42,8 +42,8 @@ Goblin.registerQuest (goblinName, 'create', function (
   return quest.goblin.id;
 });
 
-Goblin.registerQuest (goblinName, 'search', function (quest, query) {
-  quest.do ({query});
+Goblin.registerQuest (goblinName, 'set-rows', function (quest, rows) {
+  quest.do ({rows});
 });
 
 Goblin.registerQuest (goblinName, 'delete', function (quest, id) {

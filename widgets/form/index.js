@@ -60,6 +60,7 @@ class Form extends Widget {
               /([A-Z])/g,
               g => `-${g[0].toLowerCase ()}`
             );
+            console.log (`change-${call} : ${modelValues[fieldName]}`);
             this.do (`change-${call}`, {newValue: modelValues[fieldName]});
           }
         }
