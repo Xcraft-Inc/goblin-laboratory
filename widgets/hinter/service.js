@@ -17,11 +17,15 @@ const logicHandlers = {
       title: action.get ('title'),
       glyph: action.get ('glyph'),
       rows: [],
-      query: '',
+      selectedIndex: null,
+      values: [],
     });
   },
   'set-rows': (state, action) => {
-    return state.set ('rows', action.get ('rows'));
+    return state.set ('rows', action.get ('rows')).set ('selectedIndex', '0');
+  },
+  'select-row': (state, action) => {
+    return state.set ('selectedIndex', action.get ('index'));
   },
   delete: state => {
     return state.set ('', {});
@@ -42,8 +46,17 @@ Goblin.registerQuest (goblinName, 'create', function (
   return quest.goblin.id;
 });
 
+Goblin.registerQuest (goblinName, 'select-row', function (quest, index, value) {
+  quest.log.info (`Select row: ${index}: ${value}`);
+  quest.do ({index: `${index}`});
+});
+
 Goblin.registerQuest (goblinName, 'set-rows', function (quest, rows) {
   quest.do ({rows});
+});
+
+Goblin.registerQuest (goblinName, 'set-values', function (quest, values) {
+  quest.do ({values});
 });
 
 Goblin.registerQuest (goblinName, 'delete', function (quest, id) {

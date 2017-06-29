@@ -4,7 +4,7 @@ import importer from 'laboratory/importer/';
 import HinterColumn from 'gadgets/hinter-column/widget';
 const widgetImporter = importer ('widget');
 
-class GenericHinter extends Widget {
+class Hinter extends Widget {
   constructor (props) {
     super (props);
   }
@@ -17,13 +17,13 @@ class GenericHinter extends Widget {
       title: 'title',
       glyph: 'glyph',
       rows: 'rows',
-      query: 'query',
+      selectedIndex: 'selectedIndex',
     };
   }
 
   render () {
-    const {id, type, kind, title, glyph, rows} = this.props;
-
+    const {id, type, kind, title, glyph, rows, selectedIndex} = this.props;
+    console.log (selectedIndex);
     if (!id) {
       return null;
     }
@@ -40,10 +40,12 @@ class GenericHinter extends Widget {
           title-text={title}
           title-glyph={glyph}
           rows={rows}
+          selectedIndex={selectedIndex}
+          onRowClick={(index, value) => this.do ('select-row', {index, value})}
         />
       );
     }
   }
 }
 
-export default GenericHinter;
+export default Hinter;
