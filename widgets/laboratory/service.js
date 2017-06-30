@@ -27,8 +27,9 @@ const logicHandlers = {
       id: id,
       url: action.get ('url'),
       wid: action.get ('wid'),
-      showNotifications: 'true',
-      notifications: [],
+      showNotifications: 'false',
+      dnd: 'false',
+      notifications: {},
       feeds: conf.feeds,
       routes: conf.routes,
       current: {
@@ -36,11 +37,38 @@ const logicHandlers = {
       },
     });
   },
-  'toggle-notifications': state => {
-    return state.set (
-      'showNotifications',
-      state.get ('showNotifications') === 'false' ? 'true' : 'false'
+  'toggle-dnd': state => {
+    return state.set ('dnd', state.get ('dnd') === 'false' ? 'true' : 'false');
+  },
+  'toggle-notifications': (state, action) => {
+    return state.set ('showNotifications', action.get ('showValue'));
+  },
+  'add-notification': (state, action) => {
+    const notifId = uuidV4 ();
+    const notif = {
+      id: notifId,
+      command: action.get ('command'),
+      status: 'not-read',
+      glyph: action.get ('glyph'),
+      color: action.get ('color'),
+      message: action.get ('message'),
+    };
+    return state.set (`notifications.${notifId}`, notif);
+  },
+  'read-all': state => {
+    const notifications = state.get ('notifications');
+    const newNotifications = notifications.transform (
+      i => i,
+      (i, v) => v.set ('status', 'read')
     );
+    return state.set ('notifications', newNotifications);
+  },
+  'remove-notification': (state, action) => {
+    const id = action.get ('notification').id;
+    return state.del (`notifications.${id}`);
+  },
+  'remove-notifications': state => {
+    return state.set (`notifications`, {});
   },
   setCurrentWorkItemByContext: (state, action) => {
     return state
@@ -270,8 +298,51 @@ Goblin.registerQuest (goblinName, 'duplicate', function* (quest) {
   return lab.id;
 });
 
-Goblin.registerQuest (goblinName, 'toggle-notifications', function (quest) {
+Goblin.registerQuest (goblinName, 'add-notification', function (
+  quest,
+  glyph,
+  color,
+  message,
+  command
+) {
+  quest.do ({glyph, color, message, command});
+  const dnd = quest.goblin.getState ().get ('dnd');
+  if (dnd !== 'true') {
+    quest.dispatch ('toggle-notifications', {showValue: 'true'});
+  }
+});
+
+Goblin.registerQuest (goblinName, 'remove-notification', function (
+  quest,
+  notification
+) {
+  quest.do ({notification});
+});
+
+Goblin.registerQuest (goblinName, 'remove-notifications', function (quest) {
   quest.do ();
+});
+
+Goblin.registerQuest (goblinName, 'click-notification', function (
+  quest,
+  notification
+) {
+  quest.cmd (notification.command, {notification});
+});
+
+Goblin.registerQuest (goblinName, 'toggle-dnd', function (quest) {
+  quest.do ();
+});
+
+Goblin.registerQuest (goblinName, 'toggle-notifications', function (quest) {
+  const state = quest.goblin.getState ();
+  const showValue = state.get ('showNotifications') === 'false'
+    ? 'true'
+    : 'false';
+  quest.do ({showValue});
+  if (showValue === 'false') {
+    quest.dispatch ('read-all');
+  }
 });
 
 Goblin.registerQuest (goblinName, '_ready', function* (quest, wid) {
