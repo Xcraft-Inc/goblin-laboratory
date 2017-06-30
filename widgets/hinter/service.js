@@ -21,8 +21,11 @@ const logicHandlers = {
       values: [],
     });
   },
-  'set-rows': (state, action) => {
-    return state.set ('rows', action.get ('rows')).set ('selectedIndex', '0');
+  'set-selections': (state, action) => {
+    return state
+      .set ('rows', action.get ('rows'))
+      .set ('values', action.get ('values'))
+      .set ('selectedIndex', '0');
   },
   'select-row': (state, action) => {
     return state.set ('selectedIndex', action.get ('index'));
@@ -34,29 +37,60 @@ const logicHandlers = {
 
 // Register quest's according rc.json
 
-Goblin.registerQuest (goblinName, 'create', function (
+Goblin.registerQuest (goblinName, 'create', function* (
   quest,
   id,
+  labId,
   type,
   title,
   glyph,
-  kind
+  kind,
+  detailWidget
 ) {
   quest.do ({id, type, title, glyph, kind});
+  const detail = yield quest.create ('detail', {
+    id: `${id.replace ('-hinter', '-detail')}`,
+    labId,
+    type,
+    title,
+    detailWidget,
+  });
+  quest.goblin.setX ('detail', detail);
+  quest.goblin.defer (detail.delete);
   return quest.goblin.id;
 });
 
-Goblin.registerQuest (goblinName, 'select-row', function (quest, index, value) {
-  quest.log.info (`Select row: ${index}: ${value}`);
+Goblin.registerQuest (goblinName, 'set-current-detail-entity', function* (
+  quest,
+  entityId
+) {
+  const detail = quest.goblin.getX ('detail');
+  yield detail.setEntity ({entityId});
+});
+
+Goblin.registerQuest (goblinName, 'select-row', function (quest, index, text) {
+  quest.log.info (`Select row: ${index}: ${text}`);
   quest.do ({index: `${index}`});
+  /*hinter@workitem@id*/
+  const ids = quest.goblin.getState ().get ('id').split ('@');
+  const workitem = ids[1];
+  const workitemId = `${ids[1]}@${ids[2]}`;
+  const value = quest.goblin.getState ().get (`values.${index}`, null);
+  const type = quest.goblin.getState ().get (`type`, null);
+  if (value && type) {
+    quest.cmd (`${workitem}.hinter-select-${type}`, {
+      id: workitemId,
+      selection: {index, text, value},
+    });
+  }
 });
 
-Goblin.registerQuest (goblinName, 'set-rows', function (quest, rows) {
-  quest.do ({rows});
-});
-
-Goblin.registerQuest (goblinName, 'set-values', function (quest, values) {
-  quest.do ({values});
+Goblin.registerQuest (goblinName, 'set-selections', function (
+  quest,
+  rows,
+  values
+) {
+  quest.do ({rows, values});
 });
 
 Goblin.registerQuest (goblinName, 'delete', function (quest, id) {

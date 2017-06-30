@@ -130,6 +130,7 @@ Goblin.registerQuest (goblinName, 'create', function* (quest, url, routes) {
 Goblin.registerQuest (goblinName, 'create-hinter-for', function* (
   quest,
   workItemId,
+  detailWidget,
   type,
   title,
   glyph,
@@ -151,10 +152,12 @@ Goblin.registerQuest (goblinName, 'create-hinter-for', function* (
 
   const hinter = yield quest.create ('hinter', {
     id: widgetId,
+    labId: quest.goblin.id,
     type,
     title,
     glyph,
     kind,
+    detailWidget,
   });
 
   yield quest.cmd ('laboratory.add', {

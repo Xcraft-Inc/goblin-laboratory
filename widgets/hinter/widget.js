@@ -41,7 +41,7 @@ class Hinter extends Widget {
           title-glyph={glyph}
           rows={rows}
           selectedIndex={selectedIndex}
-          onRowClick={(index, value) => this.do ('select-row', {index, value})}
+          onRowClick={(index, text) => this.do ('select-row', {index, text})}
         />
       );
     }

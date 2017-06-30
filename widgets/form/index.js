@@ -27,7 +27,7 @@ class Form extends Widget {
   }
 
   debounceUpdates (func) {
-    return _.debounce (func, 500);
+    return _.debounce (func, 50);
   }
 
   handleFormUpdates (model, data) {
