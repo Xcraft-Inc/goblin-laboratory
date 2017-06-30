@@ -29,6 +29,7 @@ const logicHandlers = {
       wid: action.get ('wid'),
       showNotifications: 'false',
       dnd: 'false',
+      notReadCount: null,
       notifications: {},
       feeds: conf.feeds,
       routes: conf.routes,
@@ -54,6 +55,16 @@ const logicHandlers = {
       message: action.get ('message'),
     };
     return state.set (`notifications.${notifId}`, notif);
+  },
+  'update-not-read-count': state => {
+    const notifs = state.get ('notifications').select ((i, v) => v.toJS ());
+    const count = notifs.reduce ((acc, n) => {
+      if (n.status === 'not-read') {
+        return acc + 1;
+      }
+      return acc;
+    }, 0);
+    return state.set ('notReadCount', count);
   },
   'read-all': state => {
     const notifications = state.get ('notifications');
@@ -310,6 +321,7 @@ Goblin.registerQuest (goblinName, 'add-notification', function (
   if (dnd !== 'true') {
     quest.dispatch ('toggle-notifications', {showValue: 'true'});
   }
+  quest.dispatch ('update-not-read-count');
 });
 
 Goblin.registerQuest (goblinName, 'remove-notification', function (
@@ -317,10 +329,12 @@ Goblin.registerQuest (goblinName, 'remove-notification', function (
   notification
 ) {
   quest.do ({notification});
+  quest.dispatch ('update-not-read-count');
 });
 
 Goblin.registerQuest (goblinName, 'remove-notifications', function (quest) {
   quest.do ();
+  quest.dispatch ('update-not-read-count');
 });
 
 Goblin.registerQuest (goblinName, 'click-notification', function (
@@ -343,6 +357,7 @@ Goblin.registerQuest (goblinName, 'toggle-notifications', function (quest) {
   if (showValue === 'false') {
     quest.dispatch ('read-all');
   }
+  quest.dispatch ('update-not-read-count');
 });
 
 Goblin.registerQuest (goblinName, '_ready', function* (quest, wid) {

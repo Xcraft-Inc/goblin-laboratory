@@ -2,8 +2,10 @@ import React from 'react';
 import Button from 'gadgets/button/widget';
 import Widget from 'laboratory/widget';
 import Container from 'gadgets/container/widget';
+import NotificationsButton from 'laboratory/notifications-button/widget';
 
-const Wired = Widget.Wired (Button);
+const wireButton = Widget.Wired (Button);
+const wireNotifsButton = Widget.Wired (NotificationsButton);
 class Tabs extends Widget {
   constructor (props, context) {
     super (props, context);
@@ -34,12 +36,14 @@ class Tabs extends Widget {
       currentTab = current.get (context, null);
     }
 
+    const WiredNotificationsButton = wireNotifsButton (this.context.labId);
+
     const contextTabs = tabs.get (context, []);
     return (
       <Container kind="second-bar">
         <Container kind="view-tab">
           {contextTabs.map ((v, k) => {
-            const WiredButton = Wired (k);
+            const WiredButton = wireButton (k);
             const wid = v.get ('workItemId');
             return (
               <WiredButton
@@ -52,16 +56,7 @@ class Tabs extends Widget {
           })}
         </Container>
         <Container kind="view-tab-right">
-          <Button
-            text="Notifications"
-            glyph="bell"
-            glyph-position="right"
-            kind="view-tab-right"
-            onClick={() =>
-              this.cmd ('laboratory.toggle-notifications', {
-                id: this.context.labId,
-              })}
-          />
+          <WiredNotificationsButton />
         </Container>
       </Container>
     );
