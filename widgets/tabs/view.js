@@ -2,6 +2,7 @@ import React from 'react';
 import Button from 'gadgets/button/widget';
 import Widget from 'laboratory/widget';
 import Container from 'gadgets/container/widget';
+
 const Wired = Widget.Wired (Button);
 class Tabs extends Widget {
   constructor (props, context) {
@@ -49,6 +50,18 @@ class Tabs extends Widget {
               />
             );
           })}
+        </Container>
+        <Container kind="view-tab-right">
+          <Button
+            text="Notifications"
+            glyph="bell"
+            glyph-position="right"
+            kind="view-tab-right"
+            onClick={() =>
+              this.cmd ('laboratory.toggle-notifications', {
+                id: this.context.labId,
+              })}
+          />
         </Container>
       </Container>
     );

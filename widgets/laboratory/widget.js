@@ -3,6 +3,8 @@ import Widget from 'laboratory/widget';
 import Container from 'gadgets/container/widget';
 import Button from 'gadgets/button/widget';
 import importer from '../importer/';
+import Notif from 'gadgets/notifications/widget';
+const wireNotif = Widget.Wired (Notif);
 
 const viewImporter = importer ('view');
 
@@ -15,6 +17,8 @@ class Laboratory extends Widget {
     return {
       id: 'id',
       routesMap: 'routes',
+      show: 'showNotifications',
+      data: 'notifications',
     };
   }
 
@@ -41,6 +45,8 @@ class Laboratory extends Widget {
         console.warn (`Invalid mount point ${mount} for ${k}`);
       }
     });
+
+    const Notifications = wireNotif (id);
 
     const taskView = viewImporter (routes['/task-bar/'].component);
     const Tasks = Widget.WithRoute (taskView, 'context') (
@@ -85,6 +91,7 @@ class Laboratory extends Widget {
           <Container kind="footer">
             <span>{id}</span>
           </Container>
+          <Notifications />
         </Container>
       </Container>
     );

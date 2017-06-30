@@ -24,9 +24,15 @@ class Contexts extends Widget {
 
   render () {
     const {isDisplayed, contexts, current} = this.props;
+
+    if (!this.props.id) {
+      return null;
+    }
+
     if (!isDisplayed) {
       return null;
     }
+
     return (
       <Container kind="main-tab">
         {contexts.map ((v, k) => {

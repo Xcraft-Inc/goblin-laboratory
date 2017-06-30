@@ -27,12 +27,20 @@ const logicHandlers = {
       id: id,
       url: action.get ('url'),
       wid: action.get ('wid'),
+      showNotifications: 'true',
+      notifications: [],
       feeds: conf.feeds,
       routes: conf.routes,
       current: {
         workitems: {},
       },
     });
+  },
+  'toggle-notifications': state => {
+    return state.set (
+      'showNotifications',
+      state.get ('showNotifications') === 'false' ? 'true' : 'false'
+    );
   },
   setCurrentWorkItemByContext: (state, action) => {
     return state
@@ -260,6 +268,10 @@ Goblin.registerQuest (goblinName, 'duplicate', function* (quest) {
   const routes = state.get ('routes').toJS ();
   const lab = yield quest.create ('laboratory', {url, routes});
   return lab.id;
+});
+
+Goblin.registerQuest (goblinName, 'toggle-notifications', function (quest) {
+  quest.do ();
 });
 
 Goblin.registerQuest (goblinName, '_ready', function* (quest, wid) {
