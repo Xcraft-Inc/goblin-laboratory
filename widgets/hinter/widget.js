@@ -23,8 +23,8 @@ class Hinter extends Widget {
   }
 
   componentWillMount () {
-    MouseTrap.bind ('up', this.onKeyUp);
-    MouseTrap.bind ('down', this.onKeyDown);
+    MouseTrap.bind ('up', ::this.onKeyUp);
+    MouseTrap.bind ('down', ::this.onKeyDown);
   }
 
   componentWillUnmount () {
@@ -33,15 +33,15 @@ class Hinter extends Widget {
   }
 
   onKeyUp () {
-    this.selectRow (this.props.selectedIndex - 1);
+    this.selectRow (parseInt (this.props.selectedIndex) - 1);
   }
 
   onKeyDown () {
-    this.selectRow (this.props.selectedIndex + 1);
+    this.selectRow (parseInt (this.props.selectedIndex) + 1);
   }
 
   selectRow (index) {
-    if (index >= 0 && index < this.props.rows.length) {
+    if (index >= 0 && index < this.props.rows.size) {
       const value = this.props.rows.get (index);
       this.do ('select-row', {index, value});
     }
