@@ -2,6 +2,7 @@ import React from 'react';
 import Widget from 'laboratory/widget';
 import importer from 'laboratory/importer/';
 import HinterColumn from 'gadgets/hinter-column/widget';
+import MouseTrap from 'mousetrap';
 const widgetImporter = importer ('widget');
 
 class Hinter extends Widget {
@@ -19,6 +20,31 @@ class Hinter extends Widget {
       rows: 'rows',
       selectedIndex: 'selectedIndex',
     };
+  }
+
+  componentWillMount () {
+    MouseTrap.bind ('up', this.onKeyUp);
+    MouseTrap.bind ('down', this.onKeyDown);
+  }
+
+  componentWillUnmount () {
+    MouseTrap.unbind ('up');
+    MouseTrap.unbind ('down');
+  }
+
+  onKeyUp () {
+    this.selectRow (this.props.selectedIndex - 1);
+  }
+
+  onKeyDown () {
+    this.selectRow (this.props.selectedIndex + 1);
+  }
+
+  selectRow (index) {
+    if (index >= 0 && index < this.props.rows.length) {
+      const value = this.props.rows.get (index);
+      this.do ('select-row', {index, value});
+    }
   }
 
   render () {
