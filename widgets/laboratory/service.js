@@ -29,7 +29,8 @@ const logicHandlers = {
       wid: action.get ('wid'),
       showNotifications: 'false',
       dnd: 'false',
-      notReadCount: null,
+      onlyNews: 'false',
+      notReadCount: 0,
       notifications: {},
       feeds: conf.feeds,
       routes: conf.routes,
@@ -40,6 +41,12 @@ const logicHandlers = {
   },
   'toggle-dnd': state => {
     return state.set ('dnd', state.get ('dnd') === 'false' ? 'true' : 'false');
+  },
+  'toggle-only-news': state => {
+    return state.set (
+      'onlyNews',
+      state.get ('onlyNews') === 'false' ? 'true' : 'false'
+    );
   },
   'toggle-notifications': (state, action) => {
     return state.set ('showNotifications', action.get ('showValue'));
@@ -345,6 +352,10 @@ Goblin.registerQuest (goblinName, 'click-notification', function (
 });
 
 Goblin.registerQuest (goblinName, 'toggle-dnd', function (quest) {
+  quest.do ();
+});
+
+Goblin.registerQuest (goblinName, 'toggle-only-news', function (quest) {
   quest.do ();
 });
 
