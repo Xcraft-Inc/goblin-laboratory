@@ -146,8 +146,6 @@ Goblin.registerQuest (goblinName, 'create', function* (quest, url, routes) {
     feeds,
   });
 
-  quest.goblin.setX ('window', win);
-  quest.goblin.defer (() => quest.goblin.delX ('window'));
   const wid = win.id;
   quest.goblin.defer (win.delete);
 
@@ -159,8 +157,6 @@ Goblin.registerQuest (goblinName, 'create', function* (quest, url, routes) {
     id: `contexts@default`,
   });
   quest.goblin.defer (contexts.delete);
-  quest.goblin.setX ('contexts', contexts);
-  quest.goblin.defer (() => quest.goblin.delX ('contexts'));
   quest.cmd ('laboratory.add', {
     id: quest.goblin.id,
     widgetId: `contexts@default`,
@@ -171,8 +167,6 @@ Goblin.registerQuest (goblinName, 'create', function* (quest, url, routes) {
     id: `tabs@default`,
   });
   quest.goblin.defer (tabs.delete);
-  quest.goblin.setX ('tabs', tabs);
-  quest.goblin.defer (() => quest.goblin.delX ('tabs'));
   quest.cmd ('laboratory.add', {
     id: quest.goblin.id,
     widgetId: `tabs@default`,
@@ -204,7 +198,7 @@ Goblin.registerQuest (goblinName, 'create-hinter-for', function* (
     title = type;
   }
 
-  const hinter = yield quest.create ('hinter', {
+  const hinter = yield quest.create (`hinter@${widgetId}`, {
     id: widgetId,
     labId: quest.goblin.id,
     type,
@@ -221,18 +215,17 @@ Goblin.registerQuest (goblinName, 'create-hinter-for', function* (
   return hinter.id;
 });
 
-Goblin.registerQuest (goblinName, 'add-context', function* (
+Goblin.registerQuest (goblinName, 'add-context', function (
   quest,
   contextId,
   name
 ) {
-  const contexts = quest.goblin.getX ('contexts');
-  const widgetId = yield contexts.add ({
+  const contexts = quest.use ('contexts');
+  contexts.add ({
     labId: quest.goblin.id,
     contextId,
     name,
   });
-  yield quest.cmd ('laboratory.add', {id: quest.goblin.id, widgetId});
 });
 
 Goblin.registerQuest (goblinName, 'add-tab', function* (
@@ -252,15 +245,21 @@ Goblin.registerQuest (goblinName, 'add-tab', function* (
       workItemId,
     });
   }
-  const tabs = quest.goblin.getX ('tabs');
-  const widgetId = yield tabs.add ({name, contextId, view, workItemId});
-  //Add tab
-  yield quest.cmd ('laboratory.add', {id: quest.goblin.id, widgetId});
+  const tabs = quest.use ('tabs');
+  tabs.add ({
+    name,
+    contextId,
+    view,
+    workItemId,
+    labId: quest.goblin.id,
+  });
+
   //Add workitem
-  yield quest.cmd ('laboratory.add', {
+  quest.cmd ('laboratory.add', {
     id: quest.goblin.id,
     widgetId: workItemId,
   });
+
   if (navigate) {
     yield quest.cmd ('laboratory.nav-to-workitem', {
       id: quest.goblin.id,
@@ -275,7 +274,7 @@ Goblin.registerQuest (goblinName, 'nav-to-context', function (
   quest,
   contextId
 ) {
-  const win = quest.goblin.getX ('window');
+  const win = quest.use ('wm.win');
   const state = quest.goblin.getState ();
   const view = state.get (`current.views.${contextId}`, null);
 
@@ -298,9 +297,9 @@ Goblin.registerQuest (goblinName, 'nav-to-workitem', function* (
   workItemId,
   skipNav
 ) {
-  const win = quest.goblin.getX ('window');
+  const win = quest.use ('wm.win');
   quest.dispatch ('setCurrentWorkItemByContext', {contextId, view, workItemId});
-  const tabs = quest.goblin.getX ('tabs');
+  const tabs = quest.use ('tabs');
   yield tabs.setCurrent ({contextId, workItemId});
   if (skipNav) {
     return;

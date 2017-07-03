@@ -55,7 +55,6 @@ Goblin.registerQuest (goblinName, 'create', function* (
     title,
     detailWidget,
   });
-  quest.goblin.setX ('detail', detail);
   quest.goblin.defer (detail.delete);
   return quest.goblin.id;
 });
@@ -64,7 +63,7 @@ Goblin.registerQuest (goblinName, 'set-current-detail-entity', function* (
   quest,
   entityId
 ) {
-  const detail = quest.goblin.getX ('detail');
+  const detail = quest.use ('detail');
   yield detail.setEntity ({entityId});
 });
 

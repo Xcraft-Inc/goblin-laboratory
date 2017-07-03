@@ -2,7 +2,7 @@
 
 const Goblin = require ('xcraft-core-goblin');
 const goblinName = 'tabs';
-
+const uuidV4 = require ('uuid/v4');
 // Define initial logic values
 const logicState = {};
 
@@ -70,18 +70,21 @@ Goblin.registerQuest (goblinName, 'set-current', function (
 
 Goblin.registerQuest (goblinName, 'add', function* (
   quest,
+  labId,
   contextId,
   name,
   view,
   workItemId
 ) {
-  const tab = yield quest.create ('button', {
+  const tab = yield quest.create (`button@${uuidV4 ()}`, {
     id: `${contextId}-tab@${workItemId}`,
     text: name,
     kind: 'view-tab',
   });
   quest.do ({tabId: tab.id, contextId, view, name, workItemId});
   quest.goblin.defer (tab.delete);
+  const lab = quest.useAs ('laboratory', labId);
+  lab.add ({widgetId: tab.id});
   return tab.id;
 });
 

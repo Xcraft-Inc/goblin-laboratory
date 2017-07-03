@@ -2,6 +2,7 @@ import React from 'react';
 import {actions, LocalForm} from 'react-redux-form';
 import _ from 'lodash';
 import Widget from 'laboratory/widget';
+import fasterStringify from 'faster-stable-stringify';
 
 class Form extends Widget {
   constructor (props) {
@@ -45,14 +46,14 @@ class Form extends Widget {
 
     const form = this._forms[model];
     if (!form.value) {
-      form.value = data.$form.initialValue;
+      form.value = Object.assign ({}, data.$form.initialValue);
       /* we can leave this round */
       return;
     }
 
     const modelValues = this.extractModelValues (data);
     if (modelValues) {
-      if (JSON.stringify (modelValues) !== JSON.stringify (form.value)) {
+      if (fasterStringify (modelValues) !== fasterStringify (form.value)) {
         for (const fieldName in modelValues) {
           if (form.value[fieldName] !== modelValues[fieldName]) {
             form.value[fieldName] = modelValues[fieldName];
