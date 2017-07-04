@@ -32,7 +32,7 @@ class Laboratory extends Widget {
       '/content/': {},
     };
 
-    this.shred (routesMap)._select ((k, v) => {
+    this.shred (routesMap).select ((k, v) => {
       const ex = /^(\/.[:\-a-z]+\/).*/;
       const res = ex.exec (v);
       let mount = '/';
