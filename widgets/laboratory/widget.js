@@ -74,6 +74,8 @@ class Laboratory extends Widget {
           <Container kind="task-bar">
             <Button
               text-transform="none"
+              text="Poly"
+              glyph="cube"
               tooltip="Changer de mandat"
               kind="task-logo"
             />
