@@ -5,6 +5,8 @@ const cache = {};
 const importAll = (kind, r) => {
   const files = r.keys ();
 
+  cache[kind] = {};
+
   files.forEach (file => {
     const nameSpace = path.basename (path.dirname (file));
     cache[kind][nameSpace] = r (file);
@@ -19,7 +21,10 @@ const getter = kind => name => {
 };
 
 export default kind => {
-  cache[kind] = {};
+  if (cache[kind]) {
+    return getter (kind);
+  }
+
   switch (kind) {
     case 'tasks':
       importAll (kind, require.context ('../../../', true, /\/tasks\.js$/));
@@ -36,5 +41,6 @@ export default kind => {
     default:
       throw new Error (`Unsupported kind: ${kind} for importer`);
   }
+
   return getter (kind);
 };
