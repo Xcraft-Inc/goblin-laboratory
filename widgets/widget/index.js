@@ -6,6 +6,7 @@ import {push, replace} from 'react-router-redux';
 import {matchPath} from 'react-router';
 import fasterStringify from 'faster-stable-stringify';
 import {StyleSheet, css} from 'aphrodite/no-important';
+import {flushToStyleTag} from 'aphrodite/lib/inject'; // HACK
 import traverse from 'traverse';
 import deepFreeze from 'deep-freeze';
 import importer from '../importer/';
@@ -85,6 +86,15 @@ class Widget extends React.PureComponent {
 
   read (key) {
     return this.props[key];
+  }
+
+  componentDidMount () {
+    /* HACK: flush explicitly all aphrodite styles in order to remove the
+     * flickers and bugs in some systems where the styles are not applied.
+     * Note that this API should not be called directly because it's an
+     * internal function of aphrodite.
+     */
+    flushToStyleTag ();
   }
 
   ///////////STATE MGMT:
