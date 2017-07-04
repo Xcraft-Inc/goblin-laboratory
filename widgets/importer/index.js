@@ -20,6 +20,7 @@ const getter = kind => name => {
 
 export default kind => {
   cache[kind] = {};
+
   switch (kind) {
     case 'tasks':
       importAll (kind, require.context ('../../../', true, /\/tasks\.js$/));
@@ -36,5 +37,6 @@ export default kind => {
     default:
       throw new Error (`Unsupported kind: ${kind} for importer`);
   }
+
   return getter (kind);
 };
