@@ -7,6 +7,8 @@ import fasterStringify from 'faster-stable-stringify';
 class Form extends Widget {
   constructor (props) {
     super (props);
+    this._forms = {};
+    this._focused = {};
   }
 
   attachDispatch (dispatch) {
@@ -42,6 +44,12 @@ class Form extends Widget {
 
     if (!this._forms[model]) {
       this._forms[model] = {};
+      this._focused[model] = null;
+    }
+
+    const focused = this.extractFocus (data);
+    if (focused) {
+      this._focused[model] = focused;
     }
 
     const form = this._forms[model];
@@ -61,12 +69,23 @@ class Form extends Widget {
               /([A-Z])/g,
               g => `-${g[0].toLowerCase ()}`
             );
-            console.log (`change-${call} : ${modelValues[fieldName]}`);
             this.do (`change-${call}`, {newValue: modelValues[fieldName]});
           }
         }
       }
     }
+  }
+
+  extractFocus (data) {
+    for (const fieldName in data) {
+      if (fieldName !== '$form') {
+        const field = data[fieldName];
+        if (field.focus) {
+          return fieldName;
+        }
+      }
+    }
+    return null;
   }
 
   extractModelValues (data) {
@@ -87,7 +106,7 @@ class Form extends Widget {
 
   getForm (id) {
     return props => {
-      const {initialState} = props;
+      const {initialState, focused} = props;
       if (!id) {
         return null;
       }
@@ -96,18 +115,33 @@ class Form extends Widget {
         this.handleFormUpdates (id, values);
       };
       const onUpdate = this.debounceUpdates (handleUpdate);
-
       return (
         <LocalForm
           model={id}
           onUpdate={onUpdate}
-          getDispatch={dispatch => this.attachDispatch (dispatch)}
+          getDispatch={dispatch => {
+            this.attachDispatch (dispatch);
+            if (focused) {
+              this.formFocus (`${id}.${focused}`);
+            }
+          }}
           initialState={initialState}
         >
           {props.children}
         </LocalForm>
       );
     };
+  }
+
+  componentWillUnmount () {
+    Object.keys (this._forms).forEach (id => {
+      const service = id.split ('@')[0];
+      this.cmd (`${service}.save-form`, {
+        id,
+        value: this._forms[id].value,
+        focused: this._focused[id],
+      });
+    });
   }
 
   render () {
