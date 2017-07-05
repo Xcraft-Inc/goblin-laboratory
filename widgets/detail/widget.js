@@ -38,12 +38,7 @@ class Detail extends Widget {
 
     return (
       <Container kind="view-right" width="750px">
-        <Container kind="column-full">
-          <Container kind="pane-header">
-            <Label text={title} kind="pane-header" />
-          </Container>
-          <WiredDetailWidget />
-        </Container>
+        <WiredDetailWidget />
       </Container>
     );
   }
