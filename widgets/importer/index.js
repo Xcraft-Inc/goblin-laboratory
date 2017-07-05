@@ -29,6 +29,9 @@ export default kind => {
     case 'tasks':
       importAll (kind, require.context ('../../../', true, /\/tasks\.js$/));
       break;
+    case 'content':
+      importAll (kind, require.context ('../../../', true, /\/content\.js$/));
+      break;
     case 'view':
       importAll (kind, require.context ('../../../', true, /\/view\.js$/));
       break;
