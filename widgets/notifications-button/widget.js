@@ -30,17 +30,23 @@ class NotificationsButton extends Widget {
   }
 
   render () {
+    const boxClass = this.styles.classNames.box;
+    const anchorClass = this.styles.classNames.anchor;
+
     return (
-      <Button
-        text="Notifications"
-        glyph="bell"
-        glyph-position="right"
-        kind="view-tab-right"
-        badge-value={this.props.notReadCount}
-        onClick={() => this.doAs ('laboratory', 'toggle-notifications')}
-      >
-        {this.renderNofications ()}
-      </Button>
+      <div className={boxClass}>
+        <Button
+          text="Notifications"
+          glyph="bell"
+          glyph-position="right"
+          kind="view-tab-right"
+          badge-value={this.props.notReadCount}
+          onClick={() => this.doAs ('laboratory', 'toggle-notifications')}
+        />
+        <div className={anchorClass}>
+          {this.renderNofications ()}
+        </div>
+      </div>
     );
   }
 }
