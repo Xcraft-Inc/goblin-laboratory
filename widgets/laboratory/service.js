@@ -103,7 +103,12 @@ const logicHandlers = {
 
 let increment = 0;
 // Register quest's according rc.json
-Goblin.registerQuest (goblinName, 'create', function* (quest, url, routes) {
+Goblin.registerQuest (goblinName, 'create', function* (
+  quest,
+  url,
+  routes,
+  onChangeMandate
+) {
   const port = 4000 + increment++;
   const existingUrl = url;
   let _url = existingUrl || `http://localhost:${port}`;
@@ -124,6 +129,10 @@ Goblin.registerQuest (goblinName, 'create', function* (quest, url, routes) {
       jobId: quest.goblin.id,
       outputPath: path.join (__dirname, '../../../../pack'),
     });
+  }
+
+  if (onChangeMandate) {
+    quest.goblin.setX ('onChangeMandate', onChangeMandate);
   }
 
   quest.log.info (`Waiting for webpack goblin`);
@@ -153,23 +162,24 @@ Goblin.registerQuest (goblinName, 'create', function* (quest, url, routes) {
   yield quest.cmd ('wm.win.feed.sub', {wid, feeds});
 
   // CREATE DEFAULT CONTEXT MANAGER
+  const labId = quest.goblin.id;
   quest.create ('contexts', {
-    id: `contexts@default`,
+    id: `contexts@${labId}`,
   });
 
   quest.cmd ('laboratory.add', {
     id: quest.goblin.id,
-    widgetId: `contexts@default`,
+    widgetId: `contexts@${labId}`,
   });
 
   // CREATE DEFAULT TABS MANAGER
   quest.create ('tabs', {
-    id: `tabs@default`,
+    id: `tabs@${labId}`,
   });
 
   quest.cmd ('laboratory.add', {
     id: quest.goblin.id,
-    widgetId: `tabs@default`,
+    widgetId: `tabs@${labId}`,
   });
   quest.log.info (`Laboratory ${quest.goblin.id} created!`);
   return quest.goblin.id;
@@ -378,6 +388,13 @@ Goblin.registerQuest (goblinName, '_ready', function* (quest, wid) {
 Goblin.registerQuest (goblinName, 'open', function (quest, route) {
   quest.log.info ('Laboratory opening:');
   quest.log.info (route);
+});
+
+Goblin.registerQuest (goblinName, 'change-mandate', function (quest) {
+  const onChangeMandate = quest.goblin.getX ('onChangeMandate');
+  if (onChangeMandate) {
+    quest.cmd (onChangeMandate.quest, {id: onChangeMandate.id});
+  }
 });
 
 Goblin.registerQuest (goblinName, 'add', function* (
