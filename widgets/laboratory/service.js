@@ -126,7 +126,7 @@ Goblin.registerQuest (goblinName, 'create', function* (
     });
   }
 
-  if (usePack) {
+  if (usePack && existingUrl) {
     quest.cmd ('webpack.pack', {
       goblin: 'laboratory',
       jobId: quest.goblin.id,
@@ -138,7 +138,7 @@ Goblin.registerQuest (goblinName, 'create', function* (
     quest.goblin.setX ('onChangeMandate', onChangeMandate);
   }
 
-  if (!existingUrl) {
+  if (usePack || !existingUrl) {
     quest.log.info (`Waiting for webpack goblin`);
     yield quest.sub.wait (`webpack.${quest.goblin.id}.done`);
   }
