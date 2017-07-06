@@ -106,6 +106,7 @@ let increment = 0;
 Goblin.registerQuest (goblinName, 'create', function* (
   quest,
   url,
+  usePack,
   routes,
   onChangeMandate
 ) {
@@ -123,7 +124,9 @@ Goblin.registerQuest (goblinName, 'create', function* (
       jobId: quest.goblin.id,
       port: port,
     });
-  } else {
+  }
+
+  if (usePack) {
     quest.cmd ('webpack.pack', {
       goblin: 'laboratory',
       jobId: quest.goblin.id,
@@ -135,8 +138,10 @@ Goblin.registerQuest (goblinName, 'create', function* (
     quest.goblin.setX ('onChangeMandate', onChangeMandate);
   }
 
-  quest.log.info (`Waiting for webpack goblin`);
-  yield quest.sub.wait (`webpack.${quest.goblin.id}.done`);
+  if (!existingUrl) {
+    quest.log.info (`Waiting for webpack goblin`);
+    yield quest.sub.wait (`webpack.${quest.goblin.id}.done`);
+  }
 
   quest.log.info (`Opening a window`);
 
