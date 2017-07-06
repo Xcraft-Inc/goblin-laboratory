@@ -6,7 +6,7 @@ const uuidV4 = require ('uuid/v4');
 const goblinName = path.basename (module.parent.filename, '.js');
 
 // Default route/view mapping
-// /mountpoint/:context/:workitem/
+// /mountpoint/:context/:view/:hinter
 const defaultRoutes = {
   tabs: '/before-content/:context',
   workitem: '/content/:context/:view',
