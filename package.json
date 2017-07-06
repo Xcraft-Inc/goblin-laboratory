@@ -22,7 +22,7 @@
     "history": "^4.6.1",
     "immutable": "^4.0.0-rc.2",
     "immutable-devtools": "0.0.7",
-    "immutablepatch": "^0.4.1",
+    "immutablepatch": "Xcraft-Inc/immutable-js-patch",
     "prop-types": "^15.5.10",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
