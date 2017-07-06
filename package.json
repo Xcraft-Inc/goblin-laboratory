@@ -41,7 +41,7 @@
     "uuid": "^3.0.1",
     "xcraft-core-fs": "^1.0.1",
     "xcraft-core-goblin": "^2.0.0",
-    "xcraft-core-shredder": "^0.0.1"
+    "xcraft-core-shredder": "^1.0.0"
   },
   "devDependencies": {
     "babel-cli": "",
