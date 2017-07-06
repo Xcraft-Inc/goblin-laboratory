@@ -52,7 +52,7 @@ const logicHandlers = {
     return state.set ('showNotifications', action.get ('showValue'));
   },
   'add-notification': (state, action) => {
-    const notifId = uuidV4 ();
+    const notifId = action.get ('id');
     const notif = {
       id: notifId,
       command: action.get ('command'),
@@ -338,17 +338,22 @@ Goblin.registerQuest (goblinName, 'duplicate', function* (quest) {
 
 Goblin.registerQuest (goblinName, 'add-notification', function (
   quest,
+  id,
   glyph,
   color,
   message,
   command
 ) {
-  quest.do ({glyph, color, message, command});
+  if (!id) {
+    id = uuidV4 ();
+  }
+  quest.do ({id, glyph, color, message, command});
   const dnd = quest.goblin.getState ().get ('dnd');
   if (dnd !== 'true') {
     quest.dispatch ('toggle-notifications', {showValue: 'true'});
   }
   quest.dispatch ('update-not-read-count');
+  return quest.goblin.getState ().get (`notifications.${id}`, null).toJS ();
 });
 
 Goblin.registerQuest (goblinName, 'remove-notification', function (
