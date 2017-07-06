@@ -153,20 +153,20 @@ Goblin.registerQuest (goblinName, 'create', function* (quest, url, routes) {
   yield quest.cmd ('wm.win.feed.sub', {wid, feeds});
 
   // CREATE DEFAULT CONTEXT MANAGER
-  const contexts = yield quest.create ('contexts', {
+  quest.create ('contexts', {
     id: `contexts@default`,
   });
-  quest.goblin.defer (contexts.delete);
+
   quest.cmd ('laboratory.add', {
     id: quest.goblin.id,
     widgetId: `contexts@default`,
   });
 
   // CREATE DEFAULT TABS MANAGER
-  const tabs = yield quest.create ('tabs', {
+  quest.create ('tabs', {
     id: `tabs@default`,
   });
-  quest.goblin.defer (tabs.delete);
+
   quest.cmd ('laboratory.add', {
     id: quest.goblin.id,
     widgetId: `tabs@default`,
@@ -208,7 +208,7 @@ Goblin.registerQuest (goblinName, 'create-hinter-for', function* (
     detailWidget,
   });
 
-  yield quest.cmd ('laboratory.add', {
+  quest.cmd ('laboratory.add', {
     id: quest.goblin.id,
     widgetId: hinter.id,
   });
@@ -261,7 +261,7 @@ Goblin.registerQuest (goblinName, 'add-tab', function* (
   });
 
   if (navigate) {
-    yield quest.cmd ('laboratory.nav-to-workitem', {
+    quest.cmd ('laboratory.nav-to-workitem', {
       id: quest.goblin.id,
       contextId,
       view,
@@ -300,7 +300,7 @@ Goblin.registerQuest (goblinName, 'nav-to-workitem', function* (
   const win = quest.use ('wm.win');
   quest.dispatch ('setCurrentWorkItemByContext', {contextId, view, workItemId});
   const tabs = quest.use ('tabs');
-  yield tabs.setCurrent ({contextId, workItemId});
+  tabs.setCurrent ({contextId, workItemId});
   if (skipNav) {
     return;
   }

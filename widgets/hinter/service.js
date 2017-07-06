@@ -37,7 +37,7 @@ const logicHandlers = {
 
 // Register quest's according rc.json
 
-Goblin.registerQuest (goblinName, 'create', function* (
+Goblin.registerQuest (goblinName, 'create', function (
   quest,
   id,
   labId,
@@ -48,14 +48,13 @@ Goblin.registerQuest (goblinName, 'create', function* (
   detailWidget
 ) {
   quest.do ({id, type, title, glyph, kind});
-  const detail = yield quest.create ('detail', {
+  quest.create ('detail', {
     id: `${id.replace ('-hinter', '-detail')}`,
     labId,
     type,
     title,
     detailWidget,
   });
-  quest.goblin.defer (detail.delete);
   return quest.goblin.id;
 });
 
