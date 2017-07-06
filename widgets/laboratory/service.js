@@ -103,7 +103,12 @@ const logicHandlers = {
 
 let increment = 0;
 // Register quest's according rc.json
-Goblin.registerQuest (goblinName, 'create', function* (quest, url, routes) {
+Goblin.registerQuest (goblinName, 'create', function* (
+  quest,
+  url,
+  routes,
+  onChangeMandate
+) {
   const port = 4000 + increment++;
   const existingUrl = url;
   let _url = existingUrl || `http://localhost:${port}`;
@@ -124,6 +129,10 @@ Goblin.registerQuest (goblinName, 'create', function* (quest, url, routes) {
       jobId: quest.goblin.id,
       outputPath: path.join (__dirname, '../../../../pack'),
     });
+  }
+
+  if (onChangeMandate) {
+    quest.goblin.setX ('onChangeMandate', onChangeMandate);
   }
 
   quest.log.info (`Waiting for webpack goblin`);
@@ -153,23 +162,24 @@ Goblin.registerQuest (goblinName, 'create', function* (quest, url, routes) {
   yield quest.cmd ('wm.win.feed.sub', {wid, feeds});
 
   // CREATE DEFAULT CONTEXT MANAGER
-  const contexts = yield quest.create ('contexts', {
-    id: `contexts@default`,
+  const labId = quest.goblin.id;
+  quest.create ('contexts', {
+    id: `contexts@${labId}`,
   });
-  quest.goblin.defer (contexts.delete);
+
   quest.cmd ('laboratory.add', {
     id: quest.goblin.id,
-    widgetId: `contexts@default`,
+    widgetId: `contexts@${labId}`,
   });
 
   // CREATE DEFAULT TABS MANAGER
-  const tabs = yield quest.create ('tabs', {
-    id: `tabs@default`,
+  quest.create ('tabs', {
+    id: `tabs@${labId}`,
   });
-  quest.goblin.defer (tabs.delete);
+
   quest.cmd ('laboratory.add', {
     id: quest.goblin.id,
-    widgetId: `tabs@default`,
+    widgetId: `tabs@${labId}`,
   });
   quest.log.info (`Laboratory ${quest.goblin.id} created!`);
   return quest.goblin.id;
@@ -208,7 +218,7 @@ Goblin.registerQuest (goblinName, 'create-hinter-for', function* (
     detailWidget,
   });
 
-  yield quest.cmd ('laboratory.add', {
+  quest.cmd ('laboratory.add', {
     id: quest.goblin.id,
     widgetId: hinter.id,
   });
@@ -261,7 +271,7 @@ Goblin.registerQuest (goblinName, 'add-tab', function* (
   });
 
   if (navigate) {
-    yield quest.cmd ('laboratory.nav-to-workitem', {
+    quest.cmd ('laboratory.nav-to-workitem', {
       id: quest.goblin.id,
       contextId,
       view,
@@ -300,7 +310,7 @@ Goblin.registerQuest (goblinName, 'nav-to-workitem', function* (
   const win = quest.use ('wm.win');
   quest.dispatch ('setCurrentWorkItemByContext', {contextId, view, workItemId});
   const tabs = quest.use ('tabs');
-  yield tabs.setCurrent ({contextId, workItemId});
+  tabs.setCurrent ({contextId, workItemId});
   if (skipNav) {
     return;
   }
@@ -378,6 +388,13 @@ Goblin.registerQuest (goblinName, '_ready', function* (quest, wid) {
 Goblin.registerQuest (goblinName, 'open', function (quest, route) {
   quest.log.info ('Laboratory opening:');
   quest.log.info (route);
+});
+
+Goblin.registerQuest (goblinName, 'change-mandate', function (quest) {
+  const onChangeMandate = quest.goblin.getX ('onChangeMandate');
+  if (onChangeMandate) {
+    quest.cmd (onChangeMandate.quest, {id: onChangeMandate.id});
+  }
 });
 
 Goblin.registerQuest (goblinName, 'add', function* (

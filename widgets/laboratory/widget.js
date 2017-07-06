@@ -78,6 +78,7 @@ class Laboratory extends Widget {
               glyph="cube"
               tooltip="Changer de mandat"
               kind="task-logo"
+              onClick={() => this.do ('change-mandate')}
             />
             <Tasks />
           </Container>
