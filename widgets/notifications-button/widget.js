@@ -14,6 +14,22 @@ class NotificationsButton extends Widget {
     };
   }
 
+  componentDidMount () {
+    super.componentDidMount ();
+
+    if (!window.document.notificationsButtons) {
+      window.document.notificationsButtons = [];
+    }
+    window.document.notificationsButtons.push (this);
+  }
+
+  componentWillUnmount () {
+    const index = window.document.notificationsButtons.indexOf (this);
+    if (index !== -1) {
+      window.document.notificationsButtons.splice (index, 1);
+    }
+  }
+
   render () {
     return (
       <Button
