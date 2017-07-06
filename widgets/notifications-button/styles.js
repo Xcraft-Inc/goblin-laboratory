@@ -12,7 +12,7 @@ export default function styles (theme, props) {
     position: 'absolute',
     right: '0px',
     top: buttonHeight,
-    zIndex: 4,
+    zIndex: 5,
   };
 
   return {
