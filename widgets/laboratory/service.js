@@ -154,6 +154,8 @@ Goblin.registerQuest (goblinName, 'create', function* (
     _url += '?react_perf';
   }
 
+  quest.goblin.setX ('url', _url);
+
   //CREATE A WINDOW
   const win = yield quest.create ('wm.win', {
     url: _url,
@@ -320,6 +322,10 @@ Goblin.registerQuest (goblinName, 'nav-to-workitem', function* (
     return;
   }
   yield win.nav ({route: `/${contextId}/${view}?wid=${workItemId}`});
+});
+
+Goblin.registerQuest (goblinName, 'get-url', function (quest) {
+  return quest.goblin.getX ('url');
 });
 
 Goblin.registerQuest (goblinName, 'duplicate', function* (quest) {
