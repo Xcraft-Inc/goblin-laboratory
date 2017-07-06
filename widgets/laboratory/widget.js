@@ -94,7 +94,6 @@ class Laboratory extends Widget {
           <Container kind="footer">
             <span>{id}</span>
           </Container>
-          <Notifications />
         </Container>
       </Container>
     );
