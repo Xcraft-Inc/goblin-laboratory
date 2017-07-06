@@ -4,6 +4,7 @@ import Container from 'gadgets/container/widget';
 import Button from 'gadgets/button/widget';
 import importer from '../importer/';
 import Notif from 'gadgets/notifications/widget';
+
 const wireNotif = Widget.Wired (Notif);
 
 const viewImporter = importer ('view');
