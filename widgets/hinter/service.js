@@ -91,6 +91,13 @@ Goblin.registerQuest (goblinName, 'set-selections', function (
   values
 ) {
   quest.do ({rows, values});
+  if (rows.length > 0) {
+    quest.cmd ('hinter.select-row', {
+      id: quest.goblin.id,
+      index: 0,
+      text: rows[0],
+    });
+  }
 });
 
 Goblin.registerQuest (goblinName, 'delete', function (quest, id) {
