@@ -215,15 +215,25 @@ Goblin.registerQuest (goblinName, 'create-hinter-for', function* (
     title = type;
   }
 
-  const hinter = yield quest.create (`hinter@${widgetId}`, {
-    id: widgetId,
-    labId: quest.goblin.id,
-    type,
-    title,
-    glyph,
-    kind,
-    detailWidget,
-  });
+  let goblinName = workitemId;
+  if (workitemId.indexOf ('@') !== -1) {
+    goblinName = workitemId.split ('@')[0];
+  }
+
+  const hinter = yield quest.createFor (
+    goblinName,
+    workitemId,
+    `hinter@${widgetId}`,
+    {
+      id: widgetId,
+      labId: quest.goblin.id,
+      type,
+      title,
+      glyph,
+      kind,
+      detailWidget,
+    }
+  );
 
   quest.cmd ('laboratory.add', {
     id: quest.goblin.id,
@@ -240,11 +250,22 @@ Goblin.registerQuest (goblinName, 'create-form-for', function* (
     throw new Error ('Cannot create form without a workitemId');
   }
   const widgetId = `form@${workitemId}`;
-  const form = yield quest.create (`form@${workitemId}`, {
-    id: widgetId,
-    labId: quest.goblin.id,
+
+  let goblinName = workitemId;
+  if (workitemId.indexOf ('@') !== -1) {
+    goblinName = workitemId.split ('@')[0];
+  }
+
+  const form = yield quest.createFor (
+    goblinName,
     workitemId,
-  });
+    `form@${workitemId}`,
+    {
+      id: widgetId,
+      labId: quest.goblin.id,
+      workitemId,
+    }
+  );
 
   quest.cmd ('laboratory.add', {
     id: quest.goblin.id,

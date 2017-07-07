@@ -18,7 +18,7 @@ const logicHandlers = {
   },
   'save-form': (state, action) => {
     const value = action.get ('value');
-    return state.set ('form', value).set ('focused', action.get ('focused'));
+    return state.set ('value', value).set ('focused', action.get ('focused'));
   },
 };
 
