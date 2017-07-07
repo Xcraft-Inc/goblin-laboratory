@@ -80,6 +80,8 @@ Goblin.registerQuest (goblinName, 'select-row', function (quest, index, text) {
       id: workitemId,
       selection: {index, text, value},
     });
+    const detail = quest.use ('detail');
+    detail.setEntity ({entityId: value});
   }
 });
 
