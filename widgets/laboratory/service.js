@@ -18,6 +18,8 @@ const defaultRoutes = {
 // Define initial logic values
 const logicState = {};
 
+let nextNotificationOrder = 0;
+
 // Define logic handlers according rc.json
 const logicHandlers = {
   create: (state, action) => {
@@ -52,20 +54,23 @@ const logicHandlers = {
     return state.set ('showNotifications', action.get ('showValue'));
   },
   'add-notification': (state, action) => {
-    const notifId = action.get ('notificationId');
-    const notif = {
-      id: notifId,
+    const notificationId = action.get ('notificationId');
+    const notification = {
+      id: notificationId,
+      order: nextNotificationOrder++,
       command: action.get ('command'),
       status: 'not-read',
       glyph: action.get ('glyph'),
       color: action.get ('color'),
       message: action.get ('message'),
     };
-    return state.set (`notifications.${notifId}`, notif);
+    return state.set (`notifications.${notificationId}`, notification);
   },
   'update-not-read-count': state => {
-    const notifs = state.get ('notifications').select ((i, v) => v.toJS ());
-    const count = notifs.reduce ((acc, n) => {
+    const notifications = state
+      .get ('notifications')
+      .select ((i, v) => v.toJS ());
+    const count = notifications.reduce ((acc, n) => {
       if (n.status === 'not-read') {
         return acc + 1;
       }
