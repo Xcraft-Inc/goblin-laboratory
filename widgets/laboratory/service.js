@@ -423,7 +423,9 @@ Goblin.registerQuest (goblinName, 'click-notification', function (
   quest,
   notification
 ) {
-  quest.cmd (notification.command, {notification});
+  if (notification.command) {
+    quest.cmd (notification.command, {notification});
+  }
 });
 
 Goblin.registerQuest (goblinName, 'toggle-dnd', function (quest) {
