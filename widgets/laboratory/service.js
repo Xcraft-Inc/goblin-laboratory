@@ -97,7 +97,7 @@ const logicHandlers = {
     return state
       .set (
         `current.workitems.${action.get ('contextId')}`,
-        action.get ('workItemId')
+        action.get ('workitemId')
       )
       .set (`current.views.${action.get ('contextId')}`, action.get ('view'));
   },
@@ -199,14 +199,14 @@ Goblin.registerQuest (goblinName, 'create', function* (
 
 Goblin.registerQuest (goblinName, 'create-hinter-for', function* (
   quest,
-  workItemId,
+  workitemId,
   detailWidget,
   type,
   title,
   glyph,
   kind
 ) {
-  const widgetId = workItemId ? `${type}-hinter@${workItemId}` : null;
+  const widgetId = workitemId ? `${type}-hinter@${workitemId}` : null;
 
   if (!type) {
     throw new Error ('Hinter type required');
@@ -220,21 +220,63 @@ Goblin.registerQuest (goblinName, 'create-hinter-for', function* (
     title = type;
   }
 
-  const hinter = yield quest.create (`hinter@${widgetId}`, {
-    id: widgetId,
-    labId: quest.goblin.id,
-    type,
-    title,
-    glyph,
-    kind,
-    detailWidget,
-  });
+  let goblinName = workitemId;
+  if (workitemId.indexOf ('@') !== -1) {
+    goblinName = workitemId.split ('@')[0];
+  }
+
+  const hinter = yield quest.createFor (
+    goblinName,
+    workitemId,
+    `hinter@${widgetId}`,
+    {
+      id: widgetId,
+      labId: quest.goblin.id,
+      type,
+      title,
+      glyph,
+      kind,
+      detailWidget,
+    }
+  );
 
   quest.cmd ('laboratory.add', {
     id: quest.goblin.id,
     widgetId: hinter.id,
   });
   return hinter.id;
+});
+
+Goblin.registerQuest (goblinName, 'create-form-for', function* (
+  quest,
+  workitemId
+) {
+  if (!workitemId) {
+    throw new Error ('Cannot create form without a workitemId');
+  }
+  const widgetId = `form@${workitemId}`;
+
+  let goblinName = workitemId;
+  if (workitemId.indexOf ('@') !== -1) {
+    goblinName = workitemId.split ('@')[0];
+  }
+
+  const form = yield quest.createFor (
+    goblinName,
+    workitemId,
+    `form@${workitemId}`,
+    {
+      id: widgetId,
+      labId: quest.goblin.id,
+      workitemId,
+    }
+  );
+
+  quest.cmd ('laboratory.add', {
+    id: quest.goblin.id,
+    widgetId: form.id,
+  });
+  return form.id;
 });
 
 Goblin.registerQuest (goblinName, 'add-context', function (
@@ -255,7 +297,7 @@ Goblin.registerQuest (goblinName, 'add-tab', function* (
   name,
   contextId,
   view,
-  workItemId,
+  workitemId,
   navigate
 ) {
   const state = quest.goblin.getState ();
@@ -264,7 +306,7 @@ Goblin.registerQuest (goblinName, 'add-tab', function* (
     quest.dispatch ('setCurrentWorkItemByContext', {
       contextId,
       view,
-      workItemId,
+      workitemId,
     });
   }
   const tabs = quest.use ('tabs');
@@ -272,14 +314,14 @@ Goblin.registerQuest (goblinName, 'add-tab', function* (
     name,
     contextId,
     view,
-    workItemId,
+    workitemId,
     labId: quest.goblin.id,
   });
 
   //Add workitem
   quest.cmd ('laboratory.add', {
     id: quest.goblin.id,
-    widgetId: workItemId,
+    widgetId: workitemId,
   });
 
   if (navigate) {
@@ -287,7 +329,7 @@ Goblin.registerQuest (goblinName, 'add-tab', function* (
       id: quest.goblin.id,
       contextId,
       view,
-      workItemId,
+      workitemId,
     });
   }
 });
@@ -316,17 +358,17 @@ Goblin.registerQuest (goblinName, 'nav-to-workitem', function* (
   quest,
   contextId,
   view,
-  workItemId,
+  workitemId,
   skipNav
 ) {
   const win = quest.use ('wm.win');
-  quest.dispatch ('setCurrentWorkItemByContext', {contextId, view, workItemId});
+  quest.dispatch ('setCurrentWorkItemByContext', {contextId, view, workitemId});
   const tabs = quest.use ('tabs');
-  tabs.setCurrent ({contextId, workItemId});
+  tabs.setCurrent ({contextId, workitemId});
   if (skipNav) {
     return;
   }
-  yield win.nav ({route: `/${contextId}/${view}?wid=${workItemId}`});
+  yield win.nav ({route: `/${contextId}/${view}?wid=${workitemId}`});
 });
 
 Goblin.registerQuest (goblinName, 'get-url', function (quest) {

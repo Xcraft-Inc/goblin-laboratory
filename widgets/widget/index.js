@@ -15,18 +15,27 @@ const stylesImporter = importer ('styles');
 
 const hashStyles = {};
 
-const jsifyPropsNames = props => {
-  const jsified = {};
-  Object.keys (props).filter (k => props[k] && k !== 'children').forEach (k => {
-    jsified[
-      k.indexOf ('-') >= 0
-        ? k.replace (/-([a-z])/g, (m, g1) => g1.toUpperCase ())
-        : k
-    ] =
-      props[k];
-  });
-  return jsified;
-};
+/**
+ * Remove props that are functions, 'children' or undefined, null
+ *
+ * @param {object} props - Component properties.
+ * @returns {object} the filtered props.
+ */
+const getPropsForStyles = props =>
+  Object.assign (
+    {},
+    ...Object.keys (props)
+      .filter (
+        k =>
+          props[k] !== undefined &&
+          props[k] !== null &&
+          k !== 'children' &&
+          typeof props[k] !== 'function'
+      )
+      .map (k => ({
+        [k]: props[k],
+      }))
+  );
 
 const injectCSS = classes => {
   traverse (classes).forEach (function (style) {
@@ -67,7 +76,7 @@ class Widget extends React.PureComponent {
       return {};
     }
 
-    const styleProps = jsifyPropsNames (this.props);
+    const styleProps = getPropsForStyles (this.props);
     const h = fasterStringify (styleProps);
     const k = `${this.name}${this.context.theme.name}${h}`;
 
@@ -225,13 +234,13 @@ class Widget extends React.PureComponent {
     });
   }
 
-  navToWorkItem (contextId, view, workItemId) {
-    this.nav (`/${contextId}/${view}?wid=${workItemId}`);
+  navToWorkItem (contextId, view, workitemId) {
+    this.nav (`/${contextId}/${view}?wid=${workitemId}`);
     this.cmd ('laboratory.nav-to-workitem', {
       id: this.context.labId,
       contextId,
       view,
-      workItemId,
+      workitemId,
       skipNav: true,
     });
   }

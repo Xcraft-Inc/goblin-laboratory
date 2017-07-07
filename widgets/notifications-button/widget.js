@@ -40,7 +40,7 @@ class NotificationsButton extends Widget {
           glyph="bell"
           glyphPosition="right"
           kind="view-tab-right"
-          badge-value={this.props.notReadCount}
+          badgeValue={this.props.notReadCount}
           onClick={() => this.doAs ('laboratory', 'toggle-notifications')}
         />
         <div className={anchorClass}>

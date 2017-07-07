@@ -69,7 +69,7 @@ class Laboratory extends Widget {
         <Container kind="left-bar">
           <Container kind="task-bar">
             <Button
-              text-transform="none"
+              textTransform="none"
               text="Poly"
               glyph="cube"
               tooltip="Changer de mandat"

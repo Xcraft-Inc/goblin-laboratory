@@ -1,6 +1,7 @@
 import React from 'react';
-import {actions, LocalForm} from 'react-redux-form';
+import {actions} from 'react-redux-form';
 import _ from 'lodash';
+import LocalForm from './local-form';
 import Widget from 'laboratory/widget';
 import fasterStringify from 'faster-stable-stringify';
 
@@ -105,39 +106,27 @@ class Form extends Widget {
   }
 
   getForm (id) {
-    return props => {
-      const {initialState, focused} = props;
-      if (!id) {
-        return null;
-      }
+    if (!id) {
+      return null;
+    }
+    const WiredLocalForm = Widget.Wired (LocalForm) (`form@${id}`);
 
-      const handleUpdate = values => {
-        this.handleFormUpdates (id, values);
-      };
-      const onUpdate = this.debounceUpdates (handleUpdate);
-      return (
-        <LocalForm
-          model={id}
-          onUpdate={onUpdate}
-          getDispatch={dispatch => {
-            this.attachDispatch (dispatch);
-            if (focused) {
-              this.formFocus (`${id}.${focused}`);
-            }
-          }}
-          initialState={initialState}
-        >
-          {props.children}
-        </LocalForm>
-      );
-    };
+    return props => (
+      <WiredLocalForm
+        handleFormUpdates={::this.handleFormUpdates}
+        debounceUpdates={::this.debounceUpdates}
+        attachDispatch={::this.attachDispatch}
+        formFocus={::this.formFocus}
+      >
+        {props.children}
+      </WiredLocalForm>
+    );
   }
 
   componentWillUnmount () {
     Object.keys (this._forms).forEach (id => {
-      const service = id.split ('@')[0];
-      this.cmd (`${service}.save-form`, {
-        id,
+      this.cmd (`form.save-form`, {
+        id: `form@${id}`,
         value: this._forms[id].value,
         focused: this._focused[id],
       });
