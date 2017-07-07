@@ -25,17 +25,17 @@ const logicHandlers = {
     const tab = {
       id: tabId,
       view: action.get ('view'),
-      workItemId: action.get ('workItemId'),
+      workitemId: action.get ('workitemId'),
     };
     if (!current) {
       return state
-        .set (`current.${contextId}`, action.get ('workItemId'))
+        .set (`current.${contextId}`, action.get ('workitemId'))
         .set (`tabs.${contextId}.${tabId}`, tab);
     }
     return state.set (`tabs.${contextId}.${tabId}`, tab);
   },
   'set-current': (state, action) => {
-    const wid = action.get ('workItemId');
+    const wid = action.get ('workitemId');
     const contextId = action.get ('contextId');
     return state.set (`current.${contextId}`, wid);
   },
@@ -63,9 +63,9 @@ Goblin.registerQuest (goblinName, 'delete', function (quest, id) {
 Goblin.registerQuest (goblinName, 'set-current', function (
   quest,
   contextId,
-  workItemId
+  workitemId
 ) {
-  quest.do ({contextId, workItemId});
+  quest.do ({contextId, workitemId});
 });
 
 Goblin.registerQuest (goblinName, 'add', function* (
@@ -74,14 +74,14 @@ Goblin.registerQuest (goblinName, 'add', function* (
   contextId,
   name,
   view,
-  workItemId
+  workitemId
 ) {
   const tab = yield quest.create (`button@${uuidV4 ()}`, {
-    id: `${contextId}-tab@${workItemId}`,
+    id: `${contextId}-tab@${workitemId}`,
     text: name,
     kind: 'view-tab',
   });
-  quest.do ({tabId: tab.id, contextId, view, name, workItemId});
+  quest.do ({tabId: tab.id, contextId, view, name, workitemId});
   quest.goblin.defer (tab.delete);
   const lab = quest.useAs ('laboratory', labId);
   lab.add ({widgetId: tab.id});
