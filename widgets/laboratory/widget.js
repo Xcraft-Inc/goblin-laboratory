@@ -1,9 +1,13 @@
 import React from 'react';
 import Widget from 'laboratory/widget';
-import Container from 'gadgets/container/widget';
-import Button from 'gadgets/button/widget';
 import importer from '../importer/';
 
+import Container from 'gadgets/container/widget';
+import Button from 'gadgets/button/widget';
+import Label from 'gadgets/label/widget';
+import Notifications from 'gadgets/notifications/widget';
+
+const wiredNotifications = Widget.Wired (Notifications);
 const viewImporter = importer ('view');
 
 class Laboratory extends Widget {
@@ -18,6 +22,12 @@ class Laboratory extends Widget {
       show: 'showNotifications',
       data: 'notifications',
     };
+  }
+
+  renderNofications () {
+    const WiredNotifications = wiredNotifications (this.props.id);
+
+    return <WiredNotifications />;
   }
 
   render () {
@@ -64,6 +74,8 @@ class Laboratory extends Widget {
       routes['/before-content/'].path
     );
 
+    const contentClass = this.styles.classNames.content;
+
     return (
       <Container kind="root">
         <Container kind="left-bar">
@@ -85,10 +97,13 @@ class Laboratory extends Widget {
               <TopBar />
             </Container>
             <BeforeContent />
-            <Content />
-          </Container>
-          <Container kind="footer">
-            <span>{id}</span>
+            <div className={contentClass}>
+              <Content />
+              {this.renderNofications ()}
+            </div>
+            <Container kind="footer">
+              <span>{id}</span>
+            </Container>
           </Container>
         </Container>
       </Container>
