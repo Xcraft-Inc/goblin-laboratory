@@ -98,7 +98,8 @@ Goblin.registerQuest (goblinName, 'create', function* (quest, url, usePack) {
 
 Goblin.registerQuest (goblinName, 'create-form-for', function* (
   quest,
-  workitemId
+  workitemId,
+  value
 ) {
   if (!workitemId) {
     throw new Error ('Cannot create form without a workitemId');
@@ -118,6 +119,7 @@ Goblin.registerQuest (goblinName, 'create-form-for', function* (
       id: widgetId,
       labId: quest.goblin.id,
       workitemId,
+      value,
     }
   );
 

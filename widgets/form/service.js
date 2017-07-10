@@ -12,7 +12,7 @@ const logicHandlers = {
     return state.set ('', {
       id: id,
       workitemId: action.get ('workitemId'),
-      value: {},
+      value: action.get ('value'),
       focused: null,
     });
   },
@@ -22,8 +22,12 @@ const logicHandlers = {
   },
 };
 
-Goblin.registerQuest (goblinName, 'create', function* (quest, workitemId) {
-  quest.do ({id: quest.goblin.id, workitemId});
+Goblin.registerQuest (goblinName, 'create', function* (
+  quest,
+  workitemId,
+  value
+) {
+  quest.do ({id: quest.goblin.id, workitemId, value});
   return quest.goblin.id;
 });
 
