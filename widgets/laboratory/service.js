@@ -88,6 +88,7 @@ Goblin.registerQuest (goblinName, 'create', function* (quest, url, usePack) {
 
   const unsubDeleted = quest.sub ('goblin.deleted', (err, msg) => {
     quest.cmd ('laboratory.del', {id: quest.goblin.id, widgetId: msg.data.id});
+    quest.cmd ('warehouse.remove', {branch: msg.data.id});
   });
   quest.goblin.defer (unsubDeleted);
 
