@@ -2,23 +2,10 @@
 
 const path = require ('path');
 const Goblin = require ('xcraft-core-goblin');
-const uuidV4 = require ('uuid/v4');
 const goblinName = path.basename (module.parent.filename, '.js');
-
-// Default route/view mapping
-// /mountpoint/:context/:view/:hinter
-const defaultRoutes = {
-  tabs: '/before-content/:context',
-  workitem: '/content/:context/:view',
-  hinter: '/hinter/:context/:view/:hinter',
-  tasks: '/task-bar/:context',
-  contexts: '/top-bar/',
-};
 
 // Define initial logic values
 const logicState = {};
-
-let nextNotificationOrder = 0;
 
 // Define logic handlers according rc.json
 const logicHandlers = {
@@ -29,77 +16,11 @@ const logicHandlers = {
       id: id,
       url: action.get ('url'),
       wid: action.get ('wid'),
-      showNotifications: 'false',
-      dnd: 'false',
-      onlyNews: 'false',
-      notReadCount: 0,
-      notifications: {},
       feeds: conf.feeds,
-      routes: conf.routes,
-      current: {
-        workitems: {},
-      },
     });
   },
-  'toggle-dnd': state => {
-    return state.set ('dnd', state.get ('dnd') === 'false' ? 'true' : 'false');
-  },
-  'toggle-only-news': state => {
-    return state.set (
-      'onlyNews',
-      state.get ('onlyNews') === 'false' ? 'true' : 'false'
-    );
-  },
-  'toggle-notifications': (state, action) => {
-    return state.set ('showNotifications', action.get ('showValue'));
-  },
-  'add-notification': (state, action) => {
-    const notificationId = action.get ('notificationId');
-    const notification = {
-      id: notificationId,
-      order: nextNotificationOrder++,
-      command: action.get ('command'),
-      status: 'not-read',
-      glyph: action.get ('glyph'),
-      color: action.get ('color'),
-      message: action.get ('message'),
-    };
-    return state.set (`notifications.${notificationId}`, notification);
-  },
-  'update-not-read-count': state => {
-    const notifications = state
-      .get ('notifications')
-      .select ((i, v) => v.toJS ());
-    const count = notifications.reduce ((acc, n) => {
-      if (n.status === 'not-read') {
-        return acc + 1;
-      }
-      return acc;
-    }, 0);
-    return state.set ('notReadCount', count);
-  },
-  'read-all': state => {
-    const notifications = state.get ('notifications');
-    const newNotifications = notifications.transform (
-      i => i,
-      (i, v) => v.set ('status', 'read')
-    );
-    return state.set ('notifications', newNotifications);
-  },
-  'remove-notification': (state, action) => {
-    const id = action.get ('notification').id;
-    return state.del (`notifications.${id}`);
-  },
-  'remove-notifications': state => {
-    return state.set (`notifications`, {});
-  },
-  setCurrentWorkItemByContext: (state, action) => {
-    return state
-      .set (
-        `current.workitems.${action.get ('contextId')}`,
-        action.get ('workitemId')
-      )
-      .set (`current.views.${action.get ('contextId')}`, action.get ('view'));
+  'set-root': (state, action) => {
+    return state.set ('root', action.get ('widgetId'));
   },
   'update-feeds': (state, action) => {
     return state.set ('feeds', action.get ('feeds'));
@@ -108,20 +29,10 @@ const logicHandlers = {
 
 let increment = 0;
 // Register quest's according rc.json
-Goblin.registerQuest (goblinName, 'create', function* (
-  quest,
-  url,
-  usePack,
-  routes,
-  onChangeMandate
-) {
+Goblin.registerQuest (goblinName, 'create', function* (quest, url, usePack) {
   const port = 4000 + increment++;
   const existingUrl = url;
   let _url = existingUrl || `http://localhost:${port}`;
-
-  if (!routes) {
-    routes = defaultRoutes;
-  }
 
   if (!existingUrl) {
     quest.cmd ('webpack.server.start', {
@@ -139,10 +50,6 @@ Goblin.registerQuest (goblinName, 'create', function* (
     });
   }
 
-  if (onChangeMandate) {
-    quest.goblin.setX ('onChangeMandate', onChangeMandate);
-  }
-
   if (usePack || !existingUrl) {
     quest.log.info (`Waiting for webpack goblin`);
     yield quest.sub.wait (`webpack.${quest.goblin.id}.done`);
@@ -150,7 +57,7 @@ Goblin.registerQuest (goblinName, 'create', function* (
 
   quest.log.info (`Opening a window`);
 
-  const config = {routes, feeds: []};
+  const config = {feeds: []};
 
   let feeds = config.feeds;
   feeds.push (quest.goblin.id);
@@ -164,6 +71,7 @@ Goblin.registerQuest (goblinName, 'create', function* (
   //CREATE A WINDOW
   const win = yield quest.create ('wm.win', {
     url: _url,
+    labId: quest.goblin.id,
     feeds,
   });
 
@@ -173,78 +81,18 @@ Goblin.registerQuest (goblinName, 'create', function* (
   quest.do ({id: quest.goblin.id, wid, url: _url, config});
   yield quest.cmd ('wm.win.feed.sub', {wid, feeds});
 
-  // CREATE DEFAULT CONTEXT MANAGER
-  const labId = quest.goblin.id;
-  quest.create ('contexts', {
-    id: `contexts@${labId}`,
+  const unsubCreated = quest.sub ('goblin.created', (err, msg) => {
+    quest.cmd ('laboratory.add', {id: quest.goblin.id, widgetId: msg.data.id});
   });
+  quest.goblin.defer (unsubCreated);
 
-  quest.cmd ('laboratory.add', {
-    id: quest.goblin.id,
-    widgetId: `contexts@${labId}`,
+  const unsubDeleted = quest.sub ('goblin.deleted', (err, msg) => {
+    quest.cmd ('laboratory.del', {id: quest.goblin.id, widgetId: msg.data.id});
   });
+  quest.goblin.defer (unsubDeleted);
 
-  // CREATE DEFAULT TABS MANAGER
-  quest.create ('tabs', {
-    id: `tabs@${labId}`,
-  });
-
-  quest.cmd ('laboratory.add', {
-    id: quest.goblin.id,
-    widgetId: `tabs@${labId}`,
-  });
   quest.log.info (`Laboratory ${quest.goblin.id} created!`);
   return quest.goblin.id;
-});
-
-Goblin.registerQuest (goblinName, 'create-hinter-for', function* (
-  quest,
-  workitemId,
-  detailWidget,
-  type,
-  title,
-  glyph,
-  kind
-) {
-  const widgetId = workitemId ? `${type}-hinter@${workitemId}` : null;
-
-  if (!type) {
-    throw new Error ('Hinter type required');
-  }
-
-  if (!kind) {
-    kind = 'list';
-  }
-
-  if (!title) {
-    title = type;
-  }
-
-  let goblinName = workitemId;
-  if (workitemId.indexOf ('@') !== -1) {
-    goblinName = workitemId.split ('@')[0];
-  }
-
-  const hinter = yield quest.createFor (
-    goblinName,
-    workitemId,
-    `hinter@${widgetId}`,
-    {
-      id: widgetId,
-      labId: quest.goblin.id,
-      type,
-      title,
-      glyph,
-      kind,
-      detailWidget,
-    }
-  );
-
-  quest.cmd ('laboratory.add', {
-    id: quest.goblin.id,
-    widgetId: hinter.id,
-  });
-  return hinter.id;
 });
 
 Goblin.registerQuest (goblinName, 'create-form-for', function* (
@@ -279,98 +127,6 @@ Goblin.registerQuest (goblinName, 'create-form-for', function* (
   return form.id;
 });
 
-Goblin.registerQuest (goblinName, 'add-context', function (
-  quest,
-  contextId,
-  name
-) {
-  const contexts = quest.use ('contexts');
-  contexts.add ({
-    labId: quest.goblin.id,
-    contextId,
-    name,
-  });
-});
-
-Goblin.registerQuest (goblinName, 'add-tab', function* (
-  quest,
-  name,
-  contextId,
-  view,
-  workitemId,
-  navigate
-) {
-  const state = quest.goblin.getState ();
-  const workItem = state.get (`current.workitems.${contextId}`, null);
-  if (!workItem) {
-    quest.dispatch ('setCurrentWorkItemByContext', {
-      contextId,
-      view,
-      workitemId,
-    });
-  }
-  const tabs = quest.use ('tabs');
-  tabs.add ({
-    name,
-    contextId,
-    view,
-    workitemId,
-    labId: quest.goblin.id,
-  });
-
-  //Add workitem
-  quest.cmd ('laboratory.add', {
-    id: quest.goblin.id,
-    widgetId: workitemId,
-  });
-
-  if (navigate) {
-    quest.cmd ('laboratory.nav-to-workitem', {
-      id: quest.goblin.id,
-      contextId,
-      view,
-      workitemId,
-    });
-  }
-});
-
-Goblin.registerQuest (goblinName, 'nav-to-context', function (
-  quest,
-  contextId
-) {
-  const win = quest.use ('wm.win');
-  const state = quest.goblin.getState ();
-  const view = state.get (`current.views.${contextId}`, null);
-
-  if (view) {
-    const workItem = state.get (`current.workitems.${contextId}`, null);
-    if (workItem) {
-      win.nav ({route: `/${contextId}/${view}?wid=${workItem}`});
-    } else {
-      win.nav ({route: `/${contextId}/${view}`});
-    }
-  } else {
-    win.nav ({route: `/${contextId}`});
-  }
-});
-
-Goblin.registerQuest (goblinName, 'nav-to-workitem', function* (
-  quest,
-  contextId,
-  view,
-  workitemId,
-  skipNav
-) {
-  const win = quest.use ('wm.win');
-  quest.dispatch ('setCurrentWorkItemByContext', {contextId, view, workitemId});
-  const tabs = quest.use ('tabs');
-  tabs.setCurrent ({contextId, workitemId});
-  if (skipNav) {
-    return;
-  }
-  yield win.nav ({route: `/${contextId}/${view}?wid=${workitemId}`});
-});
-
 Goblin.registerQuest (goblinName, 'get-url', function (quest) {
   return quest.goblin.getX ('url');
 });
@@ -383,69 +139,26 @@ Goblin.registerQuest (goblinName, 'duplicate', function* (quest) {
   return lab.id;
 });
 
-Goblin.registerQuest (goblinName, 'add-notification', function (
-  quest,
-  notificationId,
-  glyph,
-  color,
-  message,
-  command
-) {
-  if (!notificationId) {
-    notificationId = uuidV4 ();
-  }
-  quest.do ({notificationId, glyph, color, message, command});
-  const dnd = quest.goblin.getState ().get ('dnd');
-  if (dnd !== 'true') {
-    quest.dispatch ('toggle-notifications', {showValue: 'true'});
-  }
-  quest.dispatch ('update-not-read-count');
-  return quest.goblin
-    .getState ()
-    .get (`notifications.${notificationId}`, null)
-    .toJS ();
-});
-
-Goblin.registerQuest (goblinName, 'remove-notification', function (
-  quest,
-  notification
-) {
-  quest.do ({notification});
-  quest.dispatch ('update-not-read-count');
-});
-
-Goblin.registerQuest (goblinName, 'remove-notifications', function (quest) {
-  quest.do ();
-  quest.dispatch ('update-not-read-count');
-});
-
-Goblin.registerQuest (goblinName, 'click-notification', function (
-  quest,
-  notification
-) {
-  if (notification.command) {
-    quest.cmd (notification.command, {notification});
-  }
-});
-
-Goblin.registerQuest (goblinName, 'toggle-dnd', function (quest) {
-  quest.do ();
-});
-
-Goblin.registerQuest (goblinName, 'toggle-only-news', function (quest) {
-  quest.do ();
-});
-
-Goblin.registerQuest (goblinName, 'toggle-notifications', function (quest) {
+Goblin.registerQuest (goblinName, 'set-root', function (quest, widgetId) {
+  const cleanRoot = () => {
+    let goblin = widgetId;
+    if (widgetId.indexOf ('@') !== -1) {
+      goblin = widgetId.split ('@')[0];
+    }
+    quest.cmd (`${goblin}.delete`, {id: widgetId});
+  };
   const state = quest.goblin.getState ();
-  const showValue = state.get ('showNotifications') === 'false'
-    ? 'true'
-    : 'false';
-  quest.do ({showValue});
-  if (showValue === 'false') {
-    quest.dispatch ('read-all');
+  const existingRoot = state.get ('root', null);
+  if (existingRoot) {
+    cleanRoot ();
   }
-  quest.dispatch ('update-not-read-count');
+  quest.do ();
+  quest.goblin.defer (cleanRoot);
+});
+
+Goblin.registerQuest (goblinName, 'nav', function (quest, route) {
+  const win = quest.use ('wm.win');
+  win.nav ({route});
 });
 
 Goblin.registerQuest (goblinName, '_ready', function* (quest, wid) {
@@ -490,8 +203,8 @@ Goblin.registerQuest (goblinName, 'add', function* (
 Goblin.registerQuest (goblinName, 'del', function* (
   quest,
   widgetId,
-  name,
   mustDelete,
+  name,
   questParams
 ) {
   const state = quest.goblin.getState ();
@@ -504,6 +217,10 @@ Goblin.registerQuest (goblinName, 'del', function* (
     const args = Object.assign ({id: widgetId}, questParams);
     quest.cmd (`${name}.delete`, args);
   }
+});
+
+Goblin.registerQuest (goblinName, 'delete', function* (quest) {
+  quest.log.info (`Deleting laboratory`);
 });
 
 // Create a Goblin with initial state and handlers

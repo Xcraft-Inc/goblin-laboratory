@@ -22,18 +22,7 @@ const logicHandlers = {
   },
 };
 
-Goblin.registerQuest (goblinName, 'create', function* (
-  quest,
-  labId,
-  workitemId
-) {
-  if (!labId) {
-    throw new Error ('labId not provided');
-  }
-  const lab = quest.useAs ('laboratory', labId);
-  // Add me to lab state
-  lab.add ({widgetId: quest.goblin.id});
-
+Goblin.registerQuest (goblinName, 'create', function* (quest, workitemId) {
   quest.do ({id: quest.goblin.id, workitemId});
   return quest.goblin.id;
 });
