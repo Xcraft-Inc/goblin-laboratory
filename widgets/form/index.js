@@ -105,7 +105,7 @@ class Form extends Widget {
     return map;
   }
 
-  getForm (id) {
+  getForm (id, value) {
     if (!id) {
       return null;
     }
@@ -117,6 +117,7 @@ class Form extends Widget {
         debounceUpdates={::this.debounceUpdates}
         attachDispatch={::this.attachDispatch}
         formFocus={::this.formFocus}
+        existingValue={value}
       >
         {props.children}
       </WiredLocalForm>
