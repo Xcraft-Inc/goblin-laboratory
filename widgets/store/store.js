@@ -17,7 +17,7 @@ export default function configureStore (initialState, history) {
   const routerHistory = routerMiddleware (history);
 
   const composeEnhancers =
-    (process.env.NODE_ENV === 'development' &&
+    (process.env.NODE_ENV !== 'production' &&
       window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
     compose;
 

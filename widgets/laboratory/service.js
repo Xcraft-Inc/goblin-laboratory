@@ -62,7 +62,7 @@ Goblin.registerQuest (goblinName, 'create', function* (quest, url, usePack) {
   let feeds = config.feeds;
   feeds.push (quest.goblin.id);
 
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV !== 'production') {
     _url += '?react_perf';
   }
 
