@@ -82,13 +82,24 @@ Goblin.registerQuest (goblinName, 'create', function* (quest, url, usePack) {
   yield quest.cmd ('wm.win.feed.sub', {wid, feeds});
 
   const unsubCreated = quest.sub ('goblin.created', (err, msg) => {
-    quest.cmd ('laboratory.add', {id: quest.goblin.id, widgetId: msg.data.id});
+    // Is current laboratory a dep of the new created goblin ?
+    if (Goblin.isDepOf (quest.goblin.id, msg.data.id)) {
+      quest.cmd ('laboratory.add', {
+        id: quest.goblin.id,
+        widgetId: msg.data.id,
+      });
+    }
   });
   quest.goblin.defer (unsubCreated);
 
   const unsubDeleted = quest.sub ('goblin.deleted', (err, msg) => {
-    quest.cmd ('laboratory.del', {id: quest.goblin.id, widgetId: msg.data.id});
-    quest.cmd ('warehouse.remove', {branch: msg.data.id});
+    // Is current laboratory a dep of the deleted goblin ?
+    if (msg.data.deps.indexOf (quest.goblin.id) !== -1) {
+      quest.cmd ('laboratory.del', {
+        id: quest.goblin.id,
+        widgetId: msg.data.id,
+      });
+    }
   });
   quest.goblin.defer (unsubDeleted);
 
