@@ -20,7 +20,6 @@ class LocalForm extends Widget {
       id,
       workitemId,
       value,
-      existingValue,
       focused,
       handleFormUpdates,
       debounceUpdates,
@@ -36,10 +35,7 @@ class LocalForm extends Widget {
       return null;
     }
 
-    let initialState = existingValue;
-    if (value) {
-      initialState = value.toJS ();
-    }
+    const initialState = value ? value.toJS () : {};
 
     const handleUpdate = values => {
       handleFormUpdates (workitemId, values);

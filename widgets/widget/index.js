@@ -291,20 +291,22 @@ class Widget extends React.PureComponent {
   }
 
   navToHinter () {
-    let path = this.getRouting ().get ('location.pathname');
-    const search = this.getRouting ().get ('location.search');
-    if (path.split ('/').length === 4) {
-      path = path.substr (0, path.lastIndexOf ('/'));
+    if (this.props.hinter) {
+      let path = this.getRouting ().get ('location.pathname');
+      const search = this.getRouting ().get ('location.search');
+      if (path.split ('/').length === 4) {
+        path = path.substr (0, path.lastIndexOf ('/'));
+      }
+
+      const hinterType = this.getHinterType (this.props.hinter);
+
+      if (!hinterType) {
+        this.nav (`${path}${search}`);
+        return;
+      }
+
+      this.nav (`${path}/${hinterType}${search}`);
     }
-
-    const hinterType = this.getHinterType (this.props.hinter);
-
-    if (!hinterType) {
-      this.nav (`${path}${search}`);
-      return;
-    }
-
-    this.nav (`${path}/${hinterType}${search}`);
   }
 
   replaceNav (path) {
