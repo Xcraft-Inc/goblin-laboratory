@@ -57,6 +57,10 @@ class Form extends Widget {
     const focused = this.extractFocus (data);
     if (focused) {
       this._focused[model] = focused;
+      this.cmd (`form.save-focus`, {
+        id: `form@${model}`,
+        focused: this._focused[model],
+      });
     }
 
     const form = this._forms[model];
@@ -68,6 +72,10 @@ class Form extends Widget {
 
     const modelValues = this.extractModelValues (data);
     if (modelValues) {
+      this.cmd (`form.save-value`, {
+        id: `form@${model}`,
+        value: modelValues,
+      });
       if (fasterStringify (modelValues) !== fasterStringify (form.value)) {
         for (const fieldName in modelValues) {
           if (form.value[fieldName] !== modelValues[fieldName]) {
@@ -111,7 +119,7 @@ class Form extends Widget {
     return map;
   }
 
-  getForm (id, value) {
+  getForm (id) {
     if (!id) {
       return null;
     }
@@ -124,7 +132,6 @@ class Form extends Widget {
         debounceUpdates={::this.debounceUpdates}
         attachDispatch={::this.attachDispatch}
         formFocus={::this.formFocus}
-        existingValue={value}
       >
         {props.children}
       </WiredLocalForm>

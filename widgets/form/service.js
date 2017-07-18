@@ -9,16 +9,32 @@ const logicState = {};
 const logicHandlers = {
   create: (state, action) => {
     const id = action.get ('id');
+    let existing = action.get ('value');
+    if (!existing) {
+      existing = {};
+    }
     return state.set ('', {
       id: id,
       workitemId: action.get ('workitemId'),
-      value: action.get ('value'),
+      value: existing,
       focused: null,
     });
   },
   'save-form': (state, action) => {
-    const value = action.get ('value');
-    return state.set ('value', value).set ('focused', action.get ('focused'));
+    const toSave = action.get ('modelValueToSave');
+    if (toSave) {
+      return state
+        .merge ('value', toSave)
+        .set ('focused', action.get ('focused'));
+    } else {
+      return state.set ('focused', action.get ('focused'));
+    }
+  },
+  'save-value': (state, action) => {
+    return state.merge ('value', action.get ('modelValueToSave'));
+  },
+  'save-focus': (state, action) => {
+    return state.set ('focused', action.get ('focused'));
   },
 };
 
@@ -36,7 +52,33 @@ Goblin.registerQuest (goblinName, 'save-form', function (
   value,
   focused
 ) {
-  quest.do ({value, focused});
+  const modelValueToSave = {};
+  for (const model in value) {
+    if (value[model]) {
+      modelValueToSave[model] = value[model];
+    }
+  }
+  if (Object.keys (modelValueToSave).length > 0) {
+    quest.do ({modelValueToSave});
+  } else {
+    quest.do ({modelValueToSave: null});
+  }
+});
+
+Goblin.registerQuest (goblinName, 'save-focus', function (quest, focused) {
+  quest.do ();
+});
+
+Goblin.registerQuest (goblinName, 'save-value', function (quest, value) {
+  const modelValueToSave = {};
+  for (const model in value) {
+    if (value[model]) {
+      modelValueToSave[model] = value[model];
+    }
+  }
+  if (Object.keys (modelValueToSave).length > 0) {
+    quest.do ({modelValueToSave});
+  }
 });
 
 Goblin.registerQuest (goblinName, 'delete', function (quest) {});
