@@ -74,6 +74,9 @@ Goblin.registerQuest (goblinName, 'create', function* (quest, url, usePack) {
     url: _url,
     labId: quest.goblin.id,
     feeds,
+    options: {
+      openDevTools: process.env.NODE_ENV !== 'production',
+    },
   });
 
   const wid = win.id;
