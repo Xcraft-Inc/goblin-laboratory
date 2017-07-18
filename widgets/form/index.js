@@ -16,6 +16,12 @@ class Form extends Widget {
     this.formDispatch = dispatch;
   }
 
+  setModel (model, value) {
+    if (this.formDispatch) {
+      this.formDispatch (actions.change (this.modelId + model, value));
+    }
+  }
+
   formFocus (model) {
     if (this.formDispatch) {
       this.formDispatch (actions.focus (model));
@@ -109,6 +115,7 @@ class Form extends Widget {
     if (!id) {
       return null;
     }
+    this.modelId = id;
     const WiredLocalForm = Widget.Wired (LocalForm) (`form@${id}`);
 
     return props => (
