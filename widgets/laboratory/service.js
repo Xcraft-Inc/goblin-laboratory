@@ -46,7 +46,7 @@ Goblin.registerQuest (goblinName, 'create', function* (quest, url, usePack) {
     quest.cmd ('webpack.pack', {
       goblin: 'laboratory',
       jobId: quest.goblin.id,
-      outputPath: path.join (__dirname, '../../../../pack'),
+      outputPath: path.join (__dirname, '../../../../dist'),
       options: {sourceMap: true},
     });
   }
