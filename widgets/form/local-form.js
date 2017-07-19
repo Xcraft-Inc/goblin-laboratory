@@ -1,6 +1,6 @@
 import React from 'react';
 import Widget from 'laboratory/widget';
-import {LocalForm as Form} from 'react-redux-form';
+import {Form} from 'react-redux-form/immutable';
 class LocalForm extends Widget {
   constructor (props) {
     super (props);
@@ -10,22 +10,11 @@ class LocalForm extends Widget {
     return {
       id: 'id',
       workitemId: 'workitemId',
-      value: 'value',
-      focused: 'focused',
     };
   }
 
   render () {
-    const {
-      id,
-      workitemId,
-      value,
-      focused,
-      handleFormUpdates,
-      debounceUpdates,
-      attachDispatch,
-      formFocus,
-    } = this.props;
+    const {id, workitemId} = this.props;
 
     if (!id) {
       return null;
@@ -35,23 +24,11 @@ class LocalForm extends Widget {
       return null;
     }
 
-    const initialState = value ? value.toJS () : {};
-
-    const handleUpdate = values => {
-      handleFormUpdates (workitemId, values);
-    };
-    const onUpdate = debounceUpdates (handleUpdate);
     return (
       <Form
-        model={workitemId}
-        onUpdate={onUpdate}
-        getDispatch={dispatch => {
-          attachDispatch (dispatch);
-          if (focused) {
-            formFocus (`${workitemId}.${focused}`);
-          }
-        }}
-        initialState={initialState}
+        component="div"
+        store={this.context.store}
+        model={`workitems.${workitemId}`}
       >
         {this.props.children}
       </Form>
