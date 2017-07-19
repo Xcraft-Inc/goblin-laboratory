@@ -200,14 +200,7 @@ class Widget extends React.PureComponent {
   }
 
   do (action, args) {
-    if (!this.props.id) {
-      console.error (`${this.name} is not a connected widget (need an id)`);
-      return;
-    }
-    this.cmd (
-      `${this.name}.${action}`,
-      Object.assign ({id: this.props.id}, args)
-    );
+    return this.doAs (this.name, action, args);
   }
 
   doAs (service, action, args) {
