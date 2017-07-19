@@ -200,14 +200,7 @@ class Widget extends React.PureComponent {
   }
 
   do (action, args) {
-    if (!this.props.id) {
-      console.error (`${this.name} is not a connected widget (need an id)`);
-      return;
-    }
-    this.cmd (
-      `${this.name}.${action}`,
-      Object.assign ({id: this.props.id}, args)
-    );
+    return this.doAs (this.name, action, args);
   }
 
   doAs (service, action, args) {
@@ -233,8 +226,8 @@ class Widget extends React.PureComponent {
     }
     const query = search.substring (1);
     const vars = query.split ('&');
-    for (var i = 0; i < vars.length; i++) {
-      var pair = vars[i].split ('=');
+    for (const v of vars) {
+      const pair = v.split ('=');
       if (decodeURIComponent (pair[0]) === name) {
         return decodeURIComponent (pair[1]);
       }
