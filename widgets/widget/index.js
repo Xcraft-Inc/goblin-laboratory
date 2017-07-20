@@ -50,8 +50,8 @@ const injectCSS = classes => {
 };
 
 class Widget extends React.PureComponent {
-  constructor (cProps) {
-    super (cProps);
+  constructor (...args) {
+    super (...args);
     this._name = this.constructor.name
       .replace (/([a-z])([A-Z])/g, '$1-$2')
       .toLowerCase ();
