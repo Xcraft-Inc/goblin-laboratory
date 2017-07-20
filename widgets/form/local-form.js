@@ -24,11 +24,17 @@ class LocalForm extends Widget {
       return null;
     }
 
+    const style = {
+      display: 'flex',
+      flexDirection: 'column',
+    };
+
     return (
       <Form
         component="div"
         store={this.context.store}
         model={`workitems.${workitemId}`}
+        style={style}
       >
         {this.props.children}
       </Form>
