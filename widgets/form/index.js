@@ -1,10 +1,10 @@
 import React from 'react';
 import {actions} from 'react-redux-form/immutable';
-import LocalForm from './local-form';
+import {Form as RFForm} from 'react-redux-form/immutable';
 import Widget from 'laboratory/widget';
 
 class Form extends Widget {
-  constructor (props, context) {
+  constructor (props) {
     super (props);
   }
 
@@ -16,12 +16,12 @@ class Form extends Widget {
     this.props.dispatch (actions.focus (model));
   }
 
-  getForm (id) {
-    if (!id) {
-      return null;
-    }
+  get Form () {
+    return RFForm;
+  }
 
-    return Widget.Wired (LocalForm) (`form@${id}`);
+  get formConfig () {
+    return {component: 'div', model: `models.${this.props.id}`};
   }
 
   componentWillUnmount () {

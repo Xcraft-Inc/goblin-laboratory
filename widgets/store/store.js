@@ -15,7 +15,7 @@ const questMiddleware = store => next => action => {
 
 //TODO: better handling of model/service field
 const handleChange = action => {
-  const model = action.model.replace ('workitems.', '');
+  const model = action.model.replace ('models.', '');
   const field = model.split ('.')[1];
   const goblinId = model.split ('.')[0];
   let goblin = goblinId;
