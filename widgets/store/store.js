@@ -35,12 +35,16 @@ const formMiddleware = store => next => action => {
     case 'rrf/batch':
       for (const a of action.actions) {
         if (a.type === 'rrf/change') {
-          handleChange (a);
+          if (!a.load) {
+            handleChange (action);
+          }
         }
       }
       return next (action);
     case 'rrf/change':
-      handleChange (action);
+      if (!action.load) {
+        handleChange (action);
+      }
       return next (action);
     default:
       return next (action);

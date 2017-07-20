@@ -24,5 +24,5 @@ export function routerReducer (state = initialState, {type, payload} = {}) {
 export default combineReducers ({
   routing: routerReducer,
   backend: backendReducer,
-  ...createForms ({workitems: new Shredder ({}).state}),
+  ...createForms ({models: new Shredder ({}).state}),
 });

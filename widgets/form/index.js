@@ -1,6 +1,5 @@
 import React from 'react';
-import {actions} from 'react-redux-form/immutable';
-import {Form as RFForm} from 'react-redux-form/immutable';
+import {actions, Form as RFForm} from 'react-redux-form/immutable';
 import Widget from 'laboratory/widget';
 
 class Form extends Widget {
@@ -16,12 +15,35 @@ class Form extends Widget {
     this.props.dispatch (actions.focus (model));
   }
 
+  loadForm () {
+    const state = this.getState ();
+    const model = state.models.get (this.props.id, null);
+    if (!model) {
+      console.log ('Loading form...');
+      Object.keys (this.props).forEach (p => {
+        if (p !== 'id' && typeof this.props[p] !== 'function') {
+          this.props.dispatch (
+            actions.load (`${this.props.id}.${p}`, this.props[p])
+          );
+        }
+      });
+    }
+  }
+
   get Form () {
     return RFForm;
   }
 
   get formConfig () {
-    return {component: 'div', model: `models.${this.props.id}`};
+    const style = {
+      display: 'flex',
+      flexDirection: 'column',
+    };
+    return {component: 'div', model: `models.${this.props.id}`, style};
+  }
+
+  componentWillMount () {
+    this.loadForm ();
   }
 
   componentWillUnmount () {

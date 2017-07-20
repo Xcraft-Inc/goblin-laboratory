@@ -256,6 +256,10 @@ class Widget extends React.PureComponent {
     }
   }
 
+  getState () {
+    return this.context.store.getState ();
+  }
+
   getRouting () {
     return new Shredder (this.context.store.getState ().routing);
   }
