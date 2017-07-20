@@ -1,8 +1,9 @@
 import React from 'react';
 import Widget from 'laboratory/widget';
+
 class View extends Widget {
-  constructor (props) {
-    super (props);
+  constructor () {
+    super (...arguments);
   }
 
   render () {

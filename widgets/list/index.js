@@ -3,8 +3,8 @@ import ReactList from 'react-list';
 import Widget from 'laboratory/widget';
 
 class List extends Widget {
-  constructor (props) {
-    super (props);
+  constructor () {
+    super (...arguments);
   }
 
   getList (item, type, length) {

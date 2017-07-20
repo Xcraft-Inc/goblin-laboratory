@@ -3,8 +3,8 @@ import {actions, Form as RFForm} from 'react-redux-form/immutable';
 import Widget from 'laboratory/widget';
 
 class Form extends Widget {
-  constructor (props) {
-    super (props);
+  constructor () {
+    super (...arguments);
   }
 
   setModel (model, value) {

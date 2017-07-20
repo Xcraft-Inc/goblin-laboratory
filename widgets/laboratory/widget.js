@@ -4,8 +4,8 @@ import importer from '../importer/';
 const widgetImporter = importer ('widget');
 
 class Laboratory extends Widget {
-  constructor (props) {
-    super (props);
+  constructor () {
+    super (...arguments);
   }
 
   static get wiring () {

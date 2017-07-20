@@ -9,8 +9,8 @@ import {
 } from 'searchkit';
 
 class SearchKit extends Widget {
-  constructor (props) {
-    super (props);
+  constructor () {
+    super (...arguments);
   }
   renderHits (props) {
     console.dir (props.hits);
