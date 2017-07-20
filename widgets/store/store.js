@@ -36,7 +36,7 @@ const formMiddleware = store => next => action => {
       for (const a of action.actions) {
         if (a.type === 'rrf/change') {
           if (!a.load) {
-            handleChange (action);
+            handleChange (a);
           }
         }
       }
