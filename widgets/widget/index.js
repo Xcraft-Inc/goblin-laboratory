@@ -57,6 +57,13 @@ class Widget extends React.PureComponent {
       .toLowerCase ();
   }
 
+  static get propTypes () {
+    return {
+      id: PropTypes.string,
+      hinter: PropTypes.string,
+    };
+  }
+
   static get contextTypes () {
     return {
       labId: PropTypes.string,
@@ -310,9 +317,5 @@ class Widget extends React.PureComponent {
     this.context.dispatch (replace (path));
   }
 }
-
-Widget.propTypes = {
-  id: PropTypes.string,
-};
 
 export default Widget;
