@@ -16,15 +16,15 @@ const questMiddleware = store => next => action => {
 //TODO: better handling of model/service field
 const handleChange = action => {
   const model = action.model.replace ('models.', '');
-  const field = model.split ('.')[1];
-  const goblinId = model.split ('.')[0];
+  const fields = model.split ('.');
+  const goblinId = fields.shift ();
   let goblin = goblinId;
   if (goblin.indexOf ('@') !== -1) {
     goblin = goblin.split ('@')[0];
   }
   const quest = {
     type: 'QUEST',
-    cmd: `${goblin}.change-${field}`,
+    cmd: `${goblin}.change-${fields.join ('.')}`,
     args: {id: goblinId, newValue: action.value},
   };
   ipcRenderer.send ('QUEST', {...quest});
