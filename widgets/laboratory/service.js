@@ -92,6 +92,16 @@ Goblin.registerQuest (goblinName, 'create', function* (quest, url, usePack) {
         id: quest.goblin.id,
         widgetId: msg.data.id,
       });
+
+      // Add all direct deps of this widget
+      // These deps don't depends directly of laboratory, but haves
+      // this widget as parent!
+      Goblin.getOwnDirectDeps (msg.data.id).forEach (widgetId =>
+        quest.cmd ('laboratory.add', {
+          id: quest.goblin.id,
+          widgetId,
+        })
+      );
     }
   });
   quest.goblin.defer (unsubCreated);
