@@ -111,40 +111,6 @@ Goblin.registerQuest (goblinName, 'create', function* (quest, url, usePack) {
   return quest.goblin.id;
 });
 
-Goblin.registerQuest (goblinName, 'create-form-for', function* (
-  quest,
-  workitemId,
-  value
-) {
-  if (!workitemId) {
-    throw new Error ('Cannot create form without a workitemId');
-  }
-  const widgetId = `form@${workitemId}`;
-
-  let goblinName = workitemId;
-  if (workitemId.indexOf ('@') !== -1) {
-    goblinName = workitemId.split ('@')[0];
-  }
-
-  const form = yield quest.createFor (
-    goblinName,
-    workitemId,
-    `form@${workitemId}`,
-    {
-      id: widgetId,
-      labId: quest.goblin.id,
-      workitemId,
-      value,
-    }
-  );
-
-  quest.cmd ('laboratory.add', {
-    id: quest.goblin.id,
-    widgetId: form.id,
-  });
-  return form.id;
-});
-
 Goblin.registerQuest (goblinName, 'get-url', function (quest) {
   return quest.goblin.getX ('url');
 });
