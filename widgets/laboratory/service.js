@@ -86,23 +86,46 @@ Goblin.registerQuest (goblinName, 'create', function* (quest, url, usePack) {
   yield quest.cmd ('wm.win.feed.sub', {wid, feeds});
 
   const unsubCreated = quest.sub ('goblin.created', (err, msg) => {
-    // Is current laboratory a dep of the new created goblin ?
-    if (Goblin.isDepOf (quest.goblin.id, msg.data.id)) {
-      quest.cmd ('laboratory.add', {
-        id: quest.goblin.id,
-        widgetId: msg.data.id,
-      });
+    const addDependentWidgetsToLaboratory = rootWidgetId => {
+      if (rootWidgetId === null) {
+        return;
+      }
 
-      // Add all direct deps of this widget
-      // These deps don't depends directly of laboratory, but haves
-      // this widget as parent!
-      Goblin.getOwnDirectDeps (msg.data.id).forEach (widgetId =>
+      // Add itself case
+      if (rootWidgetId === quest.goblin.id) {
         quest.cmd ('laboratory.add', {
           id: quest.goblin.id,
-          widgetId,
-        })
-      );
-    }
+          widgetId: rootWidgetId,
+        });
+        return;
+      }
+
+      // New created goblin is dep. of a laboratory ?
+      if (Goblin.hasDepOfType (rootWidgetId, 'laboratory')) {
+        // Is current laboratory a dep of the new created goblin ?
+        if (Goblin.isDepOf (quest.goblin.id, rootWidgetId)) {
+          quest.cmd ('laboratory.add', {
+            id: quest.goblin.id,
+            widgetId: rootWidgetId,
+          });
+
+          // Add all direct deps of this widget
+          // These deps don't depends directly of laboratory, but haves
+          // this widget as parent!
+          Goblin.getOwnDirectDeps (rootWidgetId).forEach (widgetId =>
+            quest.cmd ('laboratory.add', {
+              id: quest.goblin.id,
+              widgetId,
+            })
+          );
+        }
+      } else {
+        // Recurse from root dep
+        addDependentWidgetsToLaboratory (Goblin.getRootDep (rootWidgetId));
+      }
+    };
+
+    addDependentWidgetsToLaboratory (msg.data.id);
   });
   quest.goblin.defer (unsubCreated);
 
