@@ -135,10 +135,7 @@ Goblin.registerQuest (goblinName, 'duplicate', function* (quest) {
 
 Goblin.registerQuest (goblinName, 'set-root', function (quest, widgetId) {
   const cleanRoot = () => {
-    let goblin = widgetId;
-    if (widgetId.indexOf ('@') !== -1) {
-      goblin = widgetId.split ('@')[0];
-    }
+    let goblin = Goblin.getGoblinName (widgetId);
     quest.cmd (`${goblin}.delete`, {id: widgetId});
   };
   const state = quest.goblin.getState ();
