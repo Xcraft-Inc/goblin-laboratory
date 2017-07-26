@@ -16,7 +16,7 @@ class Form extends Widget {
   }
 
   loadForm () {
-    const state = this.getState ();
+    /*const state = this.getState ();
     const model = state.models.get (this.props.id, null);
     if (!model) {
       console.log ('Loading form...');
@@ -27,7 +27,7 @@ class Form extends Widget {
           );
         }
       });
-    }
+    }*/
   }
 
   get Form () {

@@ -3,6 +3,7 @@
 const path = require ('path');
 const Goblin = require ('xcraft-core-goblin');
 const goblinName = path.basename (module.parent.filename, '.js');
+const {actions} = require ('react-redux-form/immutable');
 
 // Define initial logic values
 const logicState = {};
@@ -173,6 +174,26 @@ Goblin.registerQuest (goblinName, 'set-root', function (quest, widgetId) {
 Goblin.registerQuest (goblinName, 'nav', function (quest, route) {
   const win = quest.use ('wm.win');
   win.nav ({route});
+});
+
+Goblin.registerQuest (goblinName, 'load-form-model', function (
+  quest,
+  modelId,
+  model
+) {
+  const win = quest.use ('wm.win');
+  Object.keys (model).forEach (p => {
+    if (p !== 'id') {
+      win.dispatch ({
+        action: actions.load (`models.${modelId}.${p}`, model[p]),
+      });
+    }
+  });
+});
+
+Goblin.registerQuest (goblinName, 'dispatch', function (quest, action) {
+  const win = quest.use ('wm.win');
+  win.dispatch ({action});
 });
 
 Goblin.registerQuest (goblinName, '_ready', function* (quest, wid) {
