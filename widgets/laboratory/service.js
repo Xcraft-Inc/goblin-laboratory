@@ -176,6 +176,29 @@ Goblin.registerQuest (goblinName, 'nav', function (quest, route) {
   win.nav ({route});
 });
 
+Goblin.registerQuest (goblinName, 'focus-form-field', function (
+  quest,
+  modelId,
+  path
+) {
+  const win = quest.use ('wm.win');
+  win.dispatch ({
+    action: actions.focus (`models.${modelId}.${path}`),
+  });
+});
+
+Goblin.registerQuest (goblinName, 'change-form-field', function (
+  quest,
+  modelId,
+  path,
+  value
+) {
+  const win = quest.use ('wm.win');
+  win.dispatch ({
+    action: actions.change (`models.${modelId}.${path}`, value),
+  });
+});
+
 Goblin.registerQuest (goblinName, 'load-form-model', function (
   quest,
   modelId,
