@@ -39,7 +39,10 @@ export default kind => {
       );
       break;
     case 'partial':
-      importAll (kind, require.context ('../../../', true, /\/partial\.js$/));
+      importAll (
+        kind,
+        require.context ('../../../', true, /\/widgets\/[^/]+\/partial\.js$/)
+      );
       break;
     case 'styles':
       importAll (
