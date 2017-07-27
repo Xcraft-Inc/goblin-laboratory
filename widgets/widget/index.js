@@ -192,6 +192,59 @@ class Widget extends React.PureComponent {
     return new Shredder (state);
   }
 
+  withModel (model, propName) {
+    return connect (
+      state => {
+        const s = new Shredder (state);
+        const parentModel = `backend.${this.props.id}`;
+        if (!propName) {
+          propName = 'defaultValue';
+        }
+        return {
+          [propName]: s.get (`${parentModel}${model}`),
+          model,
+        };
+      },
+      null,
+      null,
+      {pure: true}
+    );
+  }
+
+  WithModel (component, propName) {
+    return model => {
+      // Optional choice
+      if (model.indexOf ('||') !== -1) {
+        const choices = model.split ('||');
+        const first = this.getModelValue (choices[0]);
+        if (first) {
+          return this.withModel (choices[0], propName) (component);
+        }
+        const second = choices[0].replace ().replace (/[^\.]+$/, choices[1]);
+        return this.withModel (second, propName) (component);
+      }
+      // Collections
+      if (model.endsWith ('[]')) {
+        const path = model.replace ('[]', '');
+        const coll = this.getModelValue (path);
+        return props => {
+          return (
+            <div>
+              {coll.map ((v, k) => {
+                const Item = this.withModel (`${path}.${k}`, propName) (
+                  component
+                );
+                return <Item key={k} {...props} />;
+              })}
+            </div>
+          );
+        };
+      }
+      // Std
+      return this.withModel (model, propName) (component);
+    };
+  }
+
   ///////////GOBLIN BUS:
 
   cmd (cmd, args) {
@@ -263,7 +316,8 @@ class Widget extends React.PureComponent {
 
   getModelValue (model) {
     const state = new Shredder (this.getState ());
-    return state.get (`${this.context.model}${model}`);
+    const parentModel = this.context.model || `backend.${this.props.id}`;
+    return state.get (`${parentModel}${model}`);
   }
 
   getState () {
