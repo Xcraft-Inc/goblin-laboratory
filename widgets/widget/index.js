@@ -70,6 +70,7 @@ class Widget extends React.PureComponent {
       dispatch: PropTypes.func,
       store: PropTypes.object,
       theme: PropTypes.object,
+      model: PropTypes.any,
     };
   }
 
@@ -261,6 +262,11 @@ class Widget extends React.PureComponent {
     if (search) {
       return Widget.GetParameter (search, 'hid');
     }
+  }
+
+  getModelValue (model) {
+    const state = new Shredder (this.getState ());
+    return state.get (`${this.context.model}${model}`);
   }
 
   getState () {
