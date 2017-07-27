@@ -32,6 +32,9 @@ export default kind => {
     case 'view':
       importAll (kind, require.context ('../../../', true, /\/view\.js$/));
       break;
+    case 'partial':
+      importAll (kind, require.context ('../../../', true, /\/partial\.js$/));
+      break;
     case 'styles':
       importAll (kind, require.context ('../../../', true, /\/styles\.js$/));
       break;
