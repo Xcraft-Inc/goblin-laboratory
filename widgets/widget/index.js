@@ -145,10 +145,7 @@ class Widget extends React.PureComponent {
 
   static WithRoute (component, watchedParams, watchedSearchs) {
     return path => {
-      return Widget.withRoute (path, watchedParams, watchedSearchs) (props => {
-        const Component = component;
-        return <Component {...props} />;
-      });
+      return Widget.withRoute (path, watchedParams, watchedSearchs) (component);
     };
   }
 
