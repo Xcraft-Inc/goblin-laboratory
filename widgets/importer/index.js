@@ -27,16 +27,28 @@ export default kind => {
 
   switch (kind) {
     case 'tasks':
-      importAll (kind, require.context ('../../../', true, /\/tasks\.js$/));
+      importAll (
+        kind,
+        require.context ('../../../', true, /\/widgets\/[^/]+\/tasks\.js$/)
+      );
       break;
     case 'view':
-      importAll (kind, require.context ('../../../', true, /\/view\.js$/));
+      importAll (
+        kind,
+        require.context ('../../../', true, /\/widgets\/[^/]+\/view\.js$/)
+      );
       break;
     case 'styles':
-      importAll (kind, require.context ('../../../', true, /\/styles\.js$/));
+      importAll (
+        kind,
+        require.context ('../../../', true, /\/widgets\/[^/]+\/styles\.js$/)
+      );
       break;
     case 'widget':
-      importAll (kind, require.context ('../../../', true, /\/widget\.js$/));
+      importAll (
+        kind,
+        require.context ('../../../', true, /\/widgets\/[^/]+\/widget\.js$/)
+      );
       break;
     default:
       throw new Error (`Unsupported kind: ${kind} for importer`);
