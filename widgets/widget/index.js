@@ -113,12 +113,13 @@ class Widget extends React.PureComponent {
   }
 
   ///////////STATE MGMT:
-  static withRoute (path, watchedParams, watchedSearchs) {
+  static withRoute (path, watchedParams, watchedSearchs, watchHash) {
     return connect (
       state => {
         const routing = new Shredder (state.routing);
         const pathName = routing.get ('location.pathname');
         const search = routing.get ('location.search');
+
         const match = matchPath (pathName, {
           path,
           exact: false,
@@ -131,10 +132,16 @@ class Widget extends React.PureComponent {
             [watchedSearchs]: Widget.GetParameter (search, watchedSearchs),
           };
         }
+
+        let withHash = null;
+        if (watchHash) {
+          withHash = {hash: routing.get ('location.hash')};
+        }
         return {
           isDisplayed: !!match,
           [watchedParams]: !match ? null : match.params[watchedParams],
           ...withSearch,
+          ...withHash,
         };
       },
       null,
@@ -143,9 +150,11 @@ class Widget extends React.PureComponent {
     );
   }
 
-  static WithRoute (component, watchedParams, watchedSearchs) {
+  static WithRoute (component, watchedParams, watchedSearchs, watchHash) {
     return path => {
-      return Widget.withRoute (path, watchedParams, watchedSearchs) (component);
+      return Widget.withRoute (path, watchedParams, watchedSearchs, watchHash) (
+        component
+      );
     };
   }
 
@@ -351,6 +360,10 @@ class Widget extends React.PureComponent {
     return type;
   }
 
+  getHash () {
+    return this.getRouting ().get ('location.hash');
+  }
+
   navToHinter () {
     if (this.props.hinter) {
       let path = this.getRouting ().get ('location.pathname');
@@ -362,11 +375,13 @@ class Widget extends React.PureComponent {
       const hinterType = this.getHinterType (this.props.hinter);
 
       if (!hinterType) {
-        this.nav (`${path}${search}`);
+        this.nav (`${path}${search}#${this.context.model}${this.props.model}`);
         return;
       }
 
-      this.nav (`${path}/${hinterType}${search}`);
+      this.nav (
+        `${path}/${hinterType}${search}#${this.context.model}${this.props.model}`
+      );
     }
   }
 
