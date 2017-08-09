@@ -194,6 +194,9 @@ class Widget extends React.PureComponent {
   }
 
   static Wired (component) {
+    if (!component) {
+      throw new Error ('You must provide a component!');
+    }
     return id => Widget.wire (id, component.wiring) (component);
   }
 
