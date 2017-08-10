@@ -378,12 +378,14 @@ class Widget extends React.PureComponent {
       const hinterType = this.getHinterType (this.props.hinter);
 
       if (!hinterType) {
-        this.nav (`${path}${search}#${this.context.model}${this.props.model}`);
+        this.nav (
+          `${path}${search}#${this.context.model}.${this.props.hinter}`
+        );
         return;
       }
 
       this.nav (
-        `${path}/${hinterType}${search}#${this.context.model}${this.props.model}`
+        `${path}/${hinterType}${search}#${this.context.model}.${this.props.hinter}`
       );
     }
   }
