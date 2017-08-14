@@ -1,7 +1,5 @@
 import React from 'react';
 import {actions, Form as RFForm, Fieldset} from 'react-redux-form/immutable';
-import {connect} from 'react-redux';
-import Shredder from 'xcraft-core-shredder';
 import Widget from 'laboratory/widget';
 import importer from '../importer/';
 const partialImporter = importer ('partial');
