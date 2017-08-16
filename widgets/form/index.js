@@ -22,6 +22,11 @@ class Form extends Widget {
     return <Partial {...props} />;
   }
 
+  submit () {
+    const value = this.getState ().forms.backend[this.props.id];
+    this.do ('submit', {value});
+  }
+
   get Form () {
     return RFForm;
   }
@@ -35,7 +40,12 @@ class Form extends Widget {
       display: 'flex',
       flexDirection: 'column',
     };
-    return {component: 'div', model: `backend.${this.props.id}`, style};
+    return {
+      component: 'div',
+      validateOn: 'submit',
+      model: `backend.${this.props.id}`,
+      style,
+    };
   }
 
   track (path, id) {
