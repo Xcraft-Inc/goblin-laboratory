@@ -2,7 +2,6 @@
   "name": "goblin-laboratory",
   "version": "0.0.1",
   "description": "Laboratory",
-  "main": "laboratory.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
