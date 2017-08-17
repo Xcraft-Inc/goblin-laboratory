@@ -336,6 +336,13 @@ class Widget extends React.PureComponent {
     return this.context.store.getState ();
   }
 
+  getMyState () {
+    if (!this.props.id) {
+      throw new Error ('Cannot resolve widget state without an valid id');
+    }
+    return this.getState ().backend.get (this.props.id);
+  }
+
   getRouting () {
     return new Shredder (this.context.store.getState ().routing);
   }

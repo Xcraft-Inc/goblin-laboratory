@@ -7,6 +7,7 @@ const partialImporter = importer ('partial');
 class Form extends Widget {
   constructor () {
     super (...arguments);
+    this.getFormFieldValue = this.getFormFieldValue.bind (this);
   }
 
   setModel (path, value) {
@@ -23,8 +24,25 @@ class Form extends Widget {
   }
 
   submit () {
-    const value = this.getState ().forms.backend[this.props.id];
+    const value = this.formValue;
     this.do ('submit', {value});
+  }
+
+  getFormFieldValue (name) {
+    const form = this.formValue;
+    const modelValue = this.getMyState ().get (name);
+    if (form[name]) {
+      if (form[name].value) {
+        return form[name].value;
+      } else {
+        return modelValue;
+      }
+    }
+    return modelValue;
+  }
+
+  get formValue () {
+    return this.getState ().forms.backend[this.props.id];
   }
 
   get Form () {
