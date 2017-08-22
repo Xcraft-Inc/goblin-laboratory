@@ -16,8 +16,8 @@ class Form extends Widget {
     );
   }
 
-  formFocus (model) {
-    this.props.dispatch (actions.focus (model));
+  formFocus (path) {
+    this.props.dispatch (actions.focus ('backend.' + this.props.id + path));
   }
 
   getPartial (name, props) {
