@@ -11,13 +11,11 @@ class Form extends Widget {
   }
 
   setModel (path, value) {
-    this.props.dispatch (
-      actions.change ('backend.' + this.props.id + path, value)
-    );
+    this.props.dispatch (actions.change (this.props.id + path, value));
   }
 
-  formFocus (path) {
-    this.props.dispatch (actions.focus ('backend.' + this.props.id + path));
+  formFocus (model) {
+    this.props.dispatch (actions.focus (model));
   }
 
   getPartial (name, props) {
