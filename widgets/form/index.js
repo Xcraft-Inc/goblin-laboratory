@@ -10,8 +10,10 @@ class Form extends Widget {
     this.getFormFieldValue = this.getFormFieldValue.bind (this);
   }
 
-  setModel (path, value) {
-    this.props.dispatch (actions.change (this.props.id + path, value));
+  setModelValue (path, value) {
+    this.props.dispatch (
+      actions.change ('backend.' + this.props.id + path, value)
+    );
   }
 
   formFocus (model) {

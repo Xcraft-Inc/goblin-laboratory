@@ -15,6 +15,14 @@ const stylesImporter = importer ('styles');
 
 const hashStyles = {};
 
+function isFunction (functionToCheck) {
+  var getType = {};
+  return (
+    functionToCheck &&
+    getType.toString.call (functionToCheck) === '[object Function]'
+  );
+}
+
 /**
  * Remove props that are functions, 'children' or undefined, null
  *
@@ -204,18 +212,29 @@ class Widget extends React.PureComponent {
     return new Shredder (state);
   }
 
-  withModel (model, propName) {
+  withModel (model, mapProps) {
     return connect (
       state => {
         const s = new Shredder (state);
         const parentModel = `backend.${this.props.id}`;
-        if (!propName) {
-          propName = 'defaultValue';
+        if (!mapProps) {
+          return {
+            defaultValue: s.get (`${parentModel}${model}`),
+            model,
+          };
+        } else {
+          if (isFunction (mapProps)) {
+            return Object.assign (
+              {model},
+              mapProps (s.get (`${parentModel}${model}`))
+            );
+          } else {
+            return {
+              [mapProps]: s.get (`${parentModel}${model}`),
+              model,
+            };
+          }
         }
-        return {
-          [propName]: s.get (`${parentModel}${model}`),
-          model,
-        };
       },
       null,
       null,
@@ -223,17 +242,20 @@ class Widget extends React.PureComponent {
     );
   }
 
-  WithModel (component, propName) {
+  WithModel (component, mapProps) {
     return model => {
+      if (isFunction (model)) {
+        model = model ();
+      }
       // Optional choice
       if (model.indexOf ('||') !== -1) {
         const choices = model.split ('||');
         const first = this.getModelValue (choices[0]);
         if (first) {
-          return this.withModel (choices[0], propName) (component);
+          return this.withModel (choices[0], mapProps) (component);
         }
         const second = choices[0].replace ().replace (/[^\.]+$/, choices[1]);
-        return this.withModel (second, propName) (component);
+        return this.withModel (second, mapProps) (component);
       }
       // Collections
       if (model.endsWith ('[]')) {
@@ -243,7 +265,7 @@ class Widget extends React.PureComponent {
           return (
             <div>
               {coll.map ((v, k) => {
-                const Item = this.withModel (`${path}.${k}`, propName) (
+                const Item = this.withModel (`${path}.${k}`, mapProps) (
                   component
                 );
                 return <Item key={k} {...props} />;
@@ -253,7 +275,7 @@ class Widget extends React.PureComponent {
         };
       }
       // Std
-      return this.withModel (model, propName) (component);
+      return this.withModel (model, mapProps) (component);
     };
   }
 
