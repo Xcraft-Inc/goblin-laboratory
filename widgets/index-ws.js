@@ -15,7 +15,7 @@ import configureStore from 'laboratory/store/store';
 const socket = new WebSocket ('ws://localhost:8000');
 const store = configureStore (window.__INITIAL_STATE__, history, {
   name: 'ws',
-  send: socket.send,
+  send: socket.send.bind (socket),
 });
 
 const handleNewBackendState = transitState => {

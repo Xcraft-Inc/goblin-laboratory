@@ -44,7 +44,7 @@ Goblin.registerQuest (goblinName, 'create', function* (
       goblin: 'laboratory',
       jobId: quest.goblin.id,
       port: port,
-      options: {indexFile: useWS ? 'index-ws.js' : 'index.js'},
+      options: {indexFile: useWS ? 'index-ws.js' : 'index.js', target},
     });
   }
 
@@ -53,7 +53,11 @@ Goblin.registerQuest (goblinName, 'create', function* (
       goblin: 'laboratory',
       jobId: quest.goblin.id,
       outputPath: path.join (__dirname, '../../../../dist'),
-      options: {sourceMap: true, indexFile: useWS ? 'index-ws.js' : 'index.js'},
+      options: {
+        sourceMap: true,
+        indexFile: useWS ? 'index-ws.js' : 'index.js',
+        target,
+      },
     });
   }
 
