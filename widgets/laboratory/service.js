@@ -40,6 +40,13 @@ Goblin.registerQuest (goblinName, 'create', function* (
   const existingUrl = url;
   let _url = existingUrl || `http://localhost:${port}`;
 
+  if (!target) {
+    if (process.versions.electron) {
+      target = 'electron-renderer';
+    } else {
+      target = 'node';
+    }
+  }
   if (!existingUrl) {
     quest.cmd ('webpack.server.start', {
       goblin: 'laboratory',
