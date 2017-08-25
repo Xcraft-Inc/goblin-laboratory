@@ -33,7 +33,8 @@ Goblin.registerQuest (goblinName, 'create', function* (
   quest,
   url,
   usePack,
-  useWS
+  useWS,
+  target
 ) {
   const port = 4000 + increment++;
   const existingUrl = url;
