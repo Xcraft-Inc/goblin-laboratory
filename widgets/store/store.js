@@ -1,57 +1,12 @@
 import {applyMiddleware, compose, createStore} from 'redux';
 import {routerMiddleware} from 'react-router-redux';
 import thunk from 'redux-thunk';
+import middlewares from './middlewares';
 
 const rootReducer = require ('laboratory/store/root-reducer').default;
-const ipcRenderer = require ('electron').ipcRenderer;
 
-const questMiddleware = store => next => action => {
-  if (action.type === 'QUEST') {
-    ipcRenderer.send ('QUEST', {...action});
-  } else {
-    return next (action);
-  }
-};
-
-//TODO: better handling of model/service field
-const handleChange = action => {
-  const model = action.model.replace ('backend.', '');
-  const fields = model.split ('.');
-  const goblinId = fields.shift ();
-  let goblin = goblinId;
-  if (goblin.indexOf ('@') !== -1) {
-    goblin = goblin.split ('@')[0];
-  }
-  const quest = {
-    type: 'QUEST',
-    cmd: `${goblin}.change-${fields.join ('.')}`,
-    args: {id: goblinId, newValue: action.value},
-  };
-  ipcRenderer.send ('QUEST', {...quest});
-};
-
-const formMiddleware = store => next => action => {
-  switch (action.type) {
-    case 'rrf/batch':
-      for (const a of action.actions) {
-        if (a.type === 'rrf/change') {
-          if (!a.load) {
-            handleChange (a);
-          }
-        }
-      }
-      return next (action);
-    case 'rrf/change':
-      if (!action.load) {
-        handleChange (action);
-      }
-      return next (action);
-    default:
-      return next (action);
-  }
-};
-
-export default function configureStore (initialState, history) {
+export default function configureStore (initialState, history, transport) {
+  const {formMiddleware, questMiddleware} = middlewares (transport);
   const routerHistory = routerMiddleware (history);
 
   const composeEnhancers =

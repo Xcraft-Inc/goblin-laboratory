@@ -29,7 +29,12 @@ const logicHandlers = {
 
 let increment = 0;
 // Register quest's according rc.json
-Goblin.registerQuest (goblinName, 'create', function* (quest, url, usePack) {
+Goblin.registerQuest (goblinName, 'create', function* (
+  quest,
+  url,
+  usePack,
+  useWS
+) {
   const port = 4000 + increment++;
   const existingUrl = url;
   let _url = existingUrl || `http://localhost:${port}`;
@@ -76,6 +81,7 @@ Goblin.registerQuest (goblinName, 'create', function* (quest, url, usePack) {
     feeds,
     options: {
       openDevTools: process.env.NODE_ENV !== 'production',
+      useWS,
     },
   });
 

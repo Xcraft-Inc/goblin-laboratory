@@ -2,7 +2,6 @@ import {combineReducers} from 'redux';
 import backendReducer from 'laboratory/store/backend-reducer';
 import Shredder from 'xcraft-core-shredder';
 import {createForms} from 'react-redux-form/immutable';
-
 /**
  * This action type will be dispatched when your history
  * receives a location change.
