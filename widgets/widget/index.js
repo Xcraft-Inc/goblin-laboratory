@@ -8,7 +8,6 @@ import fasterStringify from 'faster-stable-stringify';
 import {StyleSheet, css} from 'aphrodite/no-important';
 import {flushToStyleTag} from 'aphrodite/lib/inject'; // HACK
 import traverse from 'traverse';
-import deepFreeze from 'deep-freeze';
 import importer from '../importer/';
 
 const stylesImporter = importer ('styles');
@@ -103,7 +102,7 @@ class Widget extends React.PureComponent {
     const styles = myStyle (this.context.theme, styleProps);
     return (hashStyles[k] = {
       classNames: injectCSS (styles),
-      props: deepFreeze (styles),
+      props: styles,
     });
   }
 
