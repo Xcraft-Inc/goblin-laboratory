@@ -1,9 +1,9 @@
 const questMiddleware = send => store => next => action => {
   if (action.type === 'QUEST') {
     send ('QUEST', action);
-  } else {
-    return next (action);
+    return;
   }
+  return next (action);
 };
 
 //TODO: better handling of model/service field
@@ -25,23 +25,22 @@ const handleChange = (send, action) => {
 
 const formMiddleware = send => store => next => action => {
   switch (action.type) {
-    case 'rrf/batch':
+    case 'rrf/batch': {
       for (const a of action.actions) {
-        if (a.type === 'rrf/change') {
-          if (!a.load) {
-            handleChange (send, a);
-          }
+        if (a.type === 'rrf/change' && !a.load) {
+          handleChange (send, a);
         }
       }
-      return next (action);
-    case 'rrf/change':
+      break;
+    }
+    case 'rrf/change': {
       if (!action.load) {
         handleChange (send, action);
       }
-      return next (action);
-    default:
-      return next (action);
+      break;
+    }
   }
+  return next (action);
 };
 
 module.exports = transport => {
