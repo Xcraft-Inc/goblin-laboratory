@@ -68,6 +68,19 @@ class Form extends Widget {
     };
   }
 
+  formConfigWithComponent (component) {
+    const style = {
+      display: 'flex',
+      flexDirection: 'column',
+    };
+    return {
+      component: component,
+      validateOn: 'submit',
+      model: `backend.${this.props.id}`,
+      style,
+    };
+  }
+
   track (path, id) {
     //TODO: better immutable tracking
     //RRF track not working...
