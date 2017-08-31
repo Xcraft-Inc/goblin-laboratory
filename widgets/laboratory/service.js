@@ -179,17 +179,17 @@ Goblin.registerQuest (goblinName, 'duplicate', function* (quest) {
 });
 
 Goblin.registerQuest (goblinName, 'set-root', function (quest, widgetId) {
-  const cleanRoot = () => {
-    let goblin = Goblin.getGoblinName (widgetId);
-    quest.cmd (`${goblin}.delete`, {id: widgetId});
+  const cleanRoot = existingRoot => {
+    let goblin = Goblin.getGoblinName (existingRoot);
+    quest.cmd (`${goblin}.delete`, {id: existingRoot});
   };
   const state = quest.goblin.getState ();
   const existingRoot = state.get ('root', null);
   if (existingRoot) {
-    cleanRoot ();
+    cleanRoot (existingRoot);
   }
   quest.do ();
-  quest.goblin.defer (cleanRoot);
+  quest.goblin.defer (() => cleanRoot (widgetId));
 });
 
 Goblin.registerQuest (goblinName, 'nav', function (quest, route) {
