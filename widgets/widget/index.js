@@ -347,13 +347,20 @@ class Widget extends React.PureComponent {
     }
   }
 
-  getModelValue (model) {
+  getModelValue (model, fullPath) {
     const state = new Shredder (this.getState ());
-    const parentModel = this.context.model || `backend.${this.props.id}`;
-    if (isFunction (model)) {
-      model = model (state.get (parentModel));
+    if (fullPath) {
+      if (isFunction (model)) {
+        model = model (state.get (model));
+      }
+      return state.get (model);
+    } else {
+      const parentModel = this.context.model || `backend.${this.props.id}`;
+      if (isFunction (model)) {
+        model = model (state.get (parentModel));
+      }
+      return state.get (`${parentModel}${model}`);
     }
-    return state.get (`${parentModel}${model}`);
   }
 
   getEntityPathInCollection (collectionPath, id, entityPath) {
