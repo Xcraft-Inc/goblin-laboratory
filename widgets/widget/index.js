@@ -256,23 +256,45 @@ class Widget extends React.PureComponent {
         const second = choices[0].replace ().replace (/[^\.]+$/, choices[1]);
         return this.withModel (second, mapProps) (component);
       }
-      // Collections
-      if (model.endsWith ('[]')) {
-        const path = model.replace ('[]', '');
-        const coll = this.getModelValue (path);
-        return props => {
-          return (
-            <div>
-              {coll.map ((v, k) => {
-                const Item = this.withModel (`${path}.${k}`, mapProps) (
-                  component
-                );
-                return <Item key={k} {...props} />;
-              })}
-            </div>
-          );
-        };
+      // Look for data in collections
+      const collectionInfo = model.match (/\[(.*)\]/);
+      if (collectionInfo) {
+        if (collectionInfo.length === 2) {
+          const itemId = collectionInfo[1];
+          //Full collection case
+          if (itemId.length === 0) {
+            const path = model.replace ('[]', '');
+            const coll = this.getModelValue (path);
+            return props => {
+              return (
+                <div>
+                  {coll.map ((v, k) => {
+                    const Item = this.withModel (`${path}.${k}`, mapProps) (
+                      component
+                    );
+                    return <Item key={k} {...props} />;
+                  })}
+                </div>
+              );
+            };
+          }
+          // With entity id  case
+          if (
+            itemId.match (
+              /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+            )
+          ) {
+            const i = model.indexOf ('[');
+            const prePath = model.substring (1, i);
+            const finalPath = this.getEntityPathInCollection (prePath, itemId) (
+              this.getModelValue ('')
+            );
+
+            return this.withModel (finalPath, mapProps) (component);
+          }
+        }
       }
+
       // Std
       return this.withModel (model, mapProps) (component);
     };
