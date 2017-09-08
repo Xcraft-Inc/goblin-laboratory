@@ -211,11 +211,14 @@ class Widget extends React.PureComponent {
     return new Shredder (state);
   }
 
-  withModel (model, mapProps) {
+  withModel (model, mapProps, useEntityId) {
     return connect (
       state => {
         const s = new Shredder (state);
-        const parentModel = `backend.${this.props.id}`;
+        let parentModel = '';
+        if (!useEntityId) {
+          parentModel = `backend.${this.props.id}`;
+        }
         if (!mapProps) {
           return {
             defaultValue: s.get (`${parentModel}${model}`),
@@ -241,15 +244,18 @@ class Widget extends React.PureComponent {
     );
   }
 
-  WithModel (component, mapProps) {
+  WithModel (component, mapProps, useEntityId) {
     return model => {
       if (isFunction (model)) {
         model = model ();
       }
+      if (useEntityId) {
+        model = `backend.${this.props.entityId}${model}`;
+      }
       // Optional choice
       if (model.indexOf ('||') !== -1) {
         const choices = model.split ('||');
-        const first = this.getModelValue (choices[0]);
+        const first = this.getModelValue (choices[0], useEntityId);
         if (first) {
           return this.withModel (choices[0], mapProps) (component);
         }
@@ -264,14 +270,16 @@ class Widget extends React.PureComponent {
           //Full collection case
           if (itemId.length === 0) {
             const path = model.replace ('[]', '');
-            const coll = this.getModelValue (path);
+            const coll = this.getModelValue (path, useEntityId);
             return props => {
               return (
                 <div>
                   {coll.map ((v, k) => {
-                    const Item = this.withModel (`${path}.${k}`, mapProps) (
-                      component
-                    );
+                    const Item = this.withModel (
+                      `${path}.${k}`,
+                      mapProps,
+                      useEntityId
+                    ) (component);
                     return <Item key={k} {...props} />;
                   })}
                 </div>
@@ -287,16 +295,20 @@ class Widget extends React.PureComponent {
             const i = model.indexOf ('[');
             const prePath = model.substring (1, i);
             const finalPath = this.getEntityPathInCollection (prePath, itemId) (
-              this.getModelValue ('')
+              useEntityId
+                ? this.getModelValue (this.props.entityId, useEntityId)
+                : this.getModelValue ('')
             );
 
-            return this.withModel (finalPath, mapProps) (component);
+            return this.withModel (finalPath, mapProps, useEntityId) (
+              component
+            );
           }
         }
       }
 
       // Std
-      return this.withModel (model, mapProps) (component);
+      return this.withModel (model, mapProps, useEntityId) (component);
     };
   }
 
