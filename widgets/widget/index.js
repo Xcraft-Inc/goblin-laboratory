@@ -387,6 +387,9 @@ class Widget extends React.PureComponent {
       if (isFunction (model)) {
         model = model (state.get (model));
       }
+      if (!model.startsWith ('backend.')) {
+        model = 'backend.' + model;
+      }
       return state.get (model);
     } else {
       const parentModel = this.context.model || `backend.${this.props.id}`;
