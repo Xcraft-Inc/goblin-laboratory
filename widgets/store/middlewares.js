@@ -15,10 +15,17 @@ const handleChange = (send, action) => {
   if (goblin.indexOf ('@') !== -1) {
     goblin = goblin.split ('@')[0];
   }
-  const questAction = {
+  let questAction = {
     type: 'QUEST',
     cmd: `${goblin}.change-${fields.join ('.')}`,
     args: {id: goblinId, newValue: action.value},
+  };
+  send ('QUEST', questAction);
+
+  questAction = {
+    type: 'QUEST',
+    cmd: `${goblin}.change`,
+    args: {id: goblinId, path: fields.join ('.'), newValue: action.value},
   };
   send ('QUEST', questAction);
 };
