@@ -312,6 +312,23 @@ class Widget extends React.PureComponent {
     };
   }
 
+  ///////// High-level model mapper API
+
+  getWidgetToEntityMapper (component, mapProps) {
+    return this.WithModel (component, mapProps, true);
+  }
+
+  getWidgetToFormMapper (component, mapProps) {
+    return this.WithModel (component, mapProps, false);
+  }
+
+  getPluginToEntityMapper (component, pluginName, mapProps) {
+    const WiredPlugin = Widget.Wired (component) (
+      `${pluginName}@${this.props.id}`
+    );
+    return this.WithModel (WiredPlugin, mapProps, true);
+  }
+
   ///////////GOBLIN BUS:
 
   cmd (cmd, args) {
@@ -398,6 +415,14 @@ class Widget extends React.PureComponent {
       }
       return state.get (`${parentModel}${model}`);
     }
+  }
+
+  getFormValue (path) {
+    return this.getModelValue (path);
+  }
+
+  getEntityValue (path) {
+    return this.getModelValue (`${this.props.entityId}${path}`, true);
   }
 
   getEntityPathInCollection (collectionPath, id, entityPath) {
