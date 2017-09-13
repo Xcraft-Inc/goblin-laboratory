@@ -134,12 +134,17 @@ Goblin.registerQuest (goblinName, 'create', function* (
           // Add all direct deps of this widget
           // These deps don't depends directly of laboratory, but haves
           // this widget as parent!
-          Goblin.getOwnDirectDeps (rootWidgetId).forEach (widgetId =>
-            quest.cmd ('laboratory.add', {
-              id: quest.goblin.id,
-              widgetId,
-            })
-          );
+          const addDirectDeps = root =>
+            Goblin.getOwnDirectDeps (root).forEach (widgetId => {
+              quest.cmd ('laboratory.add', {
+                id: quest.goblin.id,
+                widgetId,
+              });
+              // Recurse possible sub-direct deps
+              addDirectDeps (widgetId);
+            });
+
+          addDirectDeps (rootWidgetId);
         }
       } else {
         // Recurse from root dep
