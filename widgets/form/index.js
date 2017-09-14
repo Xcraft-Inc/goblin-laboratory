@@ -78,6 +78,19 @@ class Form extends Widget {
     };
   }
 
+  get entityConfig () {
+    const style = {
+      display: 'flex',
+      flexDirection: 'column',
+    };
+    return {
+      component: 'div',
+      validateOn: 'submit',
+      model: `backend.${this.props.entityId}`,
+      style,
+    };
+  }
+
   formConfigWithComponent (component) {
     const style = {
       display: 'flex',
