@@ -421,8 +421,19 @@ class Widget extends React.PureComponent {
     return this.getModelValue (path);
   }
 
-  getEntityValue (path) {
-    return this.getModelValue (`${this.props.entityId}${path}`, true);
+  getEntityValue (model) {
+    if (isFunction (model)) {
+      const state = new Shredder (this.getState ());
+      model = model (state.get (`backend.${this.props.entityId}`));
+      return this.getModelValue (model, true);
+    } else {
+      return this.getModelValue (`${this.props.entityId}${model}`, true);
+    }
+  }
+
+  getEntityById (entityId) {
+    const state = new Shredder (this.getState ());
+    return state.get (`backend.${this.props.entityId}`);
   }
 
   getEntityPathInCollection (collectionPath, id, entityPath) {
