@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import Shredder from 'xcraft-core-shredder';
 import {push, replace} from 'react-router-redux';
+import {actions} from 'react-redux-form/immutable';
 import {matchPath} from 'react-router';
 import fasterStringify from 'faster-stable-stringify';
 import {StyleSheet, css} from 'aphrodite/no-important';
@@ -396,6 +397,22 @@ class Widget extends React.PureComponent {
     if (search) {
       return Widget.GetParameter (search, 'hid');
     }
+  }
+
+  setModelValue (path, value, useEntity) {
+    let fullPath = 'backend.' + this.props.id + path;
+    if (useEntity) {
+      fullPath = 'backend.' + this.props.entityId + path;
+    }
+    this.props.dispatch (actions.change (fullPath, value));
+  }
+
+  setFormValue (path, value) {
+    this.setModelValue (path, value);
+  }
+
+  setEntityValue (path, value) {
+    this.setModelValue (path, value, true);
   }
 
   getModelValue (model, fullPath) {

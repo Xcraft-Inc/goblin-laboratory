@@ -10,22 +10,6 @@ class Form extends Widget {
     this.getFormFieldValue = this.getFormFieldValue.bind (this);
   }
 
-  setModelValue (path, value, useEntity) {
-    let fullPath = 'backend.' + this.props.id + path;
-    if (useEntity) {
-      fullPath = 'backend.' + this.props.entityId + path;
-    }
-    this.props.dispatch (actions.change (fullPath, value));
-  }
-
-  setFormValue (path, value) {
-    this.setModelValue (path, value);
-  }
-
-  setEntityValue (path, value) {
-    this.setModelValue (path, value, true);
-  }
-
   formFocus (model) {
     this.props.dispatch (actions.focus (model));
   }
