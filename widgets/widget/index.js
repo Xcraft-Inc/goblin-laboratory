@@ -450,7 +450,7 @@ class Widget extends React.PureComponent {
 
   getEntityById (entityId) {
     const state = new Shredder (this.getState ());
-    return state.get (`backend.${this.props.entityId}`);
+    return state.get (`backend.${entityId}`);
   }
 
   getEntityPathInCollection (collectionPath, id, entityPath) {
