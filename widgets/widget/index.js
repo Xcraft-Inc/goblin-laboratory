@@ -212,12 +212,12 @@ class Widget extends React.PureComponent {
     return new Shredder (state);
   }
 
-  withModel (model, mapProps, useEntityId) {
+  withModel (model, mapProps, fullPath) {
     return connect (
       state => {
         const s = new Shredder (state);
         let parentModel = '';
-        if (!useEntityId) {
+        if (!fullPath) {
           parentModel = `backend.${this.props.id}`;
         }
         if (!mapProps) {
@@ -328,6 +328,10 @@ class Widget extends React.PureComponent {
       `${pluginName}@${this.props.id}`
     );
     return this.WithModel (WiredPlugin, mapProps, true);
+  }
+
+  mapWidgetToBackend (component, mapProps, path) {
+    return this.withModel (`backend.${path}`, mapProps, true) (component);
   }
 
   ///////////GOBLIN BUS:
