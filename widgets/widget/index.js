@@ -408,7 +408,7 @@ class Widget extends React.PureComponent {
     if (useEntity) {
       fullPath = 'backend.' + this.props.entityId + path;
     }
-    this.props.dispatch (actions.change (fullPath, value));
+    this.context.dispatch (actions.change (fullPath, value));
   }
 
   setFormValue (path, value) {
