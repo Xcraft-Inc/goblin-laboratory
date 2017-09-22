@@ -334,6 +334,10 @@ class Widget extends React.PureComponent {
     return this.withModel (`backend.${path}`, mapProps, true) (component);
   }
 
+  mapWidget (component, mapProps, path) {
+    return this.withModel (path, mapProps, true) (component);
+  }
+
   ///////////GOBLIN BUS:
 
   cmd (cmd, args) {
@@ -401,6 +405,10 @@ class Widget extends React.PureComponent {
     if (search) {
       return Widget.GetParameter (search, 'hid');
     }
+  }
+
+  setBackendValue (path, value) {
+    this.context.dispatch (actions.change (path, value));
   }
 
   setModelValue (path, value, useEntity) {
