@@ -212,6 +212,32 @@ class Widget extends React.PureComponent {
     return new Shredder (state);
   }
 
+  withState (mapProps, path) {
+    return connect (
+      state => {
+        const s = new Shredder (state);
+        if (isFunction (mapProps)) {
+          return Object.assign (
+            mapProps (s.get (`backend.${this.props.id}${path}`))
+          );
+        } else {
+          return {
+            [mapProps]: s.get (`backend.${this.props.id}${path}`),
+          };
+        }
+      },
+      null,
+      null,
+      {pure: true}
+    );
+  }
+
+  WithState (component, mapProps) {
+    return path => {
+      return this.withState (mapProps, path) (component);
+    };
+  }
+
   withModel (model, mapProps, fullPath) {
     return connect (
       state => {
