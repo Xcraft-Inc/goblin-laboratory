@@ -472,6 +472,11 @@ class Widget extends React.PureComponent {
     }
   }
 
+  getBackendValue (fullpath) {
+    const state = new Shredder (this.getState ());
+    return state.get (fullpath);
+  }
+
   getFormValue (path) {
     return this.getModelValue (path);
   }
