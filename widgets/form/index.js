@@ -2,6 +2,7 @@ import React from 'react';
 import {actions, Form as RFForm, Fieldset} from 'react-redux-form/immutable';
 import Widget from 'laboratory/widget';
 import importer from '../importer/';
+import ReactList from 'react-list';
 const partialImporter = importer ('partial');
 
 class Form extends Widget {
@@ -35,6 +36,12 @@ class Form extends Widget {
       }
     }
     return modelValue;
+  }
+
+  getList (item, type, length) {
+    return props => (
+      <ReactList length={length} type={type} itemRenderer={item} {...props} />
+    );
   }
 
   get formValue () {
