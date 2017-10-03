@@ -356,7 +356,32 @@ class Widget extends React.PureComponent {
     return this.WithModel (WiredPlugin, mapProps, true);
   }
 
+  getPluginToFormMapper (component, pluginName, mapProps) {
+    const pluginPath = `${pluginName}@${this.props.id}`;
+    const WiredPlugin = Widget.Wired (component) (pluginPath);
+    return this.withModel (`backend.${pluginPath}`, mapProps, true) (
+      WiredPlugin
+    );
+  }
+
+  wirePluginToForm (component, pluginName) {
+    const WiredPlugin = Widget.Wired (component) (
+      `${pluginName}@${this.props.id}`
+    );
+    return WiredPlugin;
+  }
+
   mapWidgetToBackend (component, mapProps, path) {
+    return this.withModel (`backend.${path}`, mapProps, true) (component);
+  }
+
+  mapWidgetToEntityPlugin (component, mapProps, pluginName, path) {
+    path = `${pluginName}@${this.props.entityId}${path}`;
+    return this.withModel (`backend.${path}`, mapProps, true) (component);
+  }
+
+  mapWidgetToFormPlugin (component, mapProps, pluginName, path) {
+    path = `${pluginName}@${this.props.id}${path}`;
     return this.withModel (`backend.${path}`, mapProps, true) (component);
   }
 
@@ -479,6 +504,18 @@ class Widget extends React.PureComponent {
 
   getFormValue (path) {
     return this.getModelValue (path);
+  }
+
+  getFormPluginValue (pluginName, path) {
+    return this.getBackendValue (
+      `backend.${pluginName}@${this.props.id}${path}`
+    );
+  }
+
+  getEntityPluginValue (pluginName, path) {
+    return this.getBackendValue (
+      `backend.${pluginName}@${this.props.entityId}${path}`
+    );
   }
 
   getEntityValue (model) {
