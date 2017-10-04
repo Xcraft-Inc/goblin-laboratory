@@ -2,7 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import Shredder from 'xcraft-core-shredder';
-import {push, replace} from 'react-router-redux';
+import {push, replace, goBack} from 'react-router-redux';
 import {actions} from 'react-redux-form/immutable';
 import {matchPath} from 'react-router';
 import fasterStringify from 'faster-stable-stringify';
@@ -609,6 +609,10 @@ class Widget extends React.PureComponent {
         `${path}/${hinterType}${search}#${this.context.model}.${this.props.hinter}`
       );
     }
+  }
+
+  navGoBack () {
+    this.context.dispatch (goBack ());
   }
 
   replaceNav (path) {
