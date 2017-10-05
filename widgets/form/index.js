@@ -1,4 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+
 import {actions, Form as RFForm, Fieldset} from 'react-redux-form/immutable';
 import Widget from 'laboratory/widget';
 import importer from '../importer/';

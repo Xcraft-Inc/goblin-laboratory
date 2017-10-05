@@ -68,6 +68,7 @@ class Widget extends React.PureComponent {
   static get propTypes () {
     return {
       id: PropTypes.string,
+      entityId: PropTypes.string,
       hinter: PropTypes.string,
     };
   }
@@ -406,14 +407,12 @@ class Widget extends React.PureComponent {
   }
 
   doAs (service, action, args) {
-    if (!this.props.id) {
+    const id = this.props.id || this.context.id;
+    if (!id) {
       console.error (`${this.name} is not a connected widget (need an id)`);
       return;
     }
-    this.cmd (
-      `${service}.${action}`,
-      Object.assign ({id: this.props.id}, args)
-    );
+    this.cmd (`${service}.${action}`, Object.assign ({id}, args));
   }
 
   ///////////NAVIGATION:
