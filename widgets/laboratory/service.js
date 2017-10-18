@@ -34,11 +34,16 @@ Goblin.registerQuest (goblinName, 'create', function* (
   url,
   usePack,
   useWS,
-  target
+  target,
+  screenId
 ) {
   const port = 4000 + increment++;
   const existingUrl = url;
   let _url = existingUrl || `http://localhost:${port}`;
+
+  if (!screenId) {
+    screenId = quest.goblin.id;
+  }
 
   if (!target) {
     if (process.versions.electron) {
@@ -125,7 +130,11 @@ Goblin.registerQuest (goblinName, 'create', function* (
       // New created goblin is dep. of a laboratory ?
       if (Goblin.hasDepOfType (rootWidgetId, 'laboratory')) {
         // Is current laboratory a dep of the new created goblin ?
-        if (Goblin.isDepOf (quest.goblin.id, rootWidgetId)) {
+        // Or on a duplicated screen ?
+        if (
+          Goblin.isDepOf (quest.goblin.id, rootWidgetId) ||
+          Goblin.isDepOf (screenId, rootWidgetId)
+        ) {
           quest.cmd ('laboratory.add', {
             id: quest.goblin.id,
             widgetId: rootWidgetId,
@@ -158,7 +167,7 @@ Goblin.registerQuest (goblinName, 'create', function* (
 
   const unsubDeleted = quest.sub ('goblin.deleted', (err, msg) => {
     // Is current laboratory a dep of the deleted goblin ?
-    if (msg.data.deps.indexOf (quest.goblin.id) !== -1) {
+    if (msg.data.deps.indexOf (screenId) !== -1) {
       quest.cmd ('laboratory.del', {
         id: quest.goblin.id,
         widgetId: msg.data.id,
@@ -187,6 +196,7 @@ Goblin.registerQuest (goblinName, 'duplicate', function* (
     id: newLabId,
     url,
     usePack: usePack || false,
+    screenId: quest.goblin.id,
   });
   return lab.id;
 });
