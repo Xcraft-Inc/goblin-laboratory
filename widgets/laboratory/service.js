@@ -175,11 +175,19 @@ Goblin.registerQuest (goblinName, 'get-url', function (quest) {
   return quest.goblin.getX ('url');
 });
 
-Goblin.registerQuest (goblinName, 'duplicate', function* (quest) {
+Goblin.registerQuest (goblinName, 'duplicate', function* (
+  quest,
+  forId,
+  usePack
+) {
   const state = quest.goblin.getState ();
   const url = state.get ('url');
-  const routes = state.get ('routes').toJS ();
-  const lab = yield quest.create ('laboratory', {url, routes});
+  const newLabId = `laboratory@${quest.uuidV4 ()}`;
+  const lab = yield quest.createFor (forId, forId, newLabId, {
+    id: newLabId,
+    url,
+    usePack: usePack || false,
+  });
   return lab.id;
 });
 
@@ -215,13 +223,6 @@ Goblin.registerQuest (goblinName, '_ready', function* (quest, wid) {
 Goblin.registerQuest (goblinName, 'open', function (quest, route) {
   quest.log.info ('Laboratory opening:');
   quest.log.info (route);
-});
-
-Goblin.registerQuest (goblinName, 'change-mandate', function (quest) {
-  const onChangeMandate = quest.goblin.getX ('onChangeMandate');
-  if (onChangeMandate) {
-    quest.cmd (onChangeMandate.quest, {id: onChangeMandate.id});
-  }
 });
 
 Goblin.registerQuest (goblinName, 'add', function* (
