@@ -13,6 +13,10 @@ import createHistory from 'history/createHashHistory';
 import {push} from 'react-router-redux';
 
 const ipcRenderer = require ('electron').ipcRenderer;
+const webFrame = require ('electron').webFrame;
+
+window.setZoomFactor = f => webFrame.setZoomFactor (f);
+
 const history = createHistory ();
 //import Hello from 'venture-trade-company/hello';
 import configureStore from 'laboratory/store/store';
