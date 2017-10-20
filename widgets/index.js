@@ -15,6 +15,7 @@ import {push} from 'react-router-redux';
 const ipcRenderer = require ('electron').ipcRenderer;
 const webFrame = require ('electron').webFrame;
 
+window.zoomFactor = webFrame.getZoomFactor ();
 window.setZoomFactor = f => webFrame.setZoomFactor (f);
 
 const history = createHistory ();
