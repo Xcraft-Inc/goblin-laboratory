@@ -15,8 +15,9 @@ import {push} from 'react-router-redux';
 const ipcRenderer = require ('electron').ipcRenderer;
 const webFrame = require ('electron').webFrame;
 
-window.zoomFactor = webFrame.getZoomFactor ();
-window.setZoomFactor = f => webFrame.setZoomFactor (f);
+window.zoomable = true;
+window.zoom = () => webFrame.setZoomFactor (webFrame.getZoomFactor () + 0.1);
+window.unZoom = () => webFrame.setZoomFactor (webFrame.getZoomFactor () - 0.1);
 
 const history = createHistory ();
 //import Hello from 'venture-trade-company/hello';
