@@ -80,6 +80,7 @@ class Widget extends React.PureComponent {
       store: PropTypes.object,
       theme: PropTypes.object,
       model: PropTypes.any,
+      readonly: PropTypes.any,
     };
   }
 
