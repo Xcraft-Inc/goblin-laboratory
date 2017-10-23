@@ -56,6 +56,12 @@ export default kind => {
         require.context ('../../../', true, /\/widgets\/[^/]+\/widget\.js$/)
       );
       break;
+    case 'ui':
+      importAll (
+        kind,
+        require.context ('../../../', true, /\/widgets\/[^/]+\/ui\.js$/)
+      );
+      break;
     default:
       throw new Error (`Unsupported kind: ${kind} for importer`);
   }
