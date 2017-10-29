@@ -63,10 +63,11 @@ class Form extends Widget {
       display: 'flex',
       flexDirection: 'column',
     };
+    const id = this.props.id ? this.props.id : this.context.id;
     return {
       component: 'div',
       validateOn: 'submit',
-      model: `backend.${this.props.id}`,
+      model: `backend.${id}`,
       style,
     };
   }
@@ -89,10 +90,11 @@ class Form extends Widget {
       display: 'flex',
       flexDirection: 'column',
     };
+    const id = this.props.id ? this.props.id : this.context.id;
     return {
       component: component,
       validateOn: 'submit',
-      model: `backend.${this.props.id}`,
+      model: `backend.${id}`,
       style,
     };
   }
