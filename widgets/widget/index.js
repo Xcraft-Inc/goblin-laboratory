@@ -115,6 +115,10 @@ class Widget extends React.PureComponent {
     return this.props[key];
   }
 
+  componentDidCatch (error, info) {
+    this.reportError (error, info);
+  }
+
   componentDidMount () {
     /* HACK: flush explicitly all aphrodite styles in order to remove the
      * flickers and bugs in some systems where the styles are not applied.
@@ -403,6 +407,13 @@ class Widget extends React.PureComponent {
       args: args,
     };
     this.context.dispatch (action);
+  }
+
+  reportError (error, info) {
+    this.cmd (
+      'laboratory.when-ui-crash',
+      Object.assign ({id: this.context.labid}, {error, info})
+    );
   }
 
   do (action, args) {

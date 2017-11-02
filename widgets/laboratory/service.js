@@ -203,6 +203,21 @@ Goblin.registerQuest (goblinName, 'duplicate', function* (
   return lab.id;
 });
 
+Goblin.registerQuest (goblinName, 'when-ui-crash', function (
+  quest,
+  error,
+  info
+) {
+  console.dir (error);
+  console.log (info);
+  quest.log.error (error);
+  quest.log.error (info);
+  // RESET APP?
+  const state = quest.goblin.getState ();
+  const existingRoot = state.get ('root', null);
+  quest.me.setRoot ({widgetId: existingRoot});
+});
+
 Goblin.registerQuest (goblinName, 'set-root', function (quest, widgetId) {
   const cleanRoot = existingRoot => {
     let goblin = Goblin.getGoblinName (existingRoot);
