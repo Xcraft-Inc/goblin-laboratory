@@ -89,9 +89,11 @@ Goblin.registerQuest (goblinName, 'create', function* (
   let feeds = config.feeds;
   feeds.push (quest.goblin.id);
 
+  /*
+  //REACT16 don't support react_perf
   if (process.env.NODE_ENV !== 'production') {
     _url += '?react_perf';
-  }
+  }*/
 
   quest.goblin.setX ('url', _url);
 
