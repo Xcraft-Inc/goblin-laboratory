@@ -601,6 +601,28 @@ class Widget extends React.PureComponent {
     return this.getRouting ().get ('location.hash');
   }
 
+  hideHinter () {
+    if (this.props.hinter) {
+      let path = this.getRouting ().get ('location.pathname');
+      const search = this.getRouting ().get ('location.search');
+      if (path.split ('/').length === 4) {
+        path = path.substr (0, path.lastIndexOf ('/'));
+      }
+
+      const hinterType = this.getHinterType (this.props.hinter);
+      if (!hinterType) {
+        this.nav (
+          `${path}${search}#${this.context.model}.${this.props.hinter}`
+        );
+        return;
+      }
+
+      this.nav (
+        `${path}/${hinterType}-hidden${search}#${this.context.model}.${this.props.hinter}`
+      );
+    }
+  }
+
   navToHinter () {
     if (this.props.hinter) {
       let path = this.getRouting ().get ('location.pathname');
