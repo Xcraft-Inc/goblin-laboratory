@@ -602,24 +602,13 @@ class Widget extends React.PureComponent {
   }
 
   hideHinter () {
-    if (this.props.hinter) {
-      let path = this.getRouting ().get ('location.pathname');
-      const search = this.getRouting ().get ('location.search');
-      if (path.split ('/').length === 4) {
-        path = path.substr (0, path.lastIndexOf ('/'));
-      }
-
-      const hinterType = this.getHinterType (this.props.hinter);
-      if (!hinterType) {
-        this.nav (
-          `${path}${search}#${this.context.model}.${this.props.hinter}`
-        );
-        return;
-      }
-
-      this.nav (
-        `${path}/${hinterType}-hidden${search}#${this.context.model}.${this.props.hinter}`
-      );
+    let path = this.getRouting ().get ('location.pathname');
+    const search = this.getRouting ().get ('location.search');
+    const hash = this.getRouting ().get ('location.hash');
+    if (path.split ('/').length === 4) {
+      const hinterType = path.substr (path.lastIndexOf ('/'), path.length);
+      path = path.substr (0, path.lastIndexOf ('/'));
+      this.nav (`${path}${hinterType}-hidden${search}${hash}`);
     }
   }
 
@@ -643,6 +632,8 @@ class Widget extends React.PureComponent {
       this.nav (
         `${path}/${hinterType}${search}#${this.context.model}.${this.props.hinter}`
       );
+    } else {
+      this.hideHinter ();
     }
   }
 
