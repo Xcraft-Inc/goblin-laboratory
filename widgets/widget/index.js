@@ -632,6 +632,13 @@ class Widget extends React.PureComponent {
       this.nav (
         `${path}/${hinterType}${search}#${this.context.model}.${this.props.hinter}`
       );
+
+      if (this.props.displayValue) {
+        console.log ('display detail:');
+        if (this.props.model) {
+          console.log (this.props.selectedId);
+        }
+      }
     } else {
       this.hideHinter ();
     }
