@@ -644,6 +644,20 @@ class Widget extends React.PureComponent {
     }
   }
 
+  navToDetail (workitemId, entityId) {
+    const type = entityId.split ('@')[0];
+    let path = this.getRouting ().get ('location.pathname');
+    const search = this.getRouting ().get ('location.search');
+    if (path.split ('/').length === 4) {
+      path = path.substr (0, path.lastIndexOf ('/'));
+    }
+
+    this.nav (`${path}/${type}-hidden${search}#backend.${workitemId}.${type}`);
+
+    const detailServiceId = `${type}-detail@${workitemId}`;
+    this.cmd (`detail.set-entity`, {id: detailServiceId, entityId});
+  }
+
   navGoBack () {
     this.context.dispatch (goBack ());
   }
