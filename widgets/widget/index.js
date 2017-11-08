@@ -614,30 +614,30 @@ class Widget extends React.PureComponent {
 
   navToHinter () {
     if (this.props.hinter) {
-      let path = this.getRouting ().get ('location.pathname');
-      const search = this.getRouting ().get ('location.search');
-      if (path.split ('/').length === 4) {
-        path = path.substr (0, path.lastIndexOf ('/'));
-      }
-
-      const hinterType = this.getHinterType (this.props.hinter);
-
-      if (!hinterType) {
-        this.nav (
-          `${path}${search}#${this.context.model}.${this.props.hinter}`
-        );
-        return;
-      }
-
-      this.nav (
-        `${path}/${hinterType}${search}#${this.context.model}.${this.props.hinter}`
-      );
-
       if (this.props.displayValue) {
-        console.log ('display detail:');
-        if (this.props.model) {
+        if (this.props.model && this.props.selectedId) {
           console.log (this.props.selectedId);
+          this.navToDetail (this.props.id, this.props.selectedId);
         }
+      } else {
+        let path = this.getRouting ().get ('location.pathname');
+        const search = this.getRouting ().get ('location.search');
+        if (path.split ('/').length === 4) {
+          path = path.substr (0, path.lastIndexOf ('/'));
+        }
+
+        const hinterType = this.getHinterType (this.props.hinter);
+
+        if (!hinterType) {
+          this.nav (
+            `${path}${search}#${this.context.model}.${this.props.hinter}`
+          );
+          return;
+        }
+
+        this.nav (
+          `${path}/${hinterType}${search}#${this.context.model}.${this.props.hinter}`
+        );
       }
     } else {
       this.hideHinter ();
