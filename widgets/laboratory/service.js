@@ -115,7 +115,14 @@ Goblin.registerQuest (goblinName, 'create', function* (
   yield quest.cmd ('wm.win.feed.sub', {wid, feeds});
 
   const unsubCreated = quest.sub ('goblin.created', (err, msg) => {
+    const rootsAdded = {};
     const addDependentWidgetsToLaboratory = rootWidgetId => {
+      if (rootsAdded[rootWidgetId]) {
+        return;
+      } else {
+        rootsAdded[rootWidgetId] = true;
+      }
+
       if (rootWidgetId === null) {
         return;
       }
