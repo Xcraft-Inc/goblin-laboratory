@@ -215,14 +215,13 @@ Goblin.registerQuest (goblinName, 'when-ui-crash', function (
   error,
   info
 ) {
-  console.dir (error);
+  quest.log.err ('UI generate errors !');
   console.log (info);
-  quest.log.error (error);
-  quest.log.error (info);
+  quest.log.err (info);
   // RESET APP?
-  const state = quest.goblin.getState ();
-  const existingRoot = state.get ('root', null);
-  quest.me.setRoot ({widgetId: existingRoot});
+  //const state = quest.goblin.getState ();
+  //const existingRoot = state.get ('root', null);
+  //quest.me.setRoot ({widgetId: existingRoot});
 });
 
 Goblin.registerQuest (goblinName, 'set-root', function (quest, widgetId) {
