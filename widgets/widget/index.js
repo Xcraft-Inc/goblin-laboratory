@@ -655,7 +655,11 @@ class Widget extends React.PureComponent {
     this.nav (`${path}/${type}-hidden${search}#backend.${workitemId}.${type}`);
 
     const detailServiceId = `${type}-detail@${workitemId}`;
-    this.cmd (`detail.set-entity`, {id: detailServiceId, entityId});
+    this.cmd (`detail.set-entity`, {
+      id: detailServiceId,
+      entityId,
+      viewOnly: true,
+    });
   }
 
   navGoBack () {
