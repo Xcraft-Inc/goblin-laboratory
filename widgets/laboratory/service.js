@@ -144,7 +144,7 @@ Goblin.registerQuest (goblinName, 'create', function* (
           Goblin.isDepOf (quest.goblin.id, rootWidgetId) ||
           Goblin.isDepOf (screenId, rootWidgetId)
         ) {
-          console.log ('LAB-ADD:', rootWidgetId);
+          //console.log ('LAB-ADD:', rootWidgetId);
           quest.cmd ('laboratory.add', {
             id: quest.goblin.id,
             widgetId: rootWidgetId,
@@ -158,7 +158,7 @@ Goblin.registerQuest (goblinName, 'create', function* (
               if (rootsAdded[widgetId]) {
                 return;
               }
-              console.log ('---and------>', widgetId);
+              //console.log ('---and------>', widgetId);
               quest.cmd ('laboratory.add', {
                 id: quest.goblin.id,
                 widgetId,
