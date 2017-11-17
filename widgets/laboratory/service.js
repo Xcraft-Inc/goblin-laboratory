@@ -115,79 +115,18 @@ Goblin.registerQuest (goblinName, 'create', function* (
   yield quest.cmd ('wm.win.feed.sub', {wid, feeds});
 
   const unsubCreated = quest.sub ('goblin.created', (err, msg) => {
-    const rootsAdded = {};
-    const addDependentWidgetsToLaboratory = rootWidgetId => {
-      if (rootsAdded[rootWidgetId]) {
-        return;
-      } else {
-        rootsAdded[rootWidgetId] = true;
-      }
-
-      if (rootWidgetId === null) {
-        return;
-      }
-
-      // Add itself case
-      if (rootWidgetId === quest.goblin.id) {
-        quest.cmd ('laboratory.add', {
-          id: quest.goblin.id,
-          widgetId: rootWidgetId,
-        });
-        return;
-      }
-
-      // New created goblin is dep. of a laboratory ?
-      if (Goblin.hasDepOfType (rootWidgetId, 'laboratory')) {
-        // Is current laboratory a dep of the new created goblin ?
-        // Or on a duplicated screen ?
-        if (
-          Goblin.isDepOf (quest.goblin.id, rootWidgetId) ||
-          Goblin.isDepOf (screenId, rootWidgetId)
-        ) {
-          //console.log ('LAB-ADD:', rootWidgetId);
-          quest.cmd ('laboratory.add', {
-            id: quest.goblin.id,
-            widgetId: rootWidgetId,
-          });
-
-          // Add all direct deps of this widget
-          // These deps don't depends directly of laboratory, but haves
-          // this widget as parent!
-          const addDirectDeps = root => {
-            Goblin.getOwnDirectDeps (root).forEach (widgetId => {
-              if (rootsAdded[widgetId]) {
-                return;
-              }
-              //console.log ('---and------>', widgetId);
-              quest.cmd ('laboratory.add', {
-                id: quest.goblin.id,
-                widgetId,
-              });
-              // Recurse possible sub-direct deps
-              addDirectDeps (widgetId);
-            });
-          };
-
-          addDirectDeps (rootWidgetId);
-        }
-      } else {
-        // Recurse from root dep
-        addDependentWidgetsToLaboratory (Goblin.getRootDep (rootWidgetId));
-      }
-    };
-
-    addDependentWidgetsToLaboratory (msg.data.id);
+    quest.cmd ('laboratory.add', {
+      id: quest.goblin.id,
+      widgetId: msg.data.id,
+    });
   });
   quest.goblin.defer (unsubCreated);
 
   const unsubDeleted = quest.sub ('goblin.deleted', (err, msg) => {
-    // Is current laboratory a dep of the deleted goblin ?
-    if (msg.data.deps.indexOf (screenId) !== -1) {
-      quest.cmd ('laboratory.del', {
-        id: quest.goblin.id,
-        widgetId: msg.data.id,
-      });
-    }
+    quest.cmd ('laboratory.del', {
+      id: quest.goblin.id,
+      widgetId: msg.data.id,
+    });
   });
   quest.goblin.defer (unsubDeleted);
 
@@ -264,48 +203,25 @@ Goblin.registerQuest (goblinName, 'open', function (quest, route) {
   quest.log.info (route);
 });
 
-Goblin.registerQuest (goblinName, 'add', function* (
-  quest,
-  widgetId,
-  name,
-  create,
-  questParams
-) {
+Goblin.registerQuest (goblinName, 'add', function (quest, widgetId) {
   const state = quest.goblin.getState ();
   const wid = state.get ('wid');
   const branch = widgetId;
 
   quest.log.info (`Laboratory adding widget ${widgetId} to window ${wid}`);
 
-  const added = yield quest.cmd ('warehouse.feed.add', {feed: wid, branch});
-  quest.log.info (`feed added: ${added}`);
-  if (added && create) {
-    const args = Object.assign ({id: widgetId}, questParams);
-    const entity = yield quest.create (name, args);
-    quest.goblin.defer (entity.delete);
-  }
+  quest.cmd ('warehouse.feed.add', {feed: wid, branch});
 });
 
-Goblin.registerQuest (goblinName, 'del', function* (
-  quest,
-  widgetId,
-  mustDelete,
-  name,
-  questParams
-) {
+Goblin.registerQuest (goblinName, 'del', function (quest, widgetId) {
   const state = quest.goblin.getState ();
   const wid = state.get ('wid');
   const branch = widgetId;
   quest.log.info (`Laboratory deleting widget ${widgetId} from window ${wid}`);
-  const deleted = yield quest.cmd ('warehouse.feed.del', {feed: wid, branch});
-  quest.log.info (`feed deleted: ${deleted}`);
-  if (mustDelete) {
-    const args = Object.assign ({id: widgetId}, questParams);
-    quest.cmd (`${name}.delete`, args);
-  }
+  quest.cmd ('warehouse.feed.del', {feed: wid, branch});
 });
 
-Goblin.registerQuest (goblinName, 'delete', function* (quest) {
+Goblin.registerQuest (goblinName, 'delete', function (quest) {
   quest.log.info (`Deleting laboratory`);
 });
 
