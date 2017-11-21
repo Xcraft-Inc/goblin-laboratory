@@ -94,7 +94,7 @@ const main = Main => {
 
 if (module.hot) {
   module.hot.accept ();
-  ipcRenderer.send ('RESEND', wid);
+  ipcRenderer.send ('RESEND');
 }
 
 main (() => <span>Empty Laboratory</span>);

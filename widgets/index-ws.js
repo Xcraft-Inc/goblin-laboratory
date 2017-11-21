@@ -100,7 +100,7 @@ const main = Main => {
 
 if (module.hot) {
   module.hot.accept ();
-  socket.send (JSON.stringify ({type: 'RESEND', wid: 'web'}));
+  socket.send (JSON.stringify ({type: 'RESEND'}));
 }
 
 main (() => <span>Empty Laboratory</span>);
