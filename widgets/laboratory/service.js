@@ -98,7 +98,7 @@ Goblin.registerQuest (goblinName, 'create', function* (
   quest.goblin.setX ('url', _url);
 
   //CREATE A WINDOW
-  const win = yield quest.create ('wm.win', {
+  const win = yield quest.create ('wm', {
     url: _url,
     labId: quest.goblin.id,
     feeds,
@@ -112,7 +112,7 @@ Goblin.registerQuest (goblinName, 'create', function* (
   quest.goblin.defer (win.delete);
 
   quest.do ({id: quest.goblin.id, wid, url: _url, config});
-  yield quest.cmd ('wm.win.feed.sub', {wid, feeds});
+  yield win.feedSub ({wid, feeds});
 
   const unsubCreated = quest.sub ('goblin.created', (err, msg) => {
     quest.cmd ('laboratory.add', {
@@ -184,12 +184,12 @@ Goblin.registerQuest (goblinName, 'set-root', function (quest, widgetId) {
 });
 
 Goblin.registerQuest (goblinName, 'nav', function (quest, route) {
-  const win = quest.use ('wm.win');
+  const win = quest.getAPI (`wm`);
   win.nav ({route});
 });
 
 Goblin.registerQuest (goblinName, 'dispatch', function (quest, action) {
-  const win = quest.use ('wm.win');
+  const win = quest.getAPI (`wm`);
   win.dispatch ({action});
 });
 
