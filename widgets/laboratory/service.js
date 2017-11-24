@@ -105,6 +105,7 @@ Goblin.registerQuest (goblinName, 'create', function* (
     options: {
       openDevTools: process.env.NODE_ENV !== 'production',
       useWS,
+      target,
     },
   });
 
