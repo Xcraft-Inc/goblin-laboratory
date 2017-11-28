@@ -618,7 +618,7 @@ class Widget extends React.PureComponent {
       if (this.props.displayValue) {
         if (this.props.model && this.props.selectedId) {
           console.log (this.props.selectedId);
-          this.navToDetail (this.props.id, this.props.selectedId, true);
+          this.navToDetail (this.props.id, this.props.selectedId);
         }
       } else {
         let path = this.getRouting ().get ('location.pathname');
@@ -645,7 +645,7 @@ class Widget extends React.PureComponent {
     }
   }
 
-  navToDetail (workitemId, entityId, viewOnly) {
+  navToDetail (workitemId, entityId) {
     const type = entityId.split ('@')[0];
     let path = this.getRouting ().get ('location.pathname');
     const search = this.getRouting ().get ('location.search');
@@ -659,7 +659,6 @@ class Widget extends React.PureComponent {
     this.cmd (`detail.set-entity`, {
       id: detailServiceId,
       entityId,
-      viewOnly,
     });
   }
 
