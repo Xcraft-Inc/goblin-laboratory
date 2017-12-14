@@ -53,7 +53,7 @@ Goblin.registerQuest (goblinName, 'create', function* (
     }
   }
   if (!existingUrl) {
-    quest.cmd ('webpack.server.start', {
+    yield quest.cmd ('webpack.server.start', {
       goblin: 'laboratory',
       jobId: quest.goblin.id,
       port: port,
@@ -65,7 +65,7 @@ Goblin.registerQuest (goblinName, 'create', function* (
   }
 
   if (usePack && existingUrl) {
-    quest.cmd ('webpack.pack', {
+    yield quest.cmd ('webpack.pack', {
       goblin: 'laboratory',
       jobId: quest.goblin.id,
       outputPath: path.join (__dirname, '../../../../dist'),
