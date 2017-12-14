@@ -645,7 +645,7 @@ class Widget extends React.PureComponent {
     }
   }
 
-  navToDetail (workitemId, entityId) {
+  navToDetail (workitemId, entityId, hinterName) {
     const type = entityId.split ('@')[0];
     let path = this.getRouting ().get ('location.pathname');
     const search = this.getRouting ().get ('location.search');
@@ -653,9 +653,15 @@ class Widget extends React.PureComponent {
       path = path.substr (0, path.lastIndexOf ('/'));
     }
 
-    this.nav (`${path}/${type}-hidden${search}#backend.${workitemId}.${type}`);
+    if (!hinterName) {
+      hinterName = type;
+    }
 
-    const detailServiceId = `${type}-detail@${workitemId}`;
+    this.nav (
+      `${path}/${hinterName}-hidden${search}#backend.${workitemId}.${type}`
+    );
+
+    const detailServiceId = `${hinterName}-detail@${workitemId}`;
     this.cmd (`detail.set-entity`, {
       id: detailServiceId,
       entityId,
