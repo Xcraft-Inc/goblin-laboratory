@@ -27,7 +27,6 @@ const logicHandlers = {
   },
 };
 
-let increment = 0;
 // Register quest's according rc.json
 Goblin.registerQuest (goblinName, 'create', function* (
   quest,
@@ -37,9 +36,8 @@ Goblin.registerQuest (goblinName, 'create', function* (
   target,
   screenId
 ) {
-  const port = 4000 + increment++;
+  let port = 4000;
   const existingUrl = url;
-  let _url = existingUrl || `http://localhost:${port}`;
 
   if (!screenId) {
     screenId = quest.goblin.id;
@@ -52,14 +50,16 @@ Goblin.registerQuest (goblinName, 'create', function* (
       target = 'node';
     }
   }
+
   if (!existingUrl) {
-    yield quest.cmd ('webpack.server.start', {
+    port = yield quest.cmd ('webpack.server.start', {
       goblin: 'laboratory',
       jobId: quest.goblin.id,
-      port: port,
+      port,
       options: {
         indexFile: useWS ? 'index-ws.js' : 'index.js',
         target,
+        autoinc: true,
       },
     });
   }
@@ -81,6 +81,8 @@ Goblin.registerQuest (goblinName, 'create', function* (
     quest.log.info (`Waiting for webpack goblin`);
     yield quest.sub.wait (`webpack.${quest.goblin.id}.done`);
   }
+
+  let _url = existingUrl || `http://localhost:${port}`;
 
   quest.log.info (`Opening a window`);
 
