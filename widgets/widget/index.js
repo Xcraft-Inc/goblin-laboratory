@@ -92,9 +92,12 @@ class Widget extends React.PureComponent {
   }
 
   get styles () {
-    const myStyle = stylesImporter (this.name);
+    let myStyle = stylesImporter (this.name);
     if (!myStyle) {
-      return {};
+      myStyle = this.myStyle;
+      if (!myStyle) {
+        return {};
+      }
     }
 
     const styleProps = getPropsForStyles (this.props);
