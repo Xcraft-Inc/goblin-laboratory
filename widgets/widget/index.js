@@ -430,6 +430,11 @@ class Widget extends React.PureComponent {
     this.cmd (`${service}.${action}`, Object.assign ({id}, args));
   }
 
+  doFor (serviceId, action, args) {
+    const service = serviceId.split ('@')[0];
+    this.cmd (`${service}.${action}`, Object.assign ({id: serviceId}, args));
+  }
+
   ///////////NAVIGATION:
 
   nav (path) {
