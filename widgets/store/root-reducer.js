@@ -41,17 +41,50 @@ const blackList = [
 ];
 const resetPlugin = (state, action) => {
   if (action.type === 'rrf/reset') {
-    let newState = Object.assign ({}, state.backend);
+    let newBackend = Object.assign ({}, state.backend);
     const fullState = action.model.getState ();
+
     for (const f of Object.keys (state.backend).filter (
       k => blackList.indexOf (k) === -1
     )) {
       if (!fullState.backend.has (f)) {
-        console.log (f);
-        delete newState[f];
+        if (newBackend[f]) {
+          delete newBackend[f];
+        }
       }
     }
-    return Object.assign (state, {backend: newState});
+
+    const newInitialValue = Object.assign (
+      {},
+      state.backend.$form.initialValue
+    );
+
+    for (const f of Object.keys (state.backend.$form.initialValue)) {
+      if (!fullState.backend.has (f)) {
+        if (newInitialValue[f]) {
+          delete newInitialValue[f];
+        }
+      }
+    }
+
+    const newValue = Object.assign ({}, state.backend.$form.value);
+
+    for (const f of Object.keys (state.backend.$form.value).filter (
+      k => blackList.indexOf (k) === -1
+    )) {
+      if (!fullState.backend.has (f)) {
+        if (newValue[f]) {
+          delete newValue[f];
+        }
+      }
+    }
+
+    const newForm = Object.assign ({}, state.backend.$form);
+    newForm.initialValue = newInitialValue;
+    newForm.value = newValue;
+    newBackend.$form = newForm;
+
+    return Object.assign (state, {backend: newBackend});
   }
   return state;
 };
