@@ -99,29 +99,6 @@ class Form extends Widget {
     };
   }
 
-  componentWillUnmount () {
-    //Garbage form model
-    const dispatch = this.props.dispatch
-      ? this.props.dispatch
-      : this.context.dispatch;
-    const id = this.props.id ? this.props.id : this.context.id;
-    setTimeout (() => {
-      const state = this.getState ();
-      const modelData = state.backend.get (id, 'removed');
-      if (modelData === 'removed') {
-        if (state.forms.backend[id]) {
-          console.log ('Garbage ', id);
-          dispatch (
-            actions.reset ({
-              formId: id,
-              backendEntries: state.backend.keySeq ().toArray (),
-            })
-          );
-        }
-      }
-    }, 5000);
-  }
-
   track (path, id) {
     //TODO: better immutable tracking
     //RRF track not working...

@@ -10,9 +10,6 @@ const questMiddleware = send => store => next => action => {
 const handleChange = (send, action) => {
   const model = action.model.replace ('backend.', '');
   const fields = model.split ('.');
-  if (fields.lenght === 0) {
-    return;
-  }
   const goblinId = fields.shift ();
   let goblin = goblinId;
   if (goblin.indexOf ('@') !== -1) {
