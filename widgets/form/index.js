@@ -113,13 +113,12 @@ class Form extends Widget {
           console.log ('Garbage ', id);
           dispatch (
             actions.reset ({
-              formId: id,
-              backendEntries: state.backend.keySeq ().toArray (),
+              getState: this.getState.bind (this),
             })
           );
         }
       }
-    }, 5000);
+    }, 1000);
   }
 
   track (path, id) {
