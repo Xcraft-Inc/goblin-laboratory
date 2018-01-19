@@ -20,8 +20,28 @@ export function routerReducer (state = initialState, {type, payload} = {}) {
   return state;
 }
 
+const resetPlugin = (state, action) => {
+  if (action.type === 'rrf/reset') {
+    const form = action.model.formId;
+    if (state.backend[form]) {
+      let newState = Object.assign ({}, state.backend);
+      delete newState[form];
+      for (const f of Object.keys (state.backend)) {
+        if (action.model.backendEntries.indexOf (f) === -1) {
+          delete newState[f];
+        }
+      }
+      return Object.assign (state, {backend: newState});
+    }
+    return state;
+  }
+  return state;
+};
+
 export default combineReducers ({
   routing: routerReducer,
   backend: backendReducer,
-  ...createForms ({backend: backendReducer}),
+  ...createForms ({backend: backendReducer}, '', {
+    plugins: [resetPlugin],
+  }),
 });
