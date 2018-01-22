@@ -54,35 +54,37 @@ const resetPlugin = (state, action) => {
       }
     }
 
-    const newInitialValue = Object.assign (
-      {},
-      state.backend.$form.initialValue
-    );
+    if (state.backend && state.backend.$form) {
+      const newInitialValue = Object.assign (
+        {},
+        state.backend.$form.initialValue
+      );
 
-    for (const f of Object.keys (state.backend.$form.initialValue)) {
-      if (!fullState.backend.has (f)) {
-        if (newInitialValue[f]) {
-          delete newInitialValue[f];
+      for (const f of Object.keys (state.backend.$form.initialValue)) {
+        if (!fullState.backend.has (f)) {
+          if (newInitialValue[f]) {
+            delete newInitialValue[f];
+          }
         }
       }
-    }
 
-    const newValue = Object.assign ({}, state.backend.$form.value);
+      const newValue = Object.assign ({}, state.backend.$form.value);
 
-    for (const f of Object.keys (state.backend.$form.value).filter (
-      k => blackList.indexOf (k) === -1
-    )) {
-      if (!fullState.backend.has (f)) {
-        if (newValue[f]) {
-          delete newValue[f];
+      for (const f of Object.keys (state.backend.$form.value).filter (
+        k => blackList.indexOf (k) === -1
+      )) {
+        if (!fullState.backend.has (f)) {
+          if (newValue[f]) {
+            delete newValue[f];
+          }
         }
       }
-    }
 
-    const newForm = Object.assign ({}, state.backend.$form);
-    newForm.initialValue = newInitialValue;
-    newForm.value = newValue;
-    newBackend.$form = newForm;
+      const newForm = Object.assign ({}, state.backend.$form);
+      newForm.initialValue = newInitialValue;
+      newForm.value = newValue;
+      newBackend.$form = newForm;
+    }
 
     return Object.assign (state, {backend: newBackend});
   }
