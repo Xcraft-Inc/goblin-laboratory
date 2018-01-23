@@ -557,11 +557,10 @@ class Widget extends React.PureComponent {
       const item = entity
         .get (collectionPath)
         .shrinq.single (pack => pack.get ('id') === id);
-      if (entityPath) {
-        return `.${collectionPath}[${item.key}].${entityPath}`;
-      } else {
-        return `.${collectionPath}[${item.key}]`;
-      }
+
+      return entityPath
+        ? `.${collectionPath}[${item.key}].${entityPath}`
+        : `.${collectionPath}[${item.key}]`;
     };
   }
 
