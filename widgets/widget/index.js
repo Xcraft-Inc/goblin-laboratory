@@ -217,7 +217,7 @@ class Widget extends React.PureComponent {
     return id => Widget.wire (id, component.wiring) (component);
   }
 
-  shred (state) {
+  static shred (state) {
     return new Shredder (state);
   }
 
