@@ -37,7 +37,7 @@ const logicHandlers = {
     return state.set ('root', action.get ('widgetId'));
   },
   'next-theme': state => {
-    return state.set ('theme', themes[CURRENT_THEME_INDEX++ % themes.length]);
+    return state.set ('theme', themes[++CURRENT_THEME_INDEX % themes.length]);
   },
   'update-feeds': (state, action) => {
     return state.set ('feeds', action.get ('feeds'));
