@@ -1,7 +1,27 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import {Theme} from 'electrum-theme';
 import Widget from 'laboratory/widget';
 import importer from '../importer/';
 const widgetImporter = importer ('widget');
+
+class ThemeContext extends React.PureComponent {
+  getChildContext () {
+    return {
+      theme: this.props.theme,
+    };
+  }
+
+  static get childContextTypes () {
+    return {
+      theme: PropTypes.object,
+    };
+  }
+
+  render () {
+    return this.props.children;
+  }
+}
 
 class Laboratory extends Widget {
   constructor () {
@@ -12,6 +32,7 @@ class Laboratory extends Widget {
     return {
       id: 'id',
       root: 'root',
+      theme: 'theme',
     };
   }
 
@@ -31,7 +52,11 @@ class Laboratory extends Widget {
     const widgetName = root.split ('@')[0];
     const RootWidget = widgetImporter (widgetName);
     const WiredRoot = Widget.Wired (RootWidget) (root);
-    return <WiredRoot />;
+    return (
+      <ThemeContext theme={Theme.create (this.props.theme)}>
+        <WiredRoot />
+      </ThemeContext>
+    );
   }
 }
 

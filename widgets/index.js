@@ -8,7 +8,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {AppContainer} from 'react-hot-loader';
 import Root from 'laboratory/root';
-import {Theme} from 'electrum-theme';
 import createHistory from 'history/createHashHistory';
 import {push} from 'react-router-redux';
 
@@ -71,28 +70,10 @@ ipcRenderer.on ('NEW_BACKEND_STATE', (event, transitState) => {
   }
 });
 
-// THEMES
-const themes = [
-  'default',
-  'compact-mono',
-  'default-green',
-  'special-green',
-  'smooth-green',
-  'compact-pink',
-  'default-pink',
-];
-window.CURRENT_THEME_INDEX = 0;
-
 const main = Main => {
-  const currentTheme = themes[window.CURRENT_THEME_INDEX % themes.length];
   ReactDOM.render (
     <AppContainer>
-      <Main
-        store={store}
-        history={history}
-        theme={Theme.create (currentTheme)}
-        labId={labId}
-      />
+      <Main store={store} history={history} labId={labId} />
     </AppContainer>,
     document.getElementById ('root')
   );

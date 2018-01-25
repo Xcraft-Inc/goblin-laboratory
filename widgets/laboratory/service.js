@@ -7,6 +7,19 @@ const goblinName = path.basename (module.parent.filename, '.js');
 // Define initial logic values
 const logicState = {};
 
+// THEMES
+const themes = [
+  'default',
+  'compact-mono',
+  'default-green',
+  'special-green',
+  'smooth-green',
+  'compact-pink',
+  'default-pink',
+];
+
+let CURRENT_THEME_INDEX = 0;
+
 // Define logic handlers according rc.json
 const logicHandlers = {
   create: (state, action) => {
@@ -17,10 +30,14 @@ const logicHandlers = {
       url: action.get ('url'),
       wid: action.get ('wid'),
       feeds: conf.feeds,
+      theme: 'default',
     });
   },
   'set-root': (state, action) => {
     return state.set ('root', action.get ('widgetId'));
+  },
+  'next-theme': state => {
+    return state.set ('theme', themes[CURRENT_THEME_INDEX++ % themes.length]);
   },
   'update-feeds': (state, action) => {
     return state.set ('feeds', action.get ('feeds'));
@@ -197,6 +214,10 @@ Goblin.registerQuest (goblinName, 'set-root', function (quest, widgetId) {
 Goblin.registerQuest (goblinName, 'nav', function (quest, route) {
   const win = quest.getAPI (`wm`);
   win.nav ({route});
+});
+
+Goblin.registerQuest (goblinName, 'next-theme', function (quest) {
+  quest.do ();
 });
 
 Goblin.registerQuest (goblinName, 'dispatch', function (quest, action) {

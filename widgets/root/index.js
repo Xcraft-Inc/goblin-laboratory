@@ -13,7 +13,6 @@ class Root extends React.PureComponent {
       labId: this.props.labId,
       dispatch: this.props.store.dispatch,
       store: this.props.store,
-      theme: this.props.theme,
     };
   }
 
@@ -22,7 +21,6 @@ class Root extends React.PureComponent {
       labId: PropTypes.string,
       dispatch: PropTypes.func,
       store: PropTypes.object,
-      theme: PropTypes.object,
     };
   }
 

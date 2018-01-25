@@ -65,28 +65,10 @@ ipcRenderer.on ('NEW_BACKEND_STATE', (event, transitState) => {
   }
 });
 
-// THEMES
-const themes = [
-  'default',
-  'compact-mono',
-  'default-green',
-  'special-green',
-  'smooth-green',
-  'compact-pink',
-  'default-pink',
-];
-window.CURRENT_THEME_INDEX = 0;
-
 const main = Main => {
-  const currentTheme = themes[window.CURRENT_THEME_INDEX % themes.length];
   ReactDOM.render (
     <AppContainer>
-      <Main
-        store={store}
-        history={history}
-        theme={Theme.create (currentTheme)}
-        labId={labId}
-      />
+      <Main store={store} history={history} labId={labId} />
     </AppContainer>,
     document.getElementById ('root')
   );
