@@ -10,6 +10,7 @@ const logicState = {};
 // THEMES
 const themes = [
   'default',
+  'default-dark',
   'compact-mono',
   'default-green',
   'special-green',
