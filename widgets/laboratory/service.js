@@ -11,6 +11,7 @@ const logicState = {};
 const themes = [
   'default',
   'default-dark',
+  'default-dragula',
   'compact-mono',
   'default-green',
   'special-green',
