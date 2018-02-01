@@ -42,7 +42,7 @@ const logicHandlers = {
     return state.set ('theme', themes[++CURRENT_THEME_INDEX % themes.length]);
   },
   'change-theme': (state, action) => {
-    return state.set ('theme', action.payload.name);
+    return state.set ('theme', action.get ('name'));
   },
   'update-feeds': (state, action) => {
     return state.set ('feeds', action.get ('feeds'));
