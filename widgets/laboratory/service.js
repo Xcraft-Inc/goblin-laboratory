@@ -20,8 +20,6 @@ const themes = [
   'default-pink',
 ];
 
-let CURRENT_THEME_INDEX = 0;
-
 // Define logic handlers according rc.json
 const logicHandlers = {
   create: (state, action) => {
@@ -37,9 +35,6 @@ const logicHandlers = {
   },
   'set-root': (state, action) => {
     return state.set ('root', action.get ('widgetId'));
-  },
-  'next-theme': state => {
-    return state.set ('theme', themes[++CURRENT_THEME_INDEX % themes.length]);
   },
   'change-theme': (state, action) => {
     return state.set ('theme', action.get ('name'));
@@ -219,10 +214,6 @@ Goblin.registerQuest (goblinName, 'set-root', function (quest, widgetId) {
 Goblin.registerQuest (goblinName, 'nav', function (quest, route) {
   const win = quest.getAPI (`wm`);
   win.nav ({route});
-});
-
-Goblin.registerQuest (goblinName, 'next-theme', function (quest) {
-  quest.do ();
 });
 
 Goblin.registerQuest (goblinName, 'change-theme', function (quest, name) {
