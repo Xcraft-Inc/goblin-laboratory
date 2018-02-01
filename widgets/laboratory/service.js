@@ -41,6 +41,9 @@ const logicHandlers = {
   'next-theme': state => {
     return state.set ('theme', themes[++CURRENT_THEME_INDEX % themes.length]);
   },
+  'change-theme': (state, action) => {
+    return state.set ('theme', action.payload.name);
+  },
   'update-feeds': (state, action) => {
     return state.set ('feeds', action.get ('feeds'));
   },
@@ -220,6 +223,10 @@ Goblin.registerQuest (goblinName, 'nav', function (quest, route) {
 
 Goblin.registerQuest (goblinName, 'next-theme', function (quest) {
   quest.do ();
+});
+
+Goblin.registerQuest (goblinName, 'change-theme', function (quest, name) {
+  quest.do ({name});
 });
 
 Goblin.registerQuest (goblinName, 'dispatch', function (quest, action) {
