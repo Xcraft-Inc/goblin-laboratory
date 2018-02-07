@@ -26,6 +26,23 @@ class ThemeContext extends React.PureComponent {
   }
 }
 
+function jsToCSS (jsStyles) {
+  return toCss (
+    Object.assign (
+      {},
+      ...Object.keys (jsStyles).map (className => {
+        return {
+          [cssKey (className)]: Object.assign (
+            {},
+            ...Object.keys (jsStyles[className]).map (key => {
+              return {[cssKey (key)]: jsStyles[className][key]};
+            })
+          ),
+        };
+      })
+    )
+  );
+}
 class Laboratory extends Widget {
   constructor () {
     super (...arguments);
@@ -144,24 +161,6 @@ class Laboratory extends Widget {
     };
   }
 
-  static _JsToCSS (jsStyles) {
-    return toCss (
-      Object.assign (
-        {},
-        ...Object.keys (jsStyles).map (className => {
-          return {
-            [cssKey (className)]: Object.assign (
-              {},
-              ...Object.keys (jsStyles[className]).map (key => {
-                return {[cssKey (key)]: jsStyles[className][key]};
-              })
-            ),
-          };
-        })
-      )
-    );
-  }
-
   render () {
     const {id, root} = this.props;
 
@@ -181,7 +180,7 @@ class Laboratory extends Widget {
     return (
       <ThemeContext theme={Theme.create (this.props.theme)}>
         <Helmet>
-          <style>{Laboratory._JsToCSS (this.globalStyles)}</style>
+          <style>{jsToCSS (this.globalStyles)}</style>
         </Helmet>
         <WiredRoot />
       </ThemeContext>
