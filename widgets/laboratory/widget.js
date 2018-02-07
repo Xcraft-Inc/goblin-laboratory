@@ -43,6 +43,7 @@ function jsToCSS (jsStyles) {
     )
   );
 }
+
 class Laboratory extends Widget {
   constructor () {
     super (...arguments);
