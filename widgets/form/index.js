@@ -22,6 +22,11 @@ class Form extends Widget {
     return <Partial {...props} />;
   }
 
+  submitAs (service) {
+    const value = this.formValue;
+    this.doAs (service, 'submit', {value});
+  }
+
   submit () {
     const value = this.formValue;
     this.do ('submit', {value});
