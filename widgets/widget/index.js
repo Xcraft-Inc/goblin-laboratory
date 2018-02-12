@@ -83,6 +83,7 @@ class Widget extends React.PureComponent {
       id: PropTypes.string,
       entityId: PropTypes.string,
       dragControllerId: PropTypes.string,
+      dragServiceId: PropTypes.string,
       readonly: PropTypes.any,
     };
   }
