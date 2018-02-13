@@ -60,18 +60,9 @@ class ThemeContext extends React.PureComponent {
   }
 
   get globalStyles () {
-    if (!this.context.theme) {
+    if (!this.props.theme) {
       console.warn ('Theme is undefined in globalStyles');
     }
-    const scrollerThumbBackground = this.context.theme
-      ? this.context.theme.palette.scrollerThumbBackground
-      : //? : '#ccc';
-        'red';
-    const scrollerThumbHoverBackground = this.context.theme
-      ? this.context.theme.palette.scrollerThumbHoverBackground
-      : //? : '#aaa';
-        'yellow';
-
     return {
       body: {
         color: '#999',
@@ -110,16 +101,16 @@ class ThemeContext extends React.PureComponent {
 
       code: {
         font: 'inherit',
-        color: 'rgb(56, 56, 56)',
-        backgroundColor: 'rgb(193, 209, 224)',
+        color: this.props.theme.palette.markdownHiliteText,
+        backgroundColor: this.props.theme.palette.markdownHiliteBackground,
         padding: '1px',
         margin: 0,
       },
 
       h1: {
-        fontSize: '100%',
+        fontSize: this.props.theme.shapes.markdownH1FontSize,
         fontWeight: 300,
-        color: '#666',
+        color: this.props.theme.palette.markdownText,
         margin: '0px',
         marginTop: '8px',
       },
@@ -129,9 +120,9 @@ class ThemeContext extends React.PureComponent {
       },
 
       h2: {
-        fontSize: '90%',
+        fontSize: this.props.theme.shapes.markdownH2FontSize,
         fontWeight: 300,
-        color: '#666',
+        color: this.props.theme.palette.markdownText,
         margin: '0px',
         marginTop: '8px',
       },
@@ -145,21 +136,21 @@ class ThemeContext extends React.PureComponent {
       },
 
       ul: {
-        fontSize: '80%',
+        fontSize: this.props.theme.shapes.markdownListFontSize,
         margin: 0,
-        paddingLeft: '30px',
+        paddingLeft: this.props.theme.shapes.markdownListPadding,
         listStyleType: 'disc',
       },
 
       ol: {
-        fontSize: '80%',
+        fontSize: this.props.theme.shapes.markdownListFontSize,
         margin: 0,
-        paddingLeft: '30px',
+        paddingLeft: this.props.theme.shapes.markdownListPadding,
       },
 
       '::WebkitScrollbar': {
-        width: '14px',
-        height: '14px',
+        width: this.props.theme.shapes.scrollerThickness,
+        height: this.props.theme.shapes.scrollerThickness,
       },
 
       '::WebkitScrollbarTrack': {},
@@ -169,13 +160,23 @@ class ThemeContext extends React.PureComponent {
       },
 
       '::WebkitScrollbarThumb': {
-        boxShadow: 'inset 0 0 14px 14px ' + scrollerThumbBackground,
+        boxShadow: 'inset 0 0 ' +
+          this.props.theme.shapes.scrollerThickness +
+          ' ' +
+          this.props.theme.shapes.scrollerThickness +
+          ' ' +
+          this.props.theme.palette.scrollerThumbBackground,
         border: 'solid 2px transparent',
         borderRadius: '8px',
       },
 
       '::WebkitScrollbarThumb:hover': {
-        boxShadow: 'inset 0 0 14px 14px ' + scrollerThumbHoverBackground,
+        boxShadow: 'inset 0 0 ' +
+          this.props.theme.shapes.scrollerThickness +
+          ' ' +
+          this.props.theme.shapes.scrollerThickness +
+          ' ' +
+          this.props.theme.palette.scrollerThumbHoverBackground,
       },
     };
   }
