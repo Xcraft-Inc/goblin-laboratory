@@ -60,6 +60,18 @@ class ThemeContext extends React.PureComponent {
   }
 
   get globalStyles () {
+    if (!this.context.theme) {
+      console.warn ('Theme is undefined in globalStyles');
+    }
+    const scrollerThumbBackground = this.context.theme
+      ? this.context.theme.palette.scrollerThumbBackground
+      : //? : '#ccc';
+        'red';
+    const scrollerThumbHoverBackground = this.context.theme
+      ? this.context.theme.palette.scrollerThumbHoverBackground
+      : //? : '#aaa';
+        'yellow';
+
     return {
       body: {
         color: '#999',
@@ -157,13 +169,13 @@ class ThemeContext extends React.PureComponent {
       },
 
       '::WebkitScrollbarThumb': {
-        boxShadow: 'inset 0 0 14px 14px #ccc',
+        boxShadow: 'inset 0 0 14px 14px ' + scrollerThumbBackground,
         border: 'solid 2px transparent',
         borderRadius: '8px',
       },
 
       '::WebkitScrollbarThumb:hover': {
-        boxShadow: 'inset 0 0 14px 14px #aaa',
+        boxShadow: 'inset 0 0 14px 14px ' + scrollerThumbHoverBackground,
       },
     };
   }
