@@ -8,6 +8,26 @@ import Widget from 'laboratory/widget';
 import importer from '../importer/';
 const widgetImporter = importer ('widget');
 
+import fontawesome from '@fortawesome/fontawesome';
+import solid from '@fortawesome/fontawesome-pro-solid';
+import regular from '@fortawesome/fontawesome-pro-regular';
+import light from '@fortawesome/fontawesome-pro-light';
+import brands from '@fortawesome/fontawesome-free-brands';
+
+// TODO: add support for free version (for the open-source version of westeros)
+if (solid) {
+  fontawesome.library.add (solid);
+}
+if (regular) {
+  fontawesome.library.add (regular);
+}
+if (light) {
+  fontawesome.library.add (light);
+}
+if (brands) {
+  fontawesome.library.add (brands);
+}
+
 class ThemeContext extends React.PureComponent {
   getChildContext () {
     return {
