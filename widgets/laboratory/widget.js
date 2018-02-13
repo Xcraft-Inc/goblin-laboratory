@@ -28,24 +28,6 @@ if (brands) {
   fontawesome.library.add (brands);
 }
 
-class ThemeContext extends React.PureComponent {
-  getChildContext () {
-    return {
-      theme: this.props.theme,
-    };
-  }
-
-  static get childContextTypes () {
-    return {
-      theme: PropTypes.object,
-    };
-  }
-
-  render () {
-    return this.props.children;
-  }
-}
-
 function jsToCSS (jsStyles) {
   return toCss (
     Object.assign (
@@ -64,16 +46,16 @@ function jsToCSS (jsStyles) {
   );
 }
 
-class Laboratory extends Widget {
-  constructor () {
-    super (...arguments);
+class ThemeContext extends React.PureComponent {
+  getChildContext () {
+    return {
+      theme: this.props.theme,
+    };
   }
 
-  static get wiring () {
+  static get childContextTypes () {
     return {
-      id: 'id',
-      root: 'root',
-      theme: 'theme',
+      theme: PropTypes.object,
     };
   }
 
@@ -187,6 +169,31 @@ class Laboratory extends Widget {
   }
 
   render () {
+    return (
+      <div>
+        <Helmet>
+          <style>{jsToCSS (this.globalStyles)}</style>
+        </Helmet>
+        {this.props.children}
+      </div>
+    );
+  }
+}
+
+class Laboratory extends Widget {
+  constructor () {
+    super (...arguments);
+  }
+
+  static get wiring () {
+    return {
+      id: 'id',
+      root: 'root',
+      theme: 'theme',
+    };
+  }
+
+  render () {
     const {id, root} = this.props;
 
     if (!id) {
@@ -204,9 +211,6 @@ class Laboratory extends Widget {
     const WiredRoot = Widget.Wired (RootWidget) (root);
     return (
       <ThemeContext theme={Theme.create (this.props.theme)}>
-        <Helmet>
-          <style>{jsToCSS (this.globalStyles)}</style>
-        </Helmet>
         <WiredRoot />
       </ThemeContext>
     );
