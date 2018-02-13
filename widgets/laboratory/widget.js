@@ -150,6 +150,10 @@ class Laboratory extends Widget {
 
       '::WebkitScrollbarTrack': {},
 
+      '::WebkitScrollbarCorner': {
+        backgroundColor: 'transparent',
+      },
+
       '::WebkitScrollbarThumb': {
         boxShadow: 'inset 0 0 14px 14px #ccc',
         border: 'solid 2px transparent',
