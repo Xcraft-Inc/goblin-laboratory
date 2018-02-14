@@ -211,6 +211,24 @@ Goblin.registerQuest (goblinName, 'set-root', function (quest, widgetId) {
   quest.goblin.defer (() => cleanRoot (widgetId));
 });
 
+Goblin.registerQuest (goblinName, 'listen', function (quest, desktopId) {
+  quest.goblin.defer (
+    quest.sub (`${desktopId}.nav.requested`, (err, msg) => {
+      quest.me.nav (msg.data);
+    })
+  );
+  quest.goblin.defer (
+    quest.sub (`${desktopId}.change-theme.requested`, (err, msg) => {
+      quest.me.changeTheme (msg.data);
+    })
+  );
+  quest.goblin.defer (
+    quest.sub (`${desktopId}.dispatch.requested`, (err, msg) => {
+      quest.me.dispatch (msg.data);
+    })
+  );
+});
+
 Goblin.registerQuest (goblinName, 'nav', function (quest, route) {
   const win = quest.getAPI (`wm`);
   win.nav ({route});
