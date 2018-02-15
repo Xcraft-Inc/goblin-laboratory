@@ -135,10 +135,19 @@ Goblin.registerQuest (goblinName, 'create', function* (
   yield win.feedSub ({wid, feeds});
 
   const unsubCreated = quest.sub ('goblin.created', (err, msg) => {
-    quest.cmd ('laboratory.add', {
-      id: quest.goblin.id,
-      widgetId: msg.data.id,
-    });
+    // Only add goblin destinated to this laboratory session or desktop
+    if (
+      msg.data.messageData.id === quest.goblin.id ||
+      msg.data.messageData.labId === quest.goblin.id ||
+      msg.data.messageData.desktopId === `desktop@${quest.goblin.id}`
+    ) {
+      quest.cmd ('laboratory.add', {
+        id: quest.goblin.id,
+        widgetId: msg.data.id,
+      });
+    } else {
+      console.warn (`Laboratory skipped goblin: ${msg.data.id}`);
+    }
   });
   quest.goblin.defer (unsubCreated);
 
