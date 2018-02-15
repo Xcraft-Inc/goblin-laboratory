@@ -7,8 +7,10 @@ export default (state = fromJS ({}), action = {}) => {
     if (!action.data) {
       return state;
     }
-    const newState = transit.fromJSON (action.data.state);
-    return action.data._xcraftPatch ? patch (state, newState) : newState;
+    const newState = transit.fromJSON (action.data);
+    return newState.get ('_xcraftPatch')
+      ? patch (state, newState.get ('state'))
+      : newState.get ('state');
   }
   return state;
 };
