@@ -1,14 +1,14 @@
 import patch from 'immutablepatch';
 import {fromJS} from 'immutable';
+import transit from 'transit-immutable-js';
 
 export default (state = fromJS ({}), action = {}) => {
   if (action.type === 'NEW_BACKEND_STATE') {
-    const diff = action.diff;
-    if (!diff) {
+    if (!action.data) {
       return state;
     }
-    const newAppState = patch (state, diff);
-    return newAppState;
+    const newState = transit.fromJSON (action.data.state);
+    return action.data._xcraftPatch ? patch (state, newState) : newState;
   }
   return state;
 };

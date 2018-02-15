@@ -1,5 +1,4 @@
 import 'react-hot-loader/patch';
-import transit from 'transit-immutable-js';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {AppContainer} from 'react-hot-loader';
@@ -19,11 +18,9 @@ const store = configureStore (window.__INITIAL_STATE__, history, {
 });
 
 const handleNewBackendState = transitState => {
-  const diff = transit.fromJSON (transitState);
-
   store.dispatch ({
     type: 'NEW_BACKEND_STATE',
-    diff: diff,
+    data: transitState,
   });
 
   if (!rootMounted) {

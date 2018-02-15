@@ -3,7 +3,6 @@ if (process.env.NODE_ENV !== 'production') {
   require ('./devtools.js');
 }
 
-import transit from 'transit-immutable-js';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {AppContainer} from 'react-hot-loader';
@@ -43,11 +42,9 @@ let labId;
 
 // Must be the last event to subscribe because it sends the FRONT_END_READY msg
 ipcRenderer.on ('NEW_BACKEND_STATE', (event, transitState) => {
-  const diff = transit.fromJSON (transitState);
-
   store.dispatch ({
     type: 'NEW_BACKEND_STATE',
-    diff: diff,
+    data: transitState,
   });
 
   if (!rootMounted) {
