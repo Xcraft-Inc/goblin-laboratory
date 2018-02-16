@@ -82,6 +82,7 @@ class Widget extends React.PureComponent {
       model: PropTypes.any,
       id: PropTypes.string,
       desktopId: PropTypes.string,
+      contextId: PropTypes.string,
       entityId: PropTypes.string,
       dragControllerId: PropTypes.string,
       dragServiceId: PropTypes.string,
@@ -156,12 +157,26 @@ class Widget extends React.PureComponent {
         if (watchHash) {
           withHash = {hash: routing.get ('location.hash')};
         }
-        return {
-          isDisplayed: !!match,
-          [watchedParams]: !match ? null : match.params[watchedParams],
-          ...withSearch,
-          ...withHash,
-        };
+
+        if (Array.isArray (watchedParams)) {
+          const params = {};
+          for (const p of watchedParams) {
+            params[p] = !match ? null : match.params[p];
+          }
+          return {
+            isDisplayed: !!match,
+            ...params,
+            ...withSearch,
+            ...withHash,
+          };
+        } else {
+          return {
+            isDisplayed: !!match,
+            [watchedParams]: !match ? null : match.params[watchedParams],
+            ...withSearch,
+            ...withHash,
+          };
+        }
       },
       null,
       null,

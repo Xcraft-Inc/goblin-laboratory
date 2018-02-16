@@ -10,12 +10,14 @@ class View extends Widget {
   getChildContext () {
     return {
       desktopId: this.props.desktopId,
+      contextId: this.props.context,
     };
   }
 
   static get childContextTypes () {
     return {
       desktopId: PropTypes.string,
+      contextId: PropTypes.string,
     };
   }
 
