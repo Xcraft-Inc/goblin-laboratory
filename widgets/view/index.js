@@ -1,9 +1,22 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Widget from 'laboratory/widget';
 
 class View extends Widget {
   constructor () {
     super (...arguments);
+  }
+
+  getChildContext () {
+    return {
+      desktopId: this.props.desktopId,
+    };
+  }
+
+  static get childContextTypes () {
+    return {
+      desktopId: PropTypes.string,
+    };
   }
 
   render () {
