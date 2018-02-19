@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 const questMiddleware = send => store => next => action => {
   if (action.type === 'QUEST') {
     send ('QUEST', action);
@@ -7,7 +9,7 @@ const questMiddleware = send => store => next => action => {
 };
 
 //TODO: better handling of model/service field
-const handleChange = (send, action) => {
+const _handleChange = (send, action) => {
   const model = action.model.replace ('backend.', '');
   const fields = model.split ('.');
   if (fields.lenght === 0) {
@@ -32,6 +34,8 @@ const handleChange = (send, action) => {
   };
   send ('QUEST', questAction);
 };
+
+const handleChange = _.debounce (_handleChange, 100);
 
 const formMiddleware = send => store => next => action => {
   switch (action.type) {
