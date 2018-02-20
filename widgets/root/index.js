@@ -5,10 +5,10 @@ import {Provider} from 'react-redux';
 import {ConnectedRouter} from 'react-router-redux';
 import Widget from 'laboratory/widget/index';
 import Laboratory from '../laboratory/widget';
-const Wired = Widget.Wired (Laboratory);
+const Wired = Widget.Wired(Laboratory);
 
 class Root extends React.PureComponent {
-  getChildContext () {
+  getChildContext() {
     return {
       labId: this.props.labId,
       dispatch: this.props.store.dispatch,
@@ -16,7 +16,7 @@ class Root extends React.PureComponent {
     };
   }
 
-  static get childContextTypes () {
+  static get childContextTypes() {
     return {
       labId: PropTypes.string,
       dispatch: PropTypes.func,
@@ -24,9 +24,9 @@ class Root extends React.PureComponent {
     };
   }
 
-  render () {
+  render() {
     const {store, history, labId} = this.props;
-    const WiredLaboratory = Widget.withRoute ('/') (Wired (labId));
+    const WiredLaboratory = Widget.withRoute('/')(Wired(labId));
     return (
       <Provider store={store}>
         <ConnectedRouter history={history}>

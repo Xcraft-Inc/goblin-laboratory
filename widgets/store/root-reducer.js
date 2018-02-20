@@ -8,13 +8,13 @@ import {createForms} from 'react-redux-form/immutable';
  */
 export const LOCATION_CHANGE = '@@router/LOCATION_CHANGE';
 
-const initialState = new Shredder ({
+const initialState = new Shredder({
   location: null,
 }).state;
 
-export function routerReducer (state = initialState, {type, payload} = {}) {
+export function routerReducer(state = initialState, {type, payload} = {}) {
   if (type === LOCATION_CHANGE) {
-    return state.merge ({location: payload});
+    return state.merge({location: payload});
   }
 
   return state;
@@ -41,13 +41,13 @@ const blackList = [
 ];
 const resetPlugin = (state, action) => {
   if (action.type === 'rrf/reset') {
-    let newBackend = Object.assign ({}, state.backend);
-    const fullState = action.model.getState ();
+    let newBackend = Object.assign({}, state.backend);
+    const fullState = action.model.getState();
 
-    for (const f of Object.keys (state.backend).filter (
-      k => blackList.indexOf (k) === -1
+    for (const f of Object.keys(state.backend).filter(
+      k => blackList.indexOf(k) === -1
     )) {
-      if (!fullState.backend.has (f)) {
+      if (!fullState.backend.has(f)) {
         if (newBackend[f]) {
           delete newBackend[f];
         }
@@ -55,46 +55,46 @@ const resetPlugin = (state, action) => {
     }
 
     if (state.backend && state.backend.$form) {
-      const newInitialValue = Object.assign (
+      const newInitialValue = Object.assign(
         {},
         state.backend.$form.initialValue
       );
 
-      for (const f of Object.keys (state.backend.$form.initialValue)) {
-        if (!fullState.backend.has (f)) {
+      for (const f of Object.keys(state.backend.$form.initialValue)) {
+        if (!fullState.backend.has(f)) {
           if (newInitialValue[f]) {
             delete newInitialValue[f];
           }
         }
       }
 
-      const newValue = Object.assign ({}, state.backend.$form.value);
+      const newValue = Object.assign({}, state.backend.$form.value);
 
-      for (const f of Object.keys (state.backend.$form.value).filter (
-        k => blackList.indexOf (k) === -1
+      for (const f of Object.keys(state.backend.$form.value).filter(
+        k => blackList.indexOf(k) === -1
       )) {
-        if (!fullState.backend.has (f)) {
+        if (!fullState.backend.has(f)) {
           if (newValue[f]) {
             delete newValue[f];
           }
         }
       }
 
-      const newForm = Object.assign ({}, state.backend.$form);
+      const newForm = Object.assign({}, state.backend.$form);
       newForm.initialValue = newInitialValue;
       newForm.value = newValue;
       newBackend.$form = newForm;
     }
 
-    return Object.assign (state, {backend: newBackend});
+    return Object.assign(state, {backend: newBackend});
   }
   return state;
 };
 
-export default combineReducers ({
+export default combineReducers({
   routing: routerReducer,
   backend: backendReducer,
-  ...createForms ({backend: backendReducer}, '', {
+  ...createForms({backend: backendReducer}, '', {
     plugins: [resetPlugin],
   }),
 });

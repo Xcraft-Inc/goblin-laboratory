@@ -3,17 +3,17 @@ import ReactList from 'react-list';
 import Widget from 'laboratory/widget';
 
 class List extends Widget {
-  constructor () {
-    super (...arguments);
+  constructor() {
+    super(...arguments);
   }
 
-  getList (item, type, length) {
+  getList(item, type, length) {
     return props => (
       <ReactList length={length} type={type} itemRenderer={item} {...props} />
     );
   }
 
-  render () {
+  render() {
     return <div>Missing widget implementation</div>;
   }
 }

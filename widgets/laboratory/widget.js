@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import {Theme} from 'electrum-theme';
 import Widget from 'laboratory/widget';
 import importer from '../importer/';
-const widgetImporter = importer ('widget');
+const widgetImporter = importer('widget');
 
 import fontawesome from '@fortawesome/fontawesome';
 import solid from '@fortawesome/fontawesome-pro-solid';
@@ -16,28 +16,28 @@ import brands from '@fortawesome/fontawesome-free-brands';
 
 // TODO: add support for free version (for the open-source version of westeros)
 if (solid) {
-  fontawesome.library.add (solid);
+  fontawesome.library.add(solid);
 }
 if (regular) {
-  fontawesome.library.add (regular);
+  fontawesome.library.add(regular);
 }
 if (light) {
-  fontawesome.library.add (light);
+  fontawesome.library.add(light);
 }
 if (brands) {
-  fontawesome.library.add (brands);
+  fontawesome.library.add(brands);
 }
 
-function jsToCSS (jsStyles) {
-  return toCss (
-    Object.assign (
+function jsToCSS(jsStyles) {
+  return toCss(
+    Object.assign(
       {},
-      ...Object.keys (jsStyles).map (className => {
+      ...Object.keys(jsStyles).map(className => {
         return {
-          [cssKey (className)]: Object.assign (
+          [cssKey(className)]: Object.assign(
             {},
-            ...Object.keys (jsStyles[className]).map (key => {
-              return {[cssKey (key)]: jsStyles[className][key]};
+            ...Object.keys(jsStyles[className]).map(key => {
+              return {[cssKey(key)]: jsStyles[className][key]};
             })
           ),
         };
@@ -47,21 +47,21 @@ function jsToCSS (jsStyles) {
 }
 
 class ThemeContext extends React.PureComponent {
-  getChildContext () {
+  getChildContext() {
     return {
       theme: this.props.theme,
     };
   }
 
-  static get childContextTypes () {
+  static get childContextTypes() {
     return {
       theme: PropTypes.object,
     };
   }
 
-  get globalStyles () {
+  get globalStyles() {
     if (!this.props.theme) {
-      console.warn ('Theme is undefined in globalStyles');
+      console.warn('Theme is undefined in globalStyles');
     }
     return {
       body: {
@@ -160,7 +160,8 @@ class ThemeContext extends React.PureComponent {
       },
 
       '::WebkitScrollbarThumb': {
-        boxShadow: 'inset 0 0 ' +
+        boxShadow:
+          'inset 0 0 ' +
           this.props.theme.shapes.scrollerThickness +
           ' ' +
           this.props.theme.shapes.scrollerThickness +
@@ -171,7 +172,8 @@ class ThemeContext extends React.PureComponent {
       },
 
       '::WebkitScrollbarThumb:hover': {
-        boxShadow: 'inset 0 0 ' +
+        boxShadow:
+          'inset 0 0 ' +
           this.props.theme.shapes.scrollerThickness +
           ' ' +
           this.props.theme.shapes.scrollerThickness +
@@ -181,11 +183,11 @@ class ThemeContext extends React.PureComponent {
     };
   }
 
-  render () {
+  render() {
     return (
       <div>
         <Helmet>
-          <style>{jsToCSS (this.globalStyles)}</style>
+          <style>{jsToCSS(this.globalStyles)}</style>
         </Helmet>
         {this.props.children}
       </div>
@@ -194,11 +196,11 @@ class ThemeContext extends React.PureComponent {
 }
 
 class Laboratory extends Widget {
-  constructor () {
-    super (...arguments);
+  constructor() {
+    super(...arguments);
   }
 
-  static get wiring () {
+  static get wiring() {
     return {
       id: 'id',
       root: 'root',
@@ -206,7 +208,7 @@ class Laboratory extends Widget {
     };
   }
 
-  render () {
+  render() {
     const {id, root} = this.props;
 
     if (!id) {
@@ -219,11 +221,11 @@ class Laboratory extends Widget {
       );
     }
 
-    const widgetName = root.split ('@')[0];
-    const RootWidget = widgetImporter (widgetName);
-    const WiredRoot = Widget.Wired (RootWidget) (root);
+    const widgetName = root.split('@')[0];
+    const RootWidget = widgetImporter(widgetName);
+    const WiredRoot = Widget.Wired(RootWidget)(root);
     return (
-      <ThemeContext theme={Theme.create (this.props.theme)}>
+      <ThemeContext theme={Theme.create(this.props.theme)}>
         <WiredRoot />
       </ThemeContext>
     );

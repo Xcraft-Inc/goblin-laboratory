@@ -5,36 +5,36 @@ import {actions, Form as RFForm, Fieldset} from 'react-redux-form/immutable';
 import Widget from 'laboratory/widget';
 import importer from '../importer/';
 import ReactList from 'react-list';
-const partialImporter = importer ('partial');
+const partialImporter = importer('partial');
 
 class Form extends Widget {
-  constructor () {
-    super (...arguments);
-    this.getFormFieldValue = this.getFormFieldValue.bind (this);
+  constructor() {
+    super(...arguments);
+    this.getFormFieldValue = this.getFormFieldValue.bind(this);
   }
 
-  formFocus (model) {
-    this.props.dispatch (actions.focus (model));
+  formFocus(model) {
+    this.props.dispatch(actions.focus(model));
   }
 
-  getPartial (name, props) {
-    const Partial = partialImporter (name).bind (this);
+  getPartial(name, props) {
+    const Partial = partialImporter(name).bind(this);
     return <Partial {...props} />;
   }
 
-  submitAs (service) {
+  submitAs(service) {
     const value = this.formValue;
-    this.doAs (service, 'submit', {value});
+    this.doAs(service, 'submit', {value});
   }
 
-  submit () {
+  submit() {
     const value = this.formValue;
-    this.do ('submit', {value});
+    this.do('submit', {value});
   }
 
-  getFormFieldValue (name) {
+  getFormFieldValue(name) {
     const form = this.formValue;
-    const modelValue = this.getMyState ().get (name);
+    const modelValue = this.getMyState().get(name);
     if (form[name]) {
       if (form[name].value) {
         return form[name].value;
@@ -45,25 +45,25 @@ class Form extends Widget {
     return modelValue;
   }
 
-  getList (item, type, length) {
+  getList(item, type, length) {
     return props => (
       <ReactList length={length} type={type} itemRenderer={item} {...props} />
     );
   }
 
-  get formValue () {
-    return this.getState ().forms.backend[this.props.id];
+  get formValue() {
+    return this.getState().forms.backend[this.props.id];
   }
 
-  get Form () {
+  get Form() {
     return RFForm;
   }
 
-  get Fieldset () {
+  get Fieldset() {
     return Fieldset;
   }
 
-  get formConfig () {
+  get formConfig() {
     const style = {
       display: 'flex',
       flexDirection: 'column',
@@ -77,7 +77,7 @@ class Form extends Widget {
     };
   }
 
-  get entityConfig () {
+  get entityConfig() {
     const style = {
       display: 'flex',
       flexDirection: 'column',
@@ -90,7 +90,7 @@ class Form extends Widget {
     };
   }
 
-  formConfigWithComponent (component) {
+  formConfigWithComponent(component) {
     const style = {
       display: 'flex',
       flexDirection: 'column',
@@ -104,21 +104,21 @@ class Form extends Widget {
     };
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     //Garbage form model
     const dispatch = this.props.dispatch
       ? this.props.dispatch
       : this.context.dispatch;
     const id = this.props.id ? this.props.id : this.context.id;
-    setTimeout (() => {
-      const state = this.getState ();
-      const modelData = state.backend.get (id, 'removed');
+    setTimeout(() => {
+      const state = this.getState();
+      const modelData = state.backend.get(id, 'removed');
       if (modelData === 'removed') {
         if (state.forms.backend[id]) {
-          console.log ('Garbage ', id);
-          dispatch (
-            actions.reset ({
-              getState: this.getState.bind (this),
+          console.log('Garbage ', id);
+          dispatch(
+            actions.reset({
+              getState: this.getState.bind(this),
             })
           );
         }
@@ -126,7 +126,7 @@ class Form extends Widget {
     }, 1000);
   }
 
-  track (path, id) {
+  track(path, id) {
     //TODO: better immutable tracking
     //RRF track not working...
     const style = {
@@ -140,7 +140,7 @@ class Form extends Widget {
     };
   }
 
-  render () {
+  render() {
     return <div>Missing widget implementation</div>;
   }
 }

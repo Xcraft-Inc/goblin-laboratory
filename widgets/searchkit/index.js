@@ -9,17 +9,19 @@ import {
 } from 'searchkit';
 
 class SearchKit extends Widget {
-  constructor () {
-    super (...arguments);
+  constructor() {
+    super(...arguments);
   }
-  renderHits (props) {
-    console.dir (props.hits);
+  renderHits(props) {
+    console.dir(props.hits);
     return (
       <div>
-        {props.hits.map ((h, i) => (
+        {props.hits.map((h, i) => (
           <div key={i}>
-            {Object.keys (h._source).map ((k, i) => (
-              <div key={i}>{k}: {h._source[k]}</div>
+            {Object.keys(h._source).map((k, i) => (
+              <div key={i}>
+                {k}: {h._source[k]}
+              </div>
             ))}
             <hr />
           </div>
@@ -28,10 +30,10 @@ class SearchKit extends Widget {
     );
   }
 
-  render () {
+  render() {
     const {index, fields} = this.props;
-    this.searchkit = new SearchkitManager (`http://localhost:9200/${index}/`);
-    this.searchkit.setQueryProcessor (q => {
+    this.searchkit = new SearchkitManager(`http://localhost:9200/${index}/`);
+    this.searchkit.setQueryProcessor(q => {
       if (!q.query) {
         return q;
       }
@@ -43,7 +45,7 @@ class SearchKit extends Widget {
           },
         },
       };
-      console.dir (query);
+      console.dir(query);
       return query;
     });
     return (

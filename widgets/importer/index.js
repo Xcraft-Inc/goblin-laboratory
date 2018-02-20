@@ -3,13 +3,13 @@ import path from 'path';
 const cache = {};
 
 const importAll = (kind, r) => {
-  const files = r.keys ();
+  const files = r.keys();
 
   cache[kind] = {};
 
-  files.forEach (file => {
-    const nameSpace = path.basename (path.dirname (file));
-    cache[kind][nameSpace] = r (file);
+  files.forEach(file => {
+    const nameSpace = path.basename(path.dirname(file));
+    cache[kind][nameSpace] = r(file);
   });
 };
 
@@ -22,49 +22,49 @@ const getter = kind => name => {
 
 export default kind => {
   if (cache[kind]) {
-    return getter (kind);
+    return getter(kind);
   }
 
   switch (kind) {
     case 'tasks':
-      importAll (
+      importAll(
         kind,
-        require.context ('../../../', true, /\/widgets\/[^/]+\/tasks\.js$/)
+        require.context('../../../', true, /\/widgets\/[^/]+\/tasks\.js$/)
       );
       break;
     case 'view':
-      importAll (
+      importAll(
         kind,
-        require.context ('../../../', true, /\/widgets\/[^/]+\/view\.js$/)
+        require.context('../../../', true, /\/widgets\/[^/]+\/view\.js$/)
       );
       break;
     case 'partial':
-      importAll (
+      importAll(
         kind,
-        require.context ('../../../', true, /\/widgets\/[^/]+\/partial\.js$/)
+        require.context('../../../', true, /\/widgets\/[^/]+\/partial\.js$/)
       );
       break;
     case 'styles':
-      importAll (
+      importAll(
         kind,
-        require.context ('../../../', true, /\/widgets\/[^/]+\/styles\.js$/)
+        require.context('../../../', true, /\/widgets\/[^/]+\/styles\.js$/)
       );
       break;
     case 'widget':
-      importAll (
+      importAll(
         kind,
-        require.context ('../../../', true, /\/widgets\/[^/]+\/widget\.js$/)
+        require.context('../../../', true, /\/widgets\/[^/]+\/widget\.js$/)
       );
       break;
     case 'ui':
-      importAll (
+      importAll(
         kind,
-        require.context ('../../../', true, /\/widgets\/[^/]+\/ui\.js$/)
+        require.context('../../../', true, /\/widgets\/[^/]+\/ui\.js$/)
       );
       break;
     default:
-      throw new Error (`Unsupported kind: ${kind} for importer`);
+      throw new Error(`Unsupported kind: ${kind} for importer`);
   }
 
-  return getter (kind);
+  return getter(kind);
 };
