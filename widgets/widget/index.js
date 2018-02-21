@@ -510,6 +510,10 @@ class Widget extends React.PureComponent {
     this.setModelValue(path, value, true);
   }
 
+  backendHasBranch(branch) {
+    return this.getState().backend.has(branch);
+  }
+
   getModelValue(model, fullPath) {
     const state = new Shredder(this.getState());
     if (fullPath) {
