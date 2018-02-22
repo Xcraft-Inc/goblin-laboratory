@@ -190,17 +190,7 @@ Goblin.registerQuest(goblinName, 'when-ui-crash', function(quest, error, info) {
 });
 
 Goblin.registerQuest(goblinName, 'set-root', function(quest, widgetId) {
-  const cleanRoot = existingRoot => {
-    let goblin = Goblin.getGoblinName(existingRoot);
-    quest.cmd(`${goblin}.delete`, {id: existingRoot});
-  };
-  const state = quest.goblin.getState();
-  const existingRoot = state.get('root', null);
-  if (existingRoot) {
-    cleanRoot(existingRoot);
-  }
   quest.do();
-  quest.goblin.defer(() => cleanRoot(widgetId));
 });
 
 Goblin.registerQuest(goblinName, 'listen', function(quest, desktopId) {
