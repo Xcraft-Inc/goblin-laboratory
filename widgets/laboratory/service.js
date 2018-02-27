@@ -118,6 +118,7 @@ Goblin.registerQuest(goblinName, 'create', function*(
 
   //CREATE A WINDOW
   const win = yield quest.create('wm', {
+    id: `wm@${quest.goblin.id}`,
     url: _url,
     labId: quest.goblin.id,
     feeds,
@@ -212,7 +213,7 @@ Goblin.registerQuest(goblinName, 'listen', function(quest, desktopId) {
 });
 
 Goblin.registerQuest(goblinName, 'nav', function(quest, route) {
-  const win = quest.getAPI(`wm`);
+  const win = quest.getAPI(`wm@${quest.goblin.id}`);
   win.nav({route});
 });
 
@@ -221,7 +222,7 @@ Goblin.registerQuest(goblinName, 'change-theme', function(quest, name) {
 });
 
 Goblin.registerQuest(goblinName, 'dispatch', function(quest, action) {
-  const win = quest.getAPI(`wm`);
+  const win = quest.getAPI(`wm@${quest.goblin.id}`);
   win.dispatch({action});
 });
 
