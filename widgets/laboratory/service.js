@@ -130,7 +130,7 @@ Goblin.registerQuest(goblinName, 'create', function*(
   });
 
   const wid = win.id;
-  quest.goblin.defer(win.delete);
+  quest.goblin.defer(() => quest.release(win));
 
   quest.do({id: quest.goblin.id, wid, url: _url, config});
   yield win.feedSub({wid, feeds});
@@ -143,7 +143,7 @@ Goblin.registerQuest(goblinName, 'create', function*(
   });
   quest.goblin.defer(unsubCreated);
 
-  const unsubDeleted = quest.sub('goblin.deleted', (err, msg) => {
+  const unsubDeleted = quest.sub('goblin.released', (err, msg) => {
     quest.cmd('laboratory.del', {
       id: quest.goblin.id,
       widgetId: msg.data.id,
