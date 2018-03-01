@@ -123,7 +123,7 @@ Goblin.registerQuest(goblinName, 'create', function*(
     labId: quest.goblin.id,
     feeds,
     options: {
-      openDevTools: process.env.NODE_ENV !== 'production',
+      openDevTools: process.env.XCRAFT_APPENV !== 'release',
       useWS,
       target,
     },
