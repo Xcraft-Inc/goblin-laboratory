@@ -195,21 +195,33 @@ Goblin.registerQuest(goblinName, 'set-root', function(quest, widgetId) {
 });
 
 Goblin.registerQuest(goblinName, 'listen', function(quest, desktopId) {
-  quest.goblin.defer(
+  quest.goblin.setX(
+    `${desktopId}.nav-unsub`,
     quest.sub(`${desktopId}.nav.requested`, (err, msg) => {
       quest.me.nav(msg.data);
     })
   );
-  quest.goblin.defer(
+  quest.goblin.setX(
+    `${desktopId}.change-theme-unsub`,
     quest.sub(`${desktopId}.change-theme.requested`, (err, msg) => {
       quest.me.changeTheme(msg.data);
     })
   );
-  quest.goblin.defer(
+  quest.goblin.setX(
+    `${desktopId}.dispatch-unsub`,
     quest.sub(`${desktopId}.dispatch.requested`, (err, msg) => {
       quest.me.dispatch(msg.data);
     })
   );
+});
+
+Goblin.registerQuest(goblinName, 'unlisten', function(quest, desktopId) {
+  quest.goblin.getX(`${desktopId}.nav-unsub`)();
+  quest.goblin.getX(`${desktopId}.change-theme-unsub`)();
+  quest.goblin.getX(`${desktopId}.dispatch-unsub`)();
+  quest.goblin.delX(`${desktopId}.nav-unsub`);
+  quest.goblin.delX(`${desktopId}.change-theme-unsub`);
+  quest.goblin.delX(`${desktopId}.dispatch-unsub`);
 });
 
 Goblin.registerQuest(goblinName, 'nav', function(quest, route) {
