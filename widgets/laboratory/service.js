@@ -203,8 +203,16 @@ Goblin.registerQuest(goblinName, 'del-in-batch', function(quest, widgetIds) {
   quest.cmd('warehouse.feed.del-in-batch', {feed: wid, branches});
 });
 
-Goblin.registerQuest(goblinName, 'delete', function(quest) {
+Goblin.registerQuest(goblinName, 'delete', function*(quest) {
   quest.log.info(`Deleting laboratory`);
+  const state = quest.goblin.getState();
+  const wid = state.get('wid');
+  yield quest.cmd('warehouse.unsubscribe', {
+    feed: wid,
+  });
+  yield quest.cmd('warehouse.release', {
+    branch: wid,
+  });
 });
 
 // Create a Goblin with initial state and handlers
