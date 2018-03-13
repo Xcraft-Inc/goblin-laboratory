@@ -45,95 +45,27 @@ const logicHandlers = {
 };
 
 // Register quest's according rc.json
-Goblin.registerQuest(goblinName, 'create', function*(
-  quest,
-  url,
-  usePack,
-  useWS,
-  target,
-  screenId
-) {
-  let port = 4000;
-  const existingUrl = url;
-
-  if (!screenId) {
-    screenId = quest.goblin.id;
-  }
-
-  if (!target) {
-    if (process.versions.electron) {
-      target = 'electron-renderer';
-    } else {
-      target = 'node';
-    }
-  }
-
-  if (!existingUrl) {
-    port = yield quest.cmd('webpack.server.start', {
-      goblin: 'laboratory',
-      jobId: quest.goblin.id,
-      port,
-      options: {
-        indexFile: useWS ? 'index-ws.js' : 'index.js',
-        target,
-        autoinc: true,
-      },
-    });
-  }
-
-  if (usePack && existingUrl) {
-    yield quest.cmd('webpack.pack', {
-      goblin: 'laboratory',
-      jobId: quest.goblin.id,
-      outputPath: path.join(__dirname, '../../../../dist'),
-      options: {
-        sourceMap: true,
-        indexFile: useWS ? 'index-ws.js' : 'index.js',
-        target,
-      },
-    });
-  }
-
-  if (usePack || !existingUrl) {
-    quest.log.info(`Waiting for webpack goblin`);
-    yield quest.sub.wait(`webpack.${quest.goblin.id}.done`);
-  }
-
-  let _url = existingUrl || `http://localhost:${port}`;
-
-  quest.log.info(`Opening a window`);
-
-  const config = {feeds: []};
-
-  let feeds = config.feeds;
-  feeds.push(quest.goblin.id);
-
-  /*
-  //REACT16 don't support react_perf
-  if (process.env.NODE_ENV !== 'production') {
-    _url += '?react_perf';
-  }*/
-
-  quest.goblin.setX('url', _url);
-
-  //CREATE A WINDOW
-  const win = yield quest.create('wm', {
-    id: `wm@${quest.goblin.id}`,
-    url: _url,
+Goblin.registerQuest(goblinName, 'create', function*(quest, url, config) {
+  quest.goblin.setX('url', url);
+  const winId = `wm@${quest.goblin.id}`;
+  const win = yield quest.createFor('wm', winId, winId, {
+    id: winId,
+    url,
     labId: quest.goblin.id,
-    feeds,
+    feeds: config.feeds,
     options: {
       openDevTools: process.env.XCRAFT_APPENV !== 'release',
-      useWS,
-      target,
+      useWS: config.useWS,
+      target: config.target,
     },
   });
 
-  const wid = win.id;
-  quest.goblin.defer(() => quest.release(win));
+  yield win.feedSub({wid: winId, feeds: config.feeds});
+  quest.do({id: quest.goblin.id, wid: winId, url, config});
 
-  quest.do({id: quest.goblin.id, wid, url: _url, config});
-  yield win.feedSub({wid, feeds});
+  yield quest.me.add({
+    widgetId: win.id,
+  });
 
   const unsubCreated = quest.sub('goblin.created', (err, msg) => {
     quest.cmd('laboratory.add', {
@@ -167,15 +99,13 @@ Goblin.registerQuest(goblinName, 'get-url', function(quest) {
   return quest.goblin.getX('url');
 });
 
-Goblin.registerQuest(goblinName, 'duplicate', function*(quest, forId, usePack) {
+Goblin.registerQuest(goblinName, 'duplicate', function*(quest, forId) {
   const state = quest.goblin.getState();
   const url = state.get('url');
   const newLabId = `laboratory@${quest.uuidV4()}`;
   const lab = yield quest.createFor(forId, forId, newLabId, {
     id: newLabId,
     url,
-    usePack: usePack || false,
-    screenId: quest.goblin.id,
   });
   return lab.id;
 });
