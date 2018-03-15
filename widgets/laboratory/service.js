@@ -63,9 +63,7 @@ Goblin.registerQuest(goblinName, 'create', function*(quest, url, config) {
   yield win.feedSub({wid: winId, feeds: config.feeds});
   quest.do({id: quest.goblin.id, wid: winId, url, config});
 
-  yield quest.me.add({
-    widgetId: win.id,
-  });
+  quest.cmd('warehouse.feed.add', {feed: win.id, branch: win.id});
 
   const unsubCreated = quest.sub('goblin.created', (err, msg) => {
     quest.cmd('laboratory.add', {
