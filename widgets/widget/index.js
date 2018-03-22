@@ -147,7 +147,15 @@ class Widget extends React.PureComponent {
         });
 
         let withSearch = null;
-        if (watchedSearchs) {
+
+        if (Array.isArray(watchedSearchs)) {
+          for (const s of watchedSearchs) {
+            if (!withSearch) {
+              withSearch = {};
+            }
+            withSearch[s] = Widget.GetParameter(search, s);
+          }
+        } else {
           withSearch = {
             [watchedSearchs]: Widget.GetParameter(search, watchedSearchs),
           };
