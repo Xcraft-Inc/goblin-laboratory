@@ -110,7 +110,6 @@ class ThemeContext extends React.PureComponent {
       h1: {
         fontSize: this.props.theme.shapes.markdownH1FontSize,
         fontWeight: 300,
-        color: this.props.theme.palette.markdownText,
         margin: '0px',
         marginTop: '8px',
       },
@@ -122,7 +121,6 @@ class ThemeContext extends React.PureComponent {
       h2: {
         fontSize: this.props.theme.shapes.markdownH2FontSize,
         fontWeight: 300,
-        color: this.props.theme.palette.markdownText,
         margin: '0px',
         marginTop: '8px',
       },
