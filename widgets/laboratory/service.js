@@ -65,29 +65,32 @@ Goblin.registerQuest(goblinName, 'create', function*(quest, url, config) {
 
   quest.cmd('warehouse.feed.add', {feed: win.id, branch: win.id});
 
-  const unsubCreated = quest.sub('goblin.created', (err, msg) => {
-    quest.cmd('laboratory.add', {
-      id: quest.goblin.id,
-      widgetId: msg.data.id,
-    });
-  });
-  quest.goblin.defer(unsubCreated);
+  quest.goblin.defer(
+    quest.sub('goblin.created', (err, msg) => {
+      quest.cmd('laboratory.add', {
+        id: quest.goblin.id,
+        widgetId: msg.data.id,
+      });
+    })
+  );
 
-  const unsubDeleted = quest.sub('goblin.released', (err, msg) => {
-    quest.cmd('laboratory.del', {
-      id: quest.goblin.id,
-      widgetId: msg.data.id,
-    });
-  });
-  quest.goblin.defer(unsubDeleted);
+  quest.goblin.defer(
+    quest.sub('goblin.released', (err, msg) => {
+      quest.cmd('laboratory.del', {
+        id: quest.goblin.id,
+        widgetId: msg.data.id,
+      });
+    })
+  );
 
-  const unsubDeleted2 = quest.sub('goblin.deleted-in-batch', (err, msg) => {
-    quest.cmd('laboratory.del-in-batch', {
-      id: quest.goblin.id,
-      widgetIds: msg.data.ids,
-    });
-  });
-  quest.goblin.defer(unsubDeleted2);
+  quest.goblin.defer(
+    quest.sub('goblin.deleted-in-batch', (err, msg) => {
+      quest.cmd('laboratory.del-in-batch', {
+        id: quest.goblin.id,
+        widgetIds: msg.data.ids,
+      });
+    })
+  );
 
   quest.log.info(`Laboratory ${quest.goblin.id} created!`);
   return quest.goblin.id;
