@@ -425,8 +425,9 @@ class Widget extends React.PureComponent {
     args.labId = this.context.labId;
     const action = {
       type: 'QUEST',
-      cmd: cmd,
-      args: args,
+      cmd,
+      data: args,
+      _xcraftIPC: true,
     };
     this.context.dispatch(action);
   }

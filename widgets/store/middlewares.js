@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import helpers from 'xcraft-core-transport/lib/helpers.js';
 
 const questMiddleware = send => store => next => action => {
   if (action.type === 'QUEST') {
@@ -23,14 +24,14 @@ const _handleChange = (send, action) => {
   let questAction = {
     type: 'QUEST',
     cmd: `${goblin}.change-${fields.join('.')}`,
-    args: {id: goblinId, newValue: action.value},
+    data: {id: goblinId, newValue: action.value},
   };
   send('QUEST', questAction);
 
   questAction = {
     type: 'QUEST',
     cmd: `${goblin}.change`,
-    args: {id: goblinId, path: fields.join('.'), newValue: action.value},
+    data: {id: goblinId, path: fields.join('.'), newValue: action.value},
   };
   send('QUEST', questAction);
 };
@@ -59,12 +60,20 @@ const formMiddleware = send => store => next => action => {
 
 module.exports = transport => {
   const send = (type, action) => {
-    if (transport.name === 'electron') {
-      transport.send(type, {...action});
-      return;
+    let data = action;
+    if (action.type === 'QUEST') {
+      data = helpers.toXcraftJSON(action)[0];
     }
-    if (transport.name === 'ws') {
-      transport.send(JSON.stringify({type, action}));
+
+    switch (transport.name) {
+      case 'electron': {
+        transport.send(type, data);
+        break;
+      }
+      case 'ws': {
+        transport.send(JSON.stringify({type, data}));
+        break;
+      }
     }
   };
 
