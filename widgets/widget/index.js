@@ -420,8 +420,15 @@ class Widget extends React.PureComponent {
   }
 
   ///////////GOBLIN BUS:
+  get registry() {
+    return this.getState().commands.get('registry');
+  }
 
   cmd(cmd, args) {
+    if (!this.registry[cmd]) {
+      console.warn('Command not impl. ', cmd);
+      return;
+    }
     args.labId = this.context.labId;
     const action = {
       type: 'QUEST',

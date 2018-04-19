@@ -3,13 +3,7 @@ import helpers from 'xcraft-core-transport/lib/helpers.js';
 
 const questMiddleware = send => store => next => action => {
   if (action.type === 'QUEST') {
-    const registry = store.getState().commands.get('registry');
-    if (registry[action.cmd]) {
-      send('QUEST', action);
-    } else {
-      console.warn('Service not available: ', action.cmd);
-    }
-    return;
+    send('QUEST', action);
   }
   return next(action);
 };
