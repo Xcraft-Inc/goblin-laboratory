@@ -37,9 +37,7 @@ const handleNewBackendState = transitState => {
     ) {
       main(Root);
       rootMounted = true;
-      socket.send(
-        JSON.stringify({type: 'LABORATORY_READY', labId, wid: 'web'})
-      );
+      socket.send(JSON.stringify({type: 'LABORATORY_READY', labId}));
     }
   }
 };
