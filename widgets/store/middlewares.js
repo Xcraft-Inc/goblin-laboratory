@@ -16,7 +16,6 @@ const questMiddleware = send => store => next => action => {
 
 //TODO: better handling of model/service field
 const _handleChange = (send, action, registry) => {
-  console.dir(registry);
   const model = action.model.replace('backend.', '');
   const fields = model.split('.');
   if (fields.lenght === 0) {
