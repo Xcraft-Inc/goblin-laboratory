@@ -3,14 +3,20 @@ import helpers from 'xcraft-core-transport/lib/helpers.js';
 
 const questMiddleware = send => store => next => action => {
   if (action.type === 'QUEST') {
-    send('QUEST', action);
+    const registry = store.getState().commands.get('registry');
+    if (registry[action.cmd]) {
+      send('QUEST', action);
+    } else {
+      console.warn('Service not available: ', action.cmd);
+    }
     return;
   }
   return next(action);
 };
 
 //TODO: better handling of model/service field
-const _handleChange = (send, action) => {
+const _handleChange = (send, action, registry) => {
+  console.dir(registry);
   const model = action.model.replace('backend.', '');
   const fields = model.split('.');
   if (fields.lenght === 0) {
@@ -21,19 +27,25 @@ const _handleChange = (send, action) => {
   if (goblin.indexOf('@') !== -1) {
     goblin = goblin.split('@')[0];
   }
-  let questAction = {
-    type: 'QUEST',
-    cmd: `${goblin}.change-${fields.join('.')}`,
-    data: {id: goblinId, newValue: action.value},
-  };
-  send('QUEST', questAction);
+  const changeFieldCommand = `${goblin}.change-${fields.join('.')}`;
+  if (registry[changeFieldCommand]) {
+    const questAction = {
+      type: 'QUEST',
+      cmd: changeFieldCommand,
+      data: {id: goblinId, newValue: action.value},
+    };
+    send('QUEST', questAction);
+  }
 
-  questAction = {
-    type: 'QUEST',
-    cmd: `${goblin}.change`,
-    data: {id: goblinId, path: fields.join('.'), newValue: action.value},
-  };
-  send('QUEST', questAction);
+  const command = `${goblin}.change`;
+  if (registry[command]) {
+    const questAction = {
+      type: 'QUEST',
+      cmd: command,
+      data: {id: goblinId, path: fields.join('.'), newValue: action.value},
+    };
+    send('QUEST', questAction);
+  }
 };
 
 const handleChange = _.debounce(_handleChange, 100);
@@ -43,14 +55,14 @@ const formMiddleware = send => store => next => action => {
     case 'rrf/batch': {
       for (const a of action.actions) {
         if (a.type === 'rrf/change' && !a.load) {
-          handleChange(send, a);
+          handleChange(send, a, store.getState().commands.get('registry'));
         }
       }
       break;
     }
     case 'rrf/change': {
       if (!action.load) {
-        handleChange(send, action);
+        handleChange(send, action, store.getState().commands.get('registry'));
       }
       break;
     }
