@@ -426,7 +426,11 @@ class Widget extends React.PureComponent {
 
   cmd(cmd, args) {
     if (!this.registry[cmd]) {
-      console.warn('Command not impl. ', cmd);
+      console.warn(
+        '%cGoblins Warning',
+        'font-weight: bold;',
+        `Command not impl. ${cmd}`
+      );
       return;
     }
     args.labId = this.context.labId;
