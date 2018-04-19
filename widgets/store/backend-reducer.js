@@ -12,5 +12,10 @@ export default (state = fromJS({}), action = {}) => {
       ? patch(state, newState.get('state'))
       : newState.get('state');
   }
+
+  if (action.type === 'COMMANDS_REGISTRY') {
+    return state.set('_commands', action.commands);
+  }
+
   return state;
 };
