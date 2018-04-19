@@ -13,9 +13,5 @@ export default (state = fromJS({}), action = {}) => {
       : newState.get('state');
   }
 
-  if (action.type === 'COMMANDS_REGISTRY') {
-    return state.set('_commands', action.commands);
-  }
-
   return state;
 };

@@ -1,5 +1,6 @@
 import {combineReducers} from 'redux';
 import backendReducer from 'laboratory/store/backend-reducer';
+import commandsReducer from 'laboratory/store/commands-reducer';
 import Shredder from 'xcraft-core-shredder';
 import {createForms} from 'react-redux-form/immutable';
 /**
@@ -93,6 +94,7 @@ const resetPlugin = (state, action) => {
 
 export default combineReducers({
   routing: routerReducer,
+  commands: commandsReducer,
   backend: backendReducer,
   ...createForms({backend: backendReducer}, '', {
     plugins: [resetPlugin],
