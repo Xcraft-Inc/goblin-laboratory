@@ -58,7 +58,7 @@ socket.onmessage = function(event) {
 };
 
 socket.onopen = function() {
-  socket.send(JSON.stringify({type: 'FRONT_END_READY', wid: 'web'}));
+  main(() => <span>Empty Laboratory</span>);
 };
 
 let rootMounted = false;
@@ -72,10 +72,3 @@ const main = Main => {
     document.getElementById('root')
   );
 };
-
-if (module.hot) {
-  module.hot.accept();
-  socket.send(JSON.stringify({type: 'RESEND'}));
-}
-
-main(() => <span>Empty Laboratory</span>);
