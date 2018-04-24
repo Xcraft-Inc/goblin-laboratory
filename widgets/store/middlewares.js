@@ -63,27 +63,18 @@ const formMiddleware = send => store => next => action => {
   return next(action);
 };
 
-module.exports = transport => {
-  const send = (type, action) => {
+module.exports = send => {
+  const _send = (type, action) => {
     let data = action;
     if (action.type === 'QUEST') {
       data = helpers.toXcraftJSON(action)[0];
     }
 
-    switch (transport.name) {
-      case 'electron': {
-        transport.send(type, data);
-        break;
-      }
-      case 'ws': {
-        transport.send(JSON.stringify({type, data}));
-        break;
-      }
-    }
+    send(type, data);
   };
 
   return {
-    formMiddleware: formMiddleware(send),
-    questMiddleware: questMiddleware(send),
+    formMiddleware: formMiddleware(_send),
+    questMiddleware: questMiddleware(_send),
   };
 };

@@ -5,8 +5,8 @@ import middlewares from './middlewares';
 
 const rootReducer = require('laboratory/store/root-reducer').default;
 
-export default function configureStore(initialState, history, transport) {
-  const {formMiddleware, questMiddleware} = middlewares(transport);
+export default function configureStore(initialState, history, send) {
+  const {formMiddleware, questMiddleware} = middlewares(send);
   const routerHistory = routerMiddleware(history);
 
   const composeEnhancers =
