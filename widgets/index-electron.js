@@ -24,10 +24,8 @@ class ElectronRenderer extends Renderer {
       this.newBackendState(transitState);
     });
 
-    // FIXME: mode in renderer.js
     if (module.hot) {
       const wid = remote.getCurrentWindow().id;
-      module.hot.accept();
       this.send('RESEND', wid);
     }
 

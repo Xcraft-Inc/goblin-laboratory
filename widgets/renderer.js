@@ -20,6 +20,10 @@ class Renderer {
     this.push = push;
     this._store = configureStore(window.__INITIAL_STATE__, history, this.send);
     this._rootMounted = false;
+
+    if (module.hot) {
+      module.hot.accept();
+    }
   }
 
   get store() {
