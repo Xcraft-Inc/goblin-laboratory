@@ -27,9 +27,36 @@ class Maintenance extends Widget {
 
     return (
       <Container kind="root">
-        <Label text={status} />
-        <Label text={progress} />
-        <Label text={message} />
+        <Container kind="column" grow="1">
+          <Label
+            grow="1"
+            justify="center"
+            kind="footer"
+            glyph="solid/lock"
+            glyphSize="1000%"
+          />
+          <Label
+            grow="1"
+            justify="center"
+            kind="footer"
+            fontSize="300%"
+            text={status}
+          />
+          <Label
+            grow="1"
+            justify="center"
+            kind="footer"
+            fontSize="300%"
+            text={progress}
+          />
+          <Label
+            grow="1"
+            justify="center"
+            kind="footer"
+            fontSize="300%"
+            text={message}
+          />
+        </Container>
       </Container>
     );
   }
