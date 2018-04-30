@@ -5,6 +5,7 @@ import cssKey from 'css-key';
 import PropTypes from 'prop-types';
 import {Theme} from 'electrum-theme';
 import Widget from 'laboratory/widget';
+import Maintenance from 'laboratory/maintenance/widget';
 import importer from '../importer/';
 const widgetImporter = importer('widget');
 
@@ -207,7 +208,7 @@ class Laboratory extends Widget {
   }
 
   render() {
-    const {id, root} = this.props;
+    const {id, root, maintenanceMode} = this.props;
 
     if (!id) {
       return null;
@@ -222,9 +223,26 @@ class Laboratory extends Widget {
     const widgetName = root.split('@')[0];
     const RootWidget = widgetImporter(widgetName);
     const WiredRoot = Widget.Wired(RootWidget)(root);
+
+    const Root = props => {
+      if (props.status && props.status !== 'off') {
+        return <Maintenance mode={maintenanceMode} />;
+      } else {
+        return <WiredRoot />;
+      }
+    };
+
+    const WithMaintenance = this.mapWidget(
+      Root,
+      status => {
+        return {status};
+      },
+      'backend.workshop.maintenance.status'
+    );
+
     return (
       <ThemeContext theme={Theme.create(this.props.theme)}>
-        <WiredRoot />
+        <WithMaintenance />
       </ThemeContext>
     );
   }
