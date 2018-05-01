@@ -3,6 +3,7 @@ import React from 'react';
 import Widget from 'laboratory/widget';
 import Container from 'gadgets/container/widget';
 import Label from 'gadgets/label/widget';
+import Gauge from 'gadgets/gauge/widget';
 
 class Maintenance extends Widget {
   constructor() {
@@ -25,39 +26,37 @@ class Maintenance extends Widget {
       return null;
     }
 
+    const fullScreenClass = this.styles.classNames.fullScreen;
+    const gaugeClass = this.styles.classNames.gauge;
+
     return (
-      <Container kind="root">
-        <Container kind="column" grow="1">
-          <Label
-            grow="1"
-            justify="center"
-            kind="footer"
-            glyph="solid/lock"
-            glyphSize="1000%"
+      <div className={fullScreenClass}>
+        <Label
+          height="350px"
+          justify="center"
+          kind="footer"
+          glyphPosition="center"
+          glyph="solid/lock"
+          glyphSize="1000%"
+        />
+        <div className={gaugeClass}>
+          <Gauge
+            kind="rounded"
+            gradient="yellow-green"
+            width="300px"
+            height="8px"
+            direction="horizontal"
+            value={progress * 100}
           />
-          <Label
-            grow="1"
-            justify="center"
-            kind="footer"
-            fontSize="300%"
-            text={status}
-          />
-          <Label
-            grow="1"
-            justify="center"
-            kind="footer"
-            fontSize="300%"
-            text={progress}
-          />
-          <Label
-            grow="1"
-            justify="center"
-            kind="footer"
-            fontSize="300%"
-            text={message}
-          />
-        </Container>
-      </Container>
+        </div>
+        <Label
+          height="200px"
+          justify="center"
+          kind="footer"
+          fontSize="300%"
+          text={message}
+        />
+      </div>
     );
   }
 }
