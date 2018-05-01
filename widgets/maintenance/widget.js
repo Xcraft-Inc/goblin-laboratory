@@ -36,7 +36,7 @@ class Maintenance extends Widget {
           justify="center"
           kind="footer"
           glyphPosition="center"
-          glyph="solid/lock"
+          glyph="solid/lock-alt"
           glyphSize="1000%"
         />
         <div className={gaugeClass}>
