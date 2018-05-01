@@ -42,7 +42,7 @@ class Maintenance extends Widget {
         <div className={gaugeClass}>
           <Gauge
             kind="rounded"
-            gradient="yellow-green"
+            gradient="red-yellow-green"
             width="300px"
             height="8px"
             direction="horizontal"
