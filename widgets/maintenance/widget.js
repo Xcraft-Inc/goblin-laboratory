@@ -44,7 +44,7 @@ class Maintenance extends Widget {
             kind="rounded"
             gradient="red-yellow-green"
             width="300px"
-            height="8px"
+            height="10px"
             direction="horizontal"
             value={progress * 100}
           />

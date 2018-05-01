@@ -21,7 +21,7 @@ export default function styles(theme, props) {
   const gaugeStyle = {
     display: 'flex',
     width: '300px',
-    height: '8px',
+    height: '10px',
     transform: 'scale(2)',
   };
 
