@@ -237,6 +237,10 @@ class ThemeContext extends React.PureComponent {
         borderBottomColor: `${tooltipColorBackground}`,
       },
 
+      '.multi-line': {
+        textAlign: 'left !important',
+      },
+
       /* End tooltip section */
     };
   }
