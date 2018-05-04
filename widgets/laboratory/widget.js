@@ -181,15 +181,44 @@ class ThemeContext extends React.PureComponent {
           this.props.theme.palette.scrollerThumbHoverBackground,
       },
 
+      /* Begin tooltip section */
+
       '.tooltip': {
+        borderColor: `${
+          this.props.theme.palette.isDarkTheme ? '#888' : '#aaa'
+        } !important`,
         borderRadius: '2px !important',
         color: `${
           this.props.theme.palette.isDarkTheme ? 'white' : 'black'
         } !important`,
-        boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.25)',
+        boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.25) !important',
       },
 
-      '.tooltip::after': {},
+      '.place-right::before': {
+        borderRight: `8px solid ${
+          this.props.theme.palette.isDarkTheme ? '#888' : '#aaa'
+        } !important`,
+      },
+
+      '.place-left::before': {
+        borderLeft: `8px solid ${
+          this.props.theme.palette.isDarkTheme ? '#888' : '#aaa'
+        } !important`,
+      },
+
+      '.place-top::before': {
+        borderTop: `8px solid ${
+          this.props.theme.palette.isDarkTheme ? '#888' : '#aaa'
+        } !important`,
+      },
+
+      '.place-bottom::before': {
+        borderBottom: `8px solid ${
+          this.props.theme.palette.isDarkTheme ? '#888' : '#aaa'
+        } !important`,
+      },
+
+      /* End tooltip section */
     };
   }
 
