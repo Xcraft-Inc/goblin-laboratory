@@ -34,7 +34,12 @@ const logicHandlers = {
     });
   },
   'set-root': (state, action) => {
-    return state.set('root', action.get('widgetId'));
+    const widgetId = action.get('widgetId');
+    let widget = action.get('widget');
+    if (!widget) {
+      widget = widgetId;
+    }
+    return state.set('rootId', widgetId).set('root', widget);
   },
   'change-theme': (state, action) => {
     return state.set('theme', action.get('name'));
@@ -121,7 +126,7 @@ Goblin.registerQuest(goblinName, 'when-ui-crash', function(quest, error, info) {
   //quest.me.setRoot ({widgetId: existingRoot});
 });
 
-Goblin.registerQuest(goblinName, 'set-root', function(quest, widgetId) {
+Goblin.registerQuest(goblinName, 'set-root', function(quest, widget, widgetId) {
   quest.do();
 });
 

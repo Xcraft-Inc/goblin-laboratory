@@ -203,18 +203,19 @@ class Laboratory extends Widget {
     return {
       id: 'id',
       root: 'root',
+      rootId: 'rootId',
       theme: 'theme',
     };
   }
 
   render() {
-    const {id, root, maintenanceMode} = this.props;
+    const {id, root, rootId, maintenanceMode} = this.props;
 
     if (!id) {
       return null;
     }
 
-    if (!root) {
+    if (!rootId) {
       return (
         <div>Missing root widget, please use lab.setRoot ({`{widgetId}`})</div>
       );
@@ -222,7 +223,7 @@ class Laboratory extends Widget {
 
     const widgetName = root.split('@')[0];
     const RootWidget = widgetImporter(widgetName);
-    const WiredRoot = Widget.Wired(RootWidget)(root);
+    const WiredRoot = Widget.Wired(RootWidget)(rootId);
 
     const Root = props => {
       if (props.status && props.status !== 'off') {
