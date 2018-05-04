@@ -65,6 +65,17 @@ class ThemeContext extends React.PureComponent {
     if (!this.props.theme) {
       console.warn('Theme is undefined in globalStyles');
     }
+
+    const tooltipColorBackground = `${
+      this.props.theme.palette.tooltipBackground
+    } !important`;
+    const tooltipColorBorder = `${
+      this.props.theme.palette.tooltipBorder
+    } !important`;
+    const tooltipColorText = `${
+      this.props.theme.palette.tooltipText
+    } !important`;
+
     return {
       body: {
         color: '#999',
@@ -184,38 +195,46 @@ class ThemeContext extends React.PureComponent {
       /* Begin tooltip section */
 
       '.tooltip': {
-        borderColor: `${
-          this.props.theme.palette.isDarkTheme ? '#888' : '#aaa'
-        } !important`,
+        fontSize: '80%',
+        borderColor: tooltipColorBorder,
         borderRadius: '2px !important',
-        color: `${
-          this.props.theme.palette.isDarkTheme ? 'white' : 'black'
-        } !important`,
+        color: tooltipColorText,
+        backgroundColor: tooltipColorBackground,
         boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.25) !important',
+        opacity: '1 !important',
+        padding: '8px 12px !important',
       },
 
       '.place-right::before': {
-        borderRight: `8px solid ${
-          this.props.theme.palette.isDarkTheme ? '#888' : '#aaa'
-        } !important`,
+        borderRight: `8px solid ${tooltipColorBorder}`,
       },
 
       '.place-left::before': {
-        borderLeft: `8px solid ${
-          this.props.theme.palette.isDarkTheme ? '#888' : '#aaa'
-        } !important`,
+        borderLeft: `8px solid ${tooltipColorBorder}`,
       },
 
       '.place-top::before': {
-        borderTop: `8px solid ${
-          this.props.theme.palette.isDarkTheme ? '#888' : '#aaa'
-        } !important`,
+        borderTop: `8px solid ${tooltipColorBorder}`,
       },
 
       '.place-bottom::before': {
-        borderBottom: `8px solid ${
-          this.props.theme.palette.isDarkTheme ? '#888' : '#aaa'
-        } !important`,
+        borderBottom: `8px solid ${tooltipColorBorder}`,
+      },
+
+      '.place-right::after': {
+        borderRightColor: `${tooltipColorBackground}`,
+      },
+
+      '.place-left::after': {
+        borderLeftColor: `${tooltipColorBackground}`,
+      },
+
+      '.place-top::after': {
+        borderTopColor: `${tooltipColorBackground}`,
+      },
+
+      '.place-bottom::after': {
+        borderBottomColor: `${tooltipColorBackground}`,
       },
 
       /* End tooltip section */
@@ -235,7 +254,7 @@ class ThemeContext extends React.PureComponent {
           delayShow={400}
           effect="solid"
           border={true}
-          className={'tooltip'}
+          className="tooltip"
         />
       </div>
     );
