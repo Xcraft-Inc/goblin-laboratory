@@ -5,6 +5,7 @@ import cssKey from 'css-key';
 import PropTypes from 'prop-types';
 import {Theme} from 'electrum-theme';
 import Widget from 'laboratory/widget';
+import ReactTooltip from 'react-tooltip';
 import Maintenance from 'laboratory/maintenance/widget';
 import importer from '../importer/';
 const widgetImporter = importer('widget');
@@ -179,6 +180,16 @@ class ThemeContext extends React.PureComponent {
           ' ' +
           this.props.theme.palette.scrollerThumbHoverBackground,
       },
+
+      '.tooltip': {
+        borderRadius: '2px !important',
+        color: `${
+          this.props.theme.palette.isDarkTheme ? 'white' : 'black'
+        } !important`,
+        boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.25)',
+      },
+
+      '.tooltip::after': {},
     };
   }
 
@@ -189,6 +200,14 @@ class ThemeContext extends React.PureComponent {
           <style>{jsToCSS(this.globalStyles)}</style>
         </Helmet>
         {this.props.children}
+        <ReactTooltip
+          type={this.props.theme.palette.isDarkTheme ? 'dark' : 'light'}
+          multiline={true}
+          delayShow={400}
+          effect="solid"
+          border={true}
+          className={'tooltip'}
+        />
       </div>
     );
   }
