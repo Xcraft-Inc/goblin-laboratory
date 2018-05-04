@@ -256,6 +256,7 @@ class ThemeContext extends React.PureComponent {
           type={this.props.theme.palette.isDarkTheme ? 'dark' : 'light'}
           multiline={true}
           delayShow={400}
+          globalEventOff="click"
           effect="solid"
           border={true}
           className="tooltip"
