@@ -253,7 +253,6 @@ class ThemeContext extends React.PureComponent {
         </Helmet>
         {this.props.children}
         <ReactTooltip
-          type={this.props.theme.palette.isDarkTheme ? 'dark' : 'light'}
           multiline={true}
           delayShow={400}
           globalEventOff="click"
