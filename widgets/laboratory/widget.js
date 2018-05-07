@@ -195,14 +195,14 @@ class ThemeContext extends React.PureComponent {
       /* Begin tooltip section */
 
       '.tooltip': {
-        fontSize: '80%',
+        fontSize: `${this.props.theme.shapes.tooltipFontSize} !important`,
         borderColor: tooltipColorBorder,
-        borderRadius: '2px !important',
+        borderRadius: `${this.props.theme.shapes.tooltipRadius} !important`,
         color: tooltipColorText,
         backgroundColor: tooltipColorBackground,
-        boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.25) !important',
+        boxShadow: `${this.props.theme.shapes.tooltipShadow} !important`,
         opacity: '1 !important',
-        padding: '8px 12px !important',
+        padding: `${this.props.theme.shapes.tooltipPadding} !important`,
       },
 
       '.place-right::before': {
