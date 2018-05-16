@@ -444,9 +444,12 @@ class Widget extends React.PureComponent {
   }
 
   reportError(error, info) {
+    const desktopId = this.context.desktopId
+      ? this.context.desktopId
+      : this.props.desktopId;
     this.cmd(
       'laboratory.when-ui-crash',
-      Object.assign({id: this.context.labId}, {error, info})
+      Object.assign({id: this.context.labId}, {desktopId, error, info})
     );
   }
 
