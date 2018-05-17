@@ -419,6 +419,29 @@ class Widget extends React.PureComponent {
     return this.withModel(path, mapProps, true)(component);
   }
 
+  buildLoader(branch, Loaded) {
+    const Loader = props => {
+      if (props.loaded) {
+        return <Loaded />;
+      } else {
+        return null;
+      }
+    };
+
+    const Renderer = this.mapWidget(
+      Loader,
+      entityId => {
+        if (!entityId) {
+          return {loaded: false};
+        } else {
+          return {loaded: true};
+        }
+      },
+      `backend.${branch}.id`
+    );
+    return <Renderer />;
+  }
+
   ///////////GOBLIN BUS:
   get registry() {
     return this.getState().commands.get('registry');
