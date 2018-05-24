@@ -116,10 +116,21 @@ Goblin.registerQuest(goblinName, 'duplicate', function*(quest, forId) {
   return lab.id;
 });
 
-Goblin.registerQuest(goblinName, 'when-ui-crash', function(quest, error, info) {
+Goblin.registerQuest(goblinName, 'when-ui-crash', function(
+  quest,
+  desktopId,
+  error,
+  info
+) {
   quest.log.err('UI generate errors !');
   console.log(info);
   quest.log.err(info);
+  /*quest.fail(
+    'Erreur UI',
+    'Un composant graphique à crashé :(',
+    'ctrl+shift+i pour contrôler',
+    info.componentStack
+  );*/
   // RESET APP?
   //const state = quest.goblin.getState ();
   //const existingRoot = state.get ('root', null);

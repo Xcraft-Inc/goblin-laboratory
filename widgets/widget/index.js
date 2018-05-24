@@ -424,6 +424,29 @@ class Widget extends React.PureComponent {
     return this.withModel(path, mapProps, true)(component);
   }
 
+  buildLoader(branch, Loaded) {
+    const Loader = props => {
+      if (props.loaded) {
+        return <Loaded />;
+      } else {
+        return null;
+      }
+    };
+
+    const Renderer = this.mapWidget(
+      Loader,
+      entityId => {
+        if (!entityId) {
+          return {loaded: false};
+        } else {
+          return {loaded: true};
+        }
+      },
+      `backend.${branch}.id`
+    );
+    return <Renderer />;
+  }
+
   ///////////GOBLIN BUS:
   get registry() {
     return this.getState().commands.get('registry');
@@ -449,9 +472,12 @@ class Widget extends React.PureComponent {
   }
 
   reportError(error, info) {
+    const desktopId = this.context.desktopId
+      ? this.context.desktopId
+      : this.props.desktopId;
     this.cmd(
       'laboratory.when-ui-crash',
-      Object.assign({id: this.context.labId}, {error, info})
+      Object.assign({id: this.context.labId}, {desktopId, error, info})
     );
   }
 
