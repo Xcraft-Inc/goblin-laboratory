@@ -5,7 +5,6 @@ import Shredder from 'xcraft-core-shredder';
 import {push, replace, goBack} from 'react-router-redux';
 import {actions} from 'react-redux-form/immutable';
 import {matchPath} from 'react-router';
-import ReactTooltip from 'react-tooltip';
 import fasterStringify from 'faster-stable-stringify';
 import {StyleSheet, css} from 'aphrodite/no-important';
 import {flushToStyleTag} from 'aphrodite/lib/inject'; // HACK
@@ -122,10 +121,6 @@ class Widget extends React.PureComponent {
 
   componentDidCatch(error, info) {
     this.reportError(error, info);
-  }
-
-  componentDidUpdate() {
-    ReactTooltip.rebuild();
   }
 
   componentDidMount() {
