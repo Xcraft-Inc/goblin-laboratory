@@ -31,6 +31,7 @@ const logicHandlers = {
       wid: action.get('wid'),
       feeds: conf.feeds,
       theme: 'default',
+      globalStyles: conf.disableGlobalStyles ? false : true,
     });
   },
   'set-root': (state, action) => {

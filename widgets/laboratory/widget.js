@@ -248,9 +248,11 @@ class ThemeContext extends React.PureComponent {
   render() {
     return (
       <div>
-        <Helmet>
-          <style>{jsToCSS(this.globalStyles)}</style>
-        </Helmet>
+        {this.props.globalStyles === true ? (
+          <Helmet>
+            <style>{jsToCSS(this.globalStyles)}</style>
+          </Helmet>
+        ) : null}
         {this.props.children}
         <ReactTooltip
           multiline={true}
@@ -276,11 +278,12 @@ class Laboratory extends Widget {
       root: 'root',
       rootId: 'rootId',
       theme: 'theme',
+      globalStyles: 'globalStyles',
     };
   }
 
   render() {
-    const {id, root, rootId, maintenanceMode} = this.props;
+    const {id, root, rootId, maintenanceMode, globalStyles} = this.props;
 
     if (!id) {
       return null;
@@ -313,7 +316,10 @@ class Laboratory extends Widget {
     );
 
     return (
-      <ThemeContext theme={Theme.create(this.props.theme)}>
+      <ThemeContext
+        theme={Theme.create(this.props.theme)}
+        globalStyles={globalStyles}
+      >
         <WithMaintenance />
       </ThemeContext>
     );
