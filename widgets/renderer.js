@@ -42,15 +42,16 @@ class Renderer {
       if (
         state.some((v, k) => {
           const ns = k.replace(/([^@]+)@.*/, '$1');
-          if (ns !== 'laboratory') {
-            return false;
+          if (ns === 'laboratory' || ns === 'carnotzet') {
+            this._labId = k;
+            return true;
           }
-          this._labId = k;
-          return true;
+          return false;
         })
       ) {
         this.main(Root);
         this._rootMounted = true;
+        console.log('root mounted!');
       }
     }
   }

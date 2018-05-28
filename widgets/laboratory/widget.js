@@ -290,9 +290,7 @@ class Laboratory extends Widget {
     }
 
     if (!rootId) {
-      return (
-        <div>Missing root widget, please use lab.setRoot ({`{widgetId}`})</div>
-      );
+      return null;
     }
 
     const widgetName = root.split('@')[0];
