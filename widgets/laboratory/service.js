@@ -186,11 +186,6 @@ Goblin.registerQuest(goblinName, 'dispatch', function(quest, action) {
   win.dispatch({action});
 });
 
-Goblin.registerQuest(goblinName, '_ready', function*(quest, wid) {
-  // todo: find route
-  // quest.cmd ('wm.win.nav', {wid, route: '/vtc'});
-});
-
 Goblin.registerQuest(goblinName, 'open', function(quest, route) {
   quest.log.info('Laboratory opening:');
   quest.log.info(route);

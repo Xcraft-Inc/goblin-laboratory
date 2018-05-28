@@ -1,9 +1,11 @@
 import 'babel-polyfill';
 import Renderer from './renderer.js';
+const uuidV4 = require('uuid/v4');
 
 class BrowsersRenderer extends Renderer {
   constructor() {
-    const socket = new WebSocket('ws://localhost:8000');
+    //TODO: getlocal storage session tocken
+    const socket = new WebSocket(`ws://localhost:8000/${uuidV4()}/`);
 
     super((type, data) => {
       socket.send.bind(socket)(JSON.stringify({type, data}));

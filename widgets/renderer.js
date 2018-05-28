@@ -51,7 +51,6 @@ class Renderer {
       ) {
         this.main(Root);
         this._rootMounted = true;
-        this.send('LABORATORY_READY', this._labId);
       }
     }
   }
