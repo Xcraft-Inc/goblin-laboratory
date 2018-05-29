@@ -1,7 +1,6 @@
 import 'babel-polyfill';
 import Renderer from './renderer.js';
 const uuidV4 = require('uuid/v4');
-import fasterStringify from 'faster-stable-stringify';
 
 const WT = `
 function () {
@@ -42,7 +41,7 @@ class BrowsersRenderer extends Renderer {
     const socket = new WebSocket(`ws://localhost:8000/${uuidV4()}/`);
 
     super((type, data) => {
-      socket.send.bind(socket)(fasterStringify({type, data}));
+      socket.send.bind(socket)(JSON.stringify({type, data}));
     });
 
     socket.onmessage = event => {
