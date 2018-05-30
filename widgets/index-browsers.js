@@ -15,15 +15,15 @@ const parser = URL.createObjectURL(
 );
 
 function webWorkerJSONParse(worker, data, callback) {
-  //No webworker API case...
-  if (!worker) {
-    callback(JSON.parse(data));
-    return;
-  }
-
   // Bad payload case...
   if (typeof data !== 'string' || data.charAt(0) !== '{') {
     callback(data);
+    return;
+  }
+
+  //No webworker API case...
+  if (!worker) {
+    callback(JSON.parse(data));
     return;
   }
 
