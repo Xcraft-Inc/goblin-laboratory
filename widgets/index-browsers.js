@@ -6,7 +6,6 @@ const WT = `
 function () {
   self.onmessage = function(e){
     self.postMessage(JSON.parse(e.data));
-    self.close();
   };
 }
 `;
@@ -14,9 +13,10 @@ function () {
 const parser = URL.createObjectURL(
   new Blob(['(' + WT + ')()'], {type: 'text/javascript'})
 );
-function webWorkerJSONParse(data, callback) {
+
+function webWorkerJSONParse(worker, data, callback) {
   //No webworker API case...
-  if (!Worker) {
+  if (!worker) {
     callback(JSON.parse(data));
     return;
   }
@@ -26,11 +26,6 @@ function webWorkerJSONParse(data, callback) {
     callback(data);
     return;
   }
-
-  const worker = new Worker(parser);
-  worker.onmessage = e => {
-    callback(e.data);
-  };
 
   worker.postMessage(data);
 }
@@ -44,20 +39,30 @@ class BrowsersRenderer extends Renderer {
       socket.send.bind(socket)(JSON.stringify({type, data}));
     });
 
+    const worker = Worker ? new Worker(parser) : null;
+
+    const callback = data => {
+      switch (data.type) {
+        case 'PUSH_PATH':
+          this.store.dispatch(this.push(data.path));
+          break;
+        case 'DISPATCH_IN_APP':
+          this.store.dispatch(data.action);
+          break;
+        case 'NEW_BACKEND_STATE':
+          this.newBackendState(data.transitState);
+          break;
+      }
+    };
+
+    if (worker) {
+      worker.onmessage = e => {
+        callback(e.data);
+      };
+    }
+
     socket.onmessage = event => {
-      webWorkerJSONParse(event.data, data => {
-        switch (data.type) {
-          case 'PUSH_PATH':
-            this.store.dispatch(this.push(data.path));
-            break;
-          case 'DISPATCH_IN_APP':
-            this.store.dispatch(data.action);
-            break;
-          case 'NEW_BACKEND_STATE':
-            this.newBackendState(data.transitState);
-            break;
-        }
-      });
+      webWorkerJSONParse(worker, event.data, callback);
     };
 
     socket.onopen = () => {
