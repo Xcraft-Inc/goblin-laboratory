@@ -7,21 +7,9 @@ import {Theme} from 'electrum-theme';
 import Widget from 'laboratory/widget';
 import ReactTooltip from 'react-tooltip';
 import Maintenance from 'laboratory/maintenance/widget';
+import Fa from './fa.js';
 import importer from '../importer/';
 const widgetImporter = importer('widget');
-
-import fontawesome from '@fortawesome/fontawesome';
-
-function bootFontAwesome() {
-  const {GlyphHelpers} = require('goblin-toolbox');
-  // TODO: add support for free version (for the open-source version of westeros)
-  const entries = GlyphHelpers.getFaEntries();
-  for (const entry of entries) {
-    const _entry = entry.split('/');
-    const prefix = _entry[0].replace(/^(.)?.*/, 'fa$1');
-    fontawesome.icon({prefix, iconName: _entry[1]});
-  }
-}
 
 function jsToCSS(jsStyles) {
   return toCss(
@@ -263,7 +251,7 @@ class ThemeContext extends React.PureComponent {
 class Laboratory extends Widget {
   constructor() {
     super(...arguments);
-    bootFontAwesome();
+    Fa();
   }
 
   static get wiring() {
