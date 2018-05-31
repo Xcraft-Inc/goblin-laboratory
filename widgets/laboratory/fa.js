@@ -2,7 +2,9 @@
 import fontawesome from '@fortawesome/fontawesome';
 
 /* A */
-import a00 from '@fortawesome/fontawesome-pro-solid/faAngleDown';
+import a00 from '@fortawesome/fontawesome-pro-solid/faAngleDoubleDown';
+import a02 from '@fortawesome/fontawesome-pro-solid/faAngleDoubleLeft';
+import a05 from '@fortawesome/fontawesome-pro-solid/faAngleDown';
 import a10 from '@fortawesome/fontawesome-pro-solid/faAngleUp';
 import a20 from '@fortawesome/fontawesome-pro-solid/faArchive';
 import a30 from '@fortawesome/fontawesome-pro-solid/faArrowAltCircleLeft';
@@ -40,11 +42,12 @@ import c070 from '@fortawesome/fontawesome-pro-solid/faCheckCircle';
 import c080 from '@fortawesome/fontawesome-pro-regular/faCheckSquare';
 import c090 from '@fortawesome/fontawesome-pro-solid/faCheckSquare';
 import c093 from '@fortawesome/fontawesome-pro-solid/faChessBishop';
-import c095 from '@fortawesome/fontawesome-pro-solid/faChessKing';
-import c096 from '@fortawesome/fontawesome-pro-solid/faChessKnight';
-import c097 from '@fortawesome/fontawesome-pro-solid/faChessPawn';
-import c098 from '@fortawesome/fontawesome-pro-solid/faChessQueen';
-import c099 from '@fortawesome/fontawesome-pro-solid/faChessRook';
+import c094 from '@fortawesome/fontawesome-pro-solid/faChessKing';
+import c095 from '@fortawesome/fontawesome-pro-solid/faChessKnight';
+import c096 from '@fortawesome/fontawesome-pro-solid/faChessPawn';
+import c097 from '@fortawesome/fontawesome-pro-solid/faChessQueen';
+import c098 from '@fortawesome/fontawesome-pro-solid/faChessRook';
+import c099 from '@fortawesome/fontawesome-pro-solid/faChevronRight';
 import c100 from '@fortawesome/fontawesome-pro-solid/faChild';
 import c110 from '@fortawesome/fontawesome-pro-regular/faCircle';
 import c115 from '@fortawesome/fontawesome-pro-solid/faCircle';
@@ -62,6 +65,7 @@ import d00 from '@fortawesome/fontawesome-pro-regular/faDotCircle';
 
 /* E */
 import e00 from '@fortawesome/fontawesome-pro-solid/faEllipsisH';
+import e03 from '@fortawesome/fontawesome-pro-solid/faEllipsisV';
 import e05 from '@fortawesome/fontawesome-pro-regular/faEnvelope';
 import e10 from '@fortawesome/fontawesome-pro-solid/faEnvelope';
 import e20 from '@fortawesome/fontawesome-pro-solid/faEraser';
@@ -91,11 +95,13 @@ import h25 from '@fortawesome/fontawesome-pro-solid/faHome';
 import h30 from '@fortawesome/fontawesome-pro-regular/faHospital';
 
 /* I */
-import i00 from '@fortawesome/fontawesome-pro-solid/faIndustry';
+import i00 from '@fortawesome/fontawesome-pro-solid/faInbox';
+import i10 from '@fortawesome/fontawesome-pro-solid/faIndustry';
 
 /* L */
 import l00 from '@fortawesome/fontawesome-pro-solid/faLanguage';
 import l10 from '@fortawesome/fontawesome-pro-solid/faLink';
+import l15 from '@fortawesome/fontawesome-pro-solid/faList';
 import l20 from '@fortawesome/fontawesome-pro-solid/faLock';
 
 /* M */
@@ -111,8 +117,12 @@ import m50 from '@fortawesome/fontawesome-pro-solid/faMoneyBillAlt';
 import o00 from '@fortawesome/fontawesome-pro-solid/faOctagon';
 
 /* P */
-import p00 from '@fortawesome/fontawesome-pro-solid/faPencil';
+import p00 from '@fortawesome/fontawesome-pro-solid/faPaperclip';
+import p01 from '@fortawesome/fontawesome-pro-solid/faPaperPlane';
+import p02 from '@fortawesome/fontawesome-pro-solid/faPaste';
+import p03 from '@fortawesome/fontawesome-pro-solid/faPencil';
 import p05 from '@fortawesome/fontawesome-pro-solid/faPhone';
+import p07 from '@fortawesome/fontawesome-pro-solid/faPlane';
 import p10 from '@fortawesome/fontawesome-pro-solid/faPlus';
 import p15 from '@fortawesome/fontawesome-pro-solid/faPlusCircle';
 import p20 from '@fortawesome/fontawesome-pro-solid/faPlusSquare';
@@ -140,13 +150,16 @@ import s60 from '@fortawesome/fontawesome-pro-solid/faStar';
 import s70 from '@fortawesome/fontawesome-pro-solid/faStepBackward';
 import s80 from '@fortawesome/fontawesome-pro-solid/faStepForward';
 import s90 from '@fortawesome/fontawesome-pro-solid/faSubway';
+import s95 from '@fortawesome/fontawesome-pro-regular/faSun';
 
 /* T */
 import t00 from '@fortawesome/fontawesome-pro-solid/faTaxi';
 import t05 from '@fortawesome/fontawesome-pro-solid/faTimes';
 import t10 from '@fortawesome/fontawesome-pro-solid/faTint';
 import t20 from '@fortawesome/fontawesome-pro-light/faToggleOff';
+import t25 from '@fortawesome/fontawesome-pro-light/faToggleOn';
 import t30 from '@fortawesome/fontawesome-pro-solid/faTrain';
+import t35 from '@fortawesome/fontawesome-pro-regular/faTrash';
 import t40 from '@fortawesome/fontawesome-pro-solid/faTrash';
 import t45 from '@fortawesome/fontawesome-pro-solid/faTree';
 import t50 from '@fortawesome/fontawesome-pro-solid/faTriangle';
@@ -165,6 +178,8 @@ import u40 from '@fortawesome/fontawesome-pro-solid/faUserSecret';
 function boot() {
   fontawesome.library.add(
     a00,
+    a02,
+    a05,
     a10,
     a20,
     a30,
@@ -198,6 +213,7 @@ function boot() {
     c080,
     c090,
     c093,
+    c094,
     c095,
     c096,
     c097,
@@ -216,6 +232,7 @@ function boot() {
     c180,
     d00,
     e00,
+    e03,
     e05,
     e10,
     e20,
@@ -238,8 +255,10 @@ function boot() {
     h25,
     h30,
     i00,
+    i10,
     l00,
     l10,
+    l15,
     l20,
     m00,
     m10,
@@ -250,7 +269,11 @@ function boot() {
     m50,
     o00,
     p00,
+    p01,
+    p02,
+    p03,
     p05,
+    p07,
     p10,
     p15,
     p20,
@@ -272,11 +295,14 @@ function boot() {
     s70,
     s80,
     s90,
+    s95,
     t00,
     t05,
     t10,
     t20,
+    t25,
     t30,
+    t35,
     t40,
     t45,
     t50,
