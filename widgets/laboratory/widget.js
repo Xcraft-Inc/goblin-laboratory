@@ -11,23 +11,16 @@ import importer from '../importer/';
 const widgetImporter = importer('widget');
 
 import fontawesome from '@fortawesome/fontawesome';
-import solid from '@fortawesome/fontawesome-pro-solid';
-import regular from '@fortawesome/fontawesome-pro-regular';
-import light from '@fortawesome/fontawesome-pro-light';
-import brands from '@fortawesome/fontawesome-free-brands';
 
-// TODO: add support for free version (for the open-source version of westeros)
-if (solid) {
-  fontawesome.library.add(solid);
-}
-if (regular) {
-  fontawesome.library.add(regular);
-}
-if (light) {
-  fontawesome.library.add(light);
-}
-if (brands) {
-  fontawesome.library.add(brands);
+function bootFontAwesome() {
+  const {GlyphHelpers} = require('goblin-toolbox');
+  // TODO: add support for free version (for the open-source version of westeros)
+  const entries = GlyphHelpers.getFaEntries();
+  for (const entry of entries) {
+    const _entry = entry.split('/');
+    const prefix = _entry[0].replace(/^(.)?.*/, 'fa$1');
+    fontawesome.icon({prefix, iconName: _entry[1]});
+  }
 }
 
 function jsToCSS(jsStyles) {
@@ -270,6 +263,7 @@ class ThemeContext extends React.PureComponent {
 class Laboratory extends Widget {
   constructor() {
     super(...arguments);
+    bootFontAwesome();
   }
 
   static get wiring() {
