@@ -47,8 +47,9 @@ import c095 from '@fortawesome/fontawesome-pro-solid/faChessKnight';
 import c096 from '@fortawesome/fontawesome-pro-solid/faChessPawn';
 import c097 from '@fortawesome/fontawesome-pro-solid/faChessQueen';
 import c098 from '@fortawesome/fontawesome-pro-solid/faChessRook';
-import c099 from '@fortawesome/fontawesome-pro-solid/faChevronRight';
-import c100 from '@fortawesome/fontawesome-pro-solid/faChild';
+import c099 from '@fortawesome/fontawesome-pro-solid/faChevronLeft';
+import c100 from '@fortawesome/fontawesome-pro-solid/faChevronRight';
+import c101 from '@fortawesome/fontawesome-pro-solid/faChild';
 import c110 from '@fortawesome/fontawesome-pro-regular/faCircle';
 import c115 from '@fortawesome/fontawesome-pro-solid/faCircle';
 import c120 from '@fortawesome/fontawesome-pro-solid/faClock';
@@ -220,6 +221,7 @@ function boot() {
     c098,
     c099,
     c100,
+    c101,
     c110,
     c115,
     c120,
