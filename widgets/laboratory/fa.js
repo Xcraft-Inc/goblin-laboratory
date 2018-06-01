@@ -28,6 +28,7 @@ import b48 from '@fortawesome/fontawesome-pro-regular/faBookmark';
 import b49 from '@fortawesome/fontawesome-pro-solid/faBookmark';
 import b50 from '@fortawesome/fontawesome-pro-solid/faBuilding';
 import b60 from '@fortawesome/fontawesome-pro-solid/faBullhorn';
+import b61 from '@fortawesome/fontawesome-pro-solid/faBoxFull';
 
 /* C */
 import c000 from '@fortawesome/fontawesome-pro-solid/faCalendarPlus';
@@ -152,6 +153,7 @@ import s70 from '@fortawesome/fontawesome-pro-solid/faStepBackward';
 import s80 from '@fortawesome/fontawesome-pro-solid/faStepForward';
 import s90 from '@fortawesome/fontawesome-pro-solid/faSubway';
 import s95 from '@fortawesome/fontawesome-pro-regular/faSun';
+import s96 from '@fortawesome/fontawesome-pro-solid/faSync';
 
 /* T */
 import t00 from '@fortawesome/fontawesome-pro-solid/faTaxi';
@@ -202,6 +204,7 @@ function boot() {
     b49,
     b50,
     b60,
+    b61,
     c000,
     c010,
     c020,
@@ -298,6 +301,7 @@ function boot() {
     s80,
     s90,
     s95,
+    s96,
     t00,
     t05,
     t10,
