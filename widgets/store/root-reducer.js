@@ -1,6 +1,7 @@
 import {combineReducers} from 'redux';
 import backendReducer from 'laboratory/store/backend-reducer';
 import commandsReducer from 'laboratory/store/commands-reducer';
+import widgetsReducer from 'laboratory/store/widgets-reducer';
 import Shredder from 'xcraft-core-shredder';
 import {createForms} from 'react-redux-form/immutable';
 /**
@@ -99,4 +100,5 @@ export default combineReducers({
   ...createForms({backend: backendReducer}, '', {
     plugins: [resetPlugin],
   }),
+  widgets: widgetsReducer,
 });

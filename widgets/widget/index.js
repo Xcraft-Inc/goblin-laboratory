@@ -494,6 +494,20 @@ class Widget extends React.PureComponent {
     this.cmd(`${service}.${action}`, Object.assign({id: serviceId}, args));
   }
 
+  /**
+   * Dispatch an action in the frontend reducer for this widget.
+   *
+   * The `reducer.js` file must be present for working.
+   *
+   * @param {Object} action - Redux action.
+   */
+  dispatch(action) {
+    action._id = this.props.id;
+    action._type = this.name;
+    action.type = `@widgets_${action.type}`;
+    this.context.store.dispatch(action);
+  }
+
   ///////////NAVIGATION:
 
   nav(path) {
