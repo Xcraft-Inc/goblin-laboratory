@@ -100,6 +100,7 @@ import h30 from '@fortawesome/fontawesome-pro-regular/faHospital';
 /* I */
 import i00 from '@fortawesome/fontawesome-pro-solid/faInbox';
 import i10 from '@fortawesome/fontawesome-pro-solid/faIndustry';
+import i20 from '@fortawesome/fontawesome-pro-regular/faInfoCircle';
 
 /* L */
 import l00 from '@fortawesome/fontawesome-pro-solid/faLanguage';
@@ -263,6 +264,7 @@ function boot() {
     h30,
     i00,
     i10,
+    i20,
     l00,
     l10,
     l15,
