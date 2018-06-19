@@ -419,6 +419,36 @@ class Widget extends React.PureComponent {
     return this.withModel(path, mapProps, true)(component);
   }
 
+  buildCollectionLoader(ids, FinalComp) {
+    const Test = props => {
+      if (props.test) {
+        return <FinalComp collection={this.getCollection(ids)} />;
+      }
+      return null;
+    };
+
+    let Loader = null;
+    ids.map(id => {
+      Loader = this.mapWidget(
+        Test,
+        item => {
+          return {
+            test: item !== null,
+          };
+        },
+        `backend.${id}.id`
+      );
+    });
+
+    return <Loader />;
+  }
+
+  getCollection(ids) {
+    return ids.map(id => {
+      return this.getEntityById(id);
+    });
+  }
+
   buildLoader(branch, Loaded) {
     const Loader = props => {
       if (props.loaded) {
