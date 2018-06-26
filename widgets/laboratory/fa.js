@@ -116,6 +116,7 @@ import m10 from '@fortawesome/fontawesome-pro-solid/faMapMarkerAlt';
 import m20 from '@fortawesome/fontawesome-pro-solid/faMeh';
 import m30 from '@fortawesome/fontawesome-pro-solid/faMinus';
 import m35 from '@fortawesome/fontawesome-pro-solid/faMinusCircle';
+import m36 from '@fortawesome/fontawesome-pro-regular/faMinusCircle';
 import m40 from '@fortawesome/fontawesome-pro-solid/faMinusSquare';
 import m50 from '@fortawesome/fontawesome-pro-solid/faMoneyBillAlt';
 
@@ -131,6 +132,7 @@ import p05 from '@fortawesome/fontawesome-pro-solid/faPhone';
 import p07 from '@fortawesome/fontawesome-pro-solid/faPlane';
 import p10 from '@fortawesome/fontawesome-pro-solid/faPlus';
 import p15 from '@fortawesome/fontawesome-pro-solid/faPlusCircle';
+import p16 from '@fortawesome/fontawesome-pro-regular/faPlusCircle';
 import p20 from '@fortawesome/fontawesome-pro-solid/faPlusSquare';
 import p30 from '@fortawesome/fontawesome-pro-solid/faPoo';
 
@@ -278,6 +280,7 @@ function boot() {
     m20,
     m30,
     m35,
+    m36,
     m40,
     m50,
     o00,
@@ -289,6 +292,7 @@ function boot() {
     p07,
     p10,
     p15,
+    p16,
     p20,
     p30,
     q00,
