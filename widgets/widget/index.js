@@ -1,4 +1,5 @@
 import React from 'react';
+import _ from 'lodash';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import Shredder from 'xcraft-core-shredder';
@@ -6,8 +7,7 @@ import {push, replace, goBack} from 'react-router-redux';
 import {actions} from 'react-redux-form/immutable';
 import {matchPath} from 'react-router';
 import fasterStringify from 'faster-stable-stringify';
-import {StyleSheet, css} from 'aphrodite/no-important';
-import {flushToStyleTag} from 'aphrodite/lib/inject'; // HACK
+import {StyleSheet as Aphrodite, flushToStyleTag} from 'aphrodite/no-important';
 import traverse from 'traverse';
 import importer from '../importer/';
 
@@ -22,6 +22,26 @@ function isFunction(functionToCheck) {
     getType.toString.call(functionToCheck) === '[object Function]'
   );
 }
+
+// See https://github.com/Khan/aphrodite/issues/319#issuecomment-393857964
+const {StyleSheet, css} = Aphrodite.extend([
+  {
+    selectorHandler: (selector, baseSelector, generateSubtreeStyles) => {
+      const nestedTags = [];
+      const selectors = selector.split(',');
+      _.each(selectors, (subselector, key) => {
+        if (selector[0] === '&') {
+          const tag = key === 0 ? subselector.slice(1) : subselector;
+          const nestedTag = generateSubtreeStyles(
+            `${baseSelector} ${tag}`.replace(/ +(?= )/g, '')
+          );
+          nestedTags.push(nestedTag);
+        }
+      });
+      return _.isEmpty(nestedTags) ? null : _.flattenDeep(nestedTags);
+    },
+  },
+]);
 
 /**
  * Remove props that are functions, 'children' or undefined, null
