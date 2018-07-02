@@ -41,7 +41,7 @@ const _handleChange = (send, action, registry) => {
   }
 };
 
-const handleChange = _.debounce(_handleChange, 100);
+const handleChange = _.throttle(_handleChange, 100);
 
 const formMiddleware = send => store => next => action => {
   switch (action.type) {
