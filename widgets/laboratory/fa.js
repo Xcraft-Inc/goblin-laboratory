@@ -75,6 +75,7 @@ import e10 from '@fortawesome/fontawesome-pro-solid/faEnvelope';
 import e20 from '@fortawesome/fontawesome-pro-solid/faEraser';
 import e25 from '@fortawesome/fontawesome-pro-solid/faExclamationCircle';
 import e30 from '@fortawesome/fontawesome-pro-solid/faExclamationTriangle';
+import e35 from '@fortawesome/fontawesome-pro-solid/faExpand';
 import e40 from '@fortawesome/fontawesome-pro-regular/faEye';
 import e50 from '@fortawesome/fontawesome-pro-solid/faEye';
 import e60 from '@fortawesome/fontawesome-pro-solid/faEyeSlash';
@@ -251,6 +252,7 @@ function boot() {
     e20,
     e25,
     e30,
+    e35,
     e40,
     e50,
     e60,
