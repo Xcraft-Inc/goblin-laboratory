@@ -33,7 +33,8 @@ import b60 from '@fortawesome/fontawesome-pro-solid/faBullhorn';
 import b61 from '@fortawesome/fontawesome-pro-solid/faBoxFull';
 
 /* C */
-import c000 from '@fortawesome/fontawesome-pro-solid/faCalendarPlus';
+import c000 from '@fortawesome/fontawesome-pro-solid/faCalendar';
+import c001 from '@fortawesome/fontawesome-pro-solid/faCalendarPlus';
 import c010 from '@fortawesome/fontawesome-pro-solid/faCar';
 import c020 from '@fortawesome/fontawesome-pro-solid/faCaretDown';
 import c025 from '@fortawesome/fontawesome-pro-solid/faCaretUp';
@@ -223,6 +224,7 @@ function boot() {
     b60,
     b61,
     c000,
+    c001,
     c010,
     c020,
     c025,
