@@ -119,6 +119,7 @@ import m30 from '@fortawesome/fontawesome-pro-solid/faMinus';
 import m35 from '@fortawesome/fontawesome-pro-solid/faMinusCircle';
 import m36 from '@fortawesome/fontawesome-pro-regular/faMinusCircle';
 import m40 from '@fortawesome/fontawesome-pro-solid/faMinusSquare';
+import m41 from '@fortawesome/fontawesome-pro-regular/faMinusSquare';
 import m50 from '@fortawesome/fontawesome-pro-solid/faMoneyBillAlt';
 
 /* O */
@@ -135,6 +136,7 @@ import p10 from '@fortawesome/fontawesome-pro-solid/faPlus';
 import p15 from '@fortawesome/fontawesome-pro-solid/faPlusCircle';
 import p16 from '@fortawesome/fontawesome-pro-regular/faPlusCircle';
 import p20 from '@fortawesome/fontawesome-pro-solid/faPlusSquare';
+import p21 from '@fortawesome/fontawesome-pro-regular/faPlusSquare';
 import p30 from '@fortawesome/fontawesome-pro-solid/faPoo';
 
 /* Q */
@@ -284,6 +286,7 @@ function boot() {
     m35,
     m36,
     m40,
+    m41,
     m50,
     o00,
     p00,
@@ -296,6 +299,7 @@ function boot() {
     p15,
     p16,
     p20,
+    p21,
     p30,
     q00,
     r00,
