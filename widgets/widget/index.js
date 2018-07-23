@@ -508,7 +508,7 @@ class Widget extends React.PureComponent {
     }
     args.labId = this.context.labId;
     const action = {
-      type: 'QUEST',
+      type: 'QUEST', // FIXME: it seems not used
       cmd,
       data: args,
       _xcraftIPC: true,
