@@ -58,6 +58,7 @@ import c103 from '@fortawesome/fontawesome-pro-solid/faChild';
 import c110 from '@fortawesome/fontawesome-pro-regular/faCircle';
 import c115 from '@fortawesome/fontawesome-pro-solid/faCircle';
 import c120 from '@fortawesome/fontawesome-pro-solid/faClock';
+import c121 from '@fortawesome/fontawesome-pro-regular/faClock';
 import c130 from '@fortawesome/fontawesome-pro-regular/faClone';
 import c140 from '@fortawesome/fontawesome-pro-solid/faClone';
 import c150 from '@fortawesome/fontawesome-pro-solid/faCog';
@@ -95,7 +96,8 @@ import g00 from '@fortawesome/fontawesome-pro-solid/faGem';
 import g10 from '@fortawesome/fontawesome-pro-solid/faGraduationCap';
 
 /* H */
-import h00 from '@fortawesome/fontawesome-pro-solid/faHashtag';
+import h00 from '@fortawesome/fontawesome-pro-solid/faHandPointRight';
+import h01 from '@fortawesome/fontawesome-pro-solid/faHashtag';
 import h05 from '@fortawesome/fontawesome-pro-regular/faHeart';
 import h10 from '@fortawesome/fontawesome-pro-solid/faHeart';
 import h20 from '@fortawesome/fontawesome-pro-solid/faHexagon';
@@ -167,7 +169,9 @@ import s95 from '@fortawesome/fontawesome-pro-regular/faSun';
 import s96 from '@fortawesome/fontawesome-pro-solid/faSync';
 
 /* T */
-import t00 from '@fortawesome/fontawesome-pro-solid/faTaxi';
+import t00 from '@fortawesome/fontawesome-pro-solid/faTag';
+import t01 from '@fortawesome/fontawesome-pro-solid/faTaxi';
+import t02 from '@fortawesome/fontawesome-pro-solid/faTh';
 import t05 from '@fortawesome/fontawesome-pro-solid/faTimes';
 import t10 from '@fortawesome/fontawesome-pro-solid/faTint';
 import t20 from '@fortawesome/fontawesome-pro-light/faToggleOff';
@@ -243,6 +247,7 @@ function boot() {
     c110,
     c115,
     c120,
+    c121,
     c130,
     c140,
     c150,
@@ -271,6 +276,7 @@ function boot() {
     g00,
     g10,
     h00,
+    h01,
     h05,
     h10,
     h20,
@@ -325,6 +331,8 @@ function boot() {
     s95,
     s96,
     t00,
+    t01,
+    t02,
     t05,
     t10,
     t20,
