@@ -8,8 +8,10 @@ import a05 from '@fortawesome/fontawesome-pro-solid/faAngleDown';
 import a10 from '@fortawesome/fontawesome-pro-solid/faAngleUp';
 import a20 from '@fortawesome/fontawesome-pro-solid/faArchive';
 import a30 from '@fortawesome/fontawesome-pro-solid/faArrowAltCircleLeft';
-import a40 from '@fortawesome/fontawesome-pro-solid/faArrowRight';
-import a50 from '@fortawesome/fontawesome-pro-solid/faArrowDown';
+import a40 from '@fortawesome/fontawesome-pro-solid/faArrowLeft';
+import a41 from '@fortawesome/fontawesome-pro-solid/faArrowRight';
+import a42 from '@fortawesome/fontawesome-pro-solid/faArrowUp';
+import a43 from '@fortawesome/fontawesome-pro-solid/faArrowDown';
 import a60 from '@fortawesome/fontawesome-pro-solid/faAsterisk';
 import a70 from '@fortawesome/fontawesome-pro-solid/faAt';
 
@@ -196,7 +198,9 @@ function boot() {
     a20,
     a30,
     a40,
-    a50,
+    a41,
+    a42,
+    a43,
     a60,
     a70,
     b00,
