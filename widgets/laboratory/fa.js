@@ -81,11 +81,13 @@ import e25 from '@fortawesome/fontawesome-pro-solid/faExclamationCircle';
 import e30 from '@fortawesome/fontawesome-pro-solid/faExclamationTriangle';
 import e35 from '@fortawesome/fontawesome-pro-solid/faExpand';
 import e40 from '@fortawesome/fontawesome-pro-regular/faEye';
+import e41 from '@fortawesome/fontawesome-pro-regular/faEyeSlash';
 import e50 from '@fortawesome/fontawesome-pro-solid/faEye';
 import e60 from '@fortawesome/fontawesome-pro-solid/faEyeSlash';
 
 /* F */
-import f00 from '@fortawesome/fontawesome-pro-solid/faFastForward';
+import f00 from '@fortawesome/fontawesome-pro-solid/faFastBackward';
+import f01 from '@fortawesome/fontawesome-pro-solid/faFastForward';
 import f05 from '@fortawesome/fontawesome-pro-solid/faFax';
 import f10 from '@fortawesome/fontawesome-pro-solid/faFemale';
 import f20 from '@fortawesome/fontawesome-pro-solid/faFileAlt';
@@ -267,9 +269,11 @@ function boot() {
     e30,
     e35,
     e40,
+    e41,
     e50,
     e60,
     f00,
+    f01,
     f05,
     f10,
     f20,
