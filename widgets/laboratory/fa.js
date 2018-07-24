@@ -161,7 +161,8 @@ import s10 from '@fortawesome/fontawesome-pro-solid/faSignInAlt';
 import s15 from '@fortawesome/fontawesome-free-brands/faSkype';
 import s20 from '@fortawesome/fontawesome-pro-solid/faSmile';
 import s30 from '@fortawesome/fontawesome-pro-solid/faSpinner';
-import s40 from '@fortawesome/fontawesome-pro-regular/faSquare';
+import s40 from '@fortawesome/fontawesome-pro-solid/faSquare';
+import s41 from '@fortawesome/fontawesome-pro-regular/faSquare';
 import s50 from '@fortawesome/fontawesome-free-brands/faStackOverflow';
 import s55 from '@fortawesome/fontawesome-pro-regular/faStar';
 import s60 from '@fortawesome/fontawesome-pro-solid/faStar';
@@ -328,6 +329,7 @@ function boot() {
     s20,
     s30,
     s40,
+    s41,
     s50,
     s55,
     s60,
