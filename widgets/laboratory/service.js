@@ -53,8 +53,14 @@ const logicHandlers = {
 // Register quest's according rc.json
 Goblin.registerQuest(goblinName, 'create', function*(quest, url, config) {
   quest.goblin.setX('url', url);
-  const winId = `wm@${quest.goblin.id}`;
-  const win = yield quest.createFor('wm', winId, winId, {
+
+  const labId = quest.goblin.id;
+  const feed = `wm@${labId}`;
+  const winId = feed;
+
+  quest.goblin.feed = feed;
+
+  const win = yield quest.createFor('wm', labId, winId, {
     id: winId,
     url,
     labId: quest.goblin.id,
@@ -69,10 +75,10 @@ Goblin.registerQuest(goblinName, 'create', function*(quest, url, config) {
   yield win.feedSub({wid: winId, feeds: config.feeds});
   quest.do({id: quest.goblin.id, wid: winId, url, config});
 
-  quest.cmd('warehouse.feed.add', {feed: win.id, branch: win.id});
+  quest.cmd('warehouse.feed.add', {feed, branch: winId});
 
   quest.goblin.defer(
-    quest.sub('goblin.created', (err, msg) => {
+    quest.sub(`goblin.${feed}.created`, (err, msg) => {
       quest.cmd('laboratory.add', {
         id: quest.goblin.id,
         widgetId: msg.data.id,
@@ -205,8 +211,9 @@ Goblin.registerQuest(goblinName, 'del', function(quest, widgetId) {
   const state = quest.goblin.getState();
   const wid = state.get('wid');
   const branch = widgetId;
+  const labId = quest.goblin.id;
   quest.log.info(`Laboratory deleting widget ${widgetId} from window ${wid}`);
-  quest.cmd('warehouse.feed.del', {feed: wid, branch});
+  quest.cmd('warehouse.feed.del', {feed: wid, owners: [labId, branch], branch});
 });
 
 Goblin.registerQuest(goblinName, 'del-in-batch', function(quest, widgetIds) {
