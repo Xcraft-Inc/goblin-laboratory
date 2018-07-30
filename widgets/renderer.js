@@ -56,6 +56,13 @@ class Renderer {
     }
   }
 
+  newBackendInfos(transitState) {
+    this.store.dispatch({
+      type: 'NEW_BACKEND_INFOS',
+      data: transitState,
+    });
+  }
+
   main(Main) {
     if (!Main) {
       Main = function Main() {

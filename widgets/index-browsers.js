@@ -52,6 +52,9 @@ class BrowsersRenderer extends Renderer {
         case 'NEW_BACKEND_STATE':
           this.newBackendState(data.transitState);
           break;
+        case 'NEW_BACKEND_INFOS':
+          this.newBackendInfos(data.transitState);
+          break;
       }
     };
 
