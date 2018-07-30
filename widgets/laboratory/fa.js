@@ -39,6 +39,8 @@ import c010 from '@fortawesome/fontawesome-pro-solid/faCar';
 import c020 from '@fortawesome/fontawesome-pro-solid/faCaretDown';
 import c025 from '@fortawesome/fontawesome-pro-solid/faCaretUp';
 import c030 from '@fortawesome/fontawesome-pro-solid/faCartPlus';
+import c035 from '@fortawesome/fontawesome-pro-regular/faCreditCard';
+import c036 from '@fortawesome/fontawesome-pro-regular/faCreditCardBlank';
 import c040 from '@fortawesome/fontawesome-pro-solid/faCertificate';
 import c050 from '@fortawesome/fontawesome-pro-solid/faChartLine';
 import c060 from '@fortawesome/fontawesome-pro-solid/faCheck';
@@ -151,7 +153,8 @@ import q00 from '@fortawesome/fontawesome-pro-solid/faQuestionCircle';
 
 /* R */
 import r00 from '@fortawesome/fontawesome-pro-solid/faRandom';
-import r10 from '@fortawesome/fontawesome-pro-solid/faRocket';
+import r10 from '@fortawesome/fontawesome-pro-regular/faRectangleLandscape';
+import r20 from '@fortawesome/fontawesome-pro-solid/faRocket';
 
 /* S */
 import s00 from '@fortawesome/fontawesome-pro-solid/faSearch';
@@ -232,6 +235,8 @@ function boot() {
     c020,
     c025,
     c030,
+    c035,
+    c036,
     c040,
     c050,
     c060,
@@ -321,6 +326,7 @@ function boot() {
     q00,
     r00,
     r10,
+    r20,
     s00,
     s05,
     s07,
