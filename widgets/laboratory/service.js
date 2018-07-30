@@ -108,6 +108,10 @@ Goblin.registerQuest(goblinName, 'create', function*(quest, url, config) {
   return quest.goblin.id;
 });
 
+Goblin.registerQuest(goblinName, 'get-feed', function(quest) {
+  return quest.goblin.feed;
+});
+
 Goblin.registerQuest(goblinName, 'get-url', function(quest) {
   return quest.goblin.getX('url');
 });
