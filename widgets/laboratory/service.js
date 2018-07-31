@@ -58,7 +58,7 @@ Goblin.registerQuest(goblinName, 'create', function*(quest, url, config) {
   const feed = `wm@${labId}`;
   const winId = feed;
 
-  quest.goblin.feed = feed;
+  quest.goblin.feed = {[feed]: true};
 
   const win = yield quest.createFor('wm', labId, winId, {
     id: winId,
