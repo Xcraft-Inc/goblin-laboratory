@@ -67,8 +67,9 @@ import c140 from '@fortawesome/fontawesome-pro-solid/faClone';
 import c150 from '@fortawesome/fontawesome-pro-solid/faCog';
 import c151 from '@fortawesome/fontawesome-pro-solid/faCoins';
 import c160 from '@fortawesome/fontawesome-pro-solid/faColumns';
+import c170 from '@fortawesome/fontawesome-pro-regular/faComment';
 import c175 from '@fortawesome/fontawesome-pro-solid/faComment';
-import c170 from '@fortawesome/fontawesome-pro-solid/faCompress';
+import c176 from '@fortawesome/fontawesome-pro-solid/faCompress';
 import c180 from '@fortawesome/fontawesome-pro-light/faCube';
 
 /* D */
@@ -266,6 +267,7 @@ function boot() {
     c160,
     c170,
     c175,
+    c176,
     c180,
     d00,
     e00,
