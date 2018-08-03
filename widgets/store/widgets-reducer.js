@@ -16,7 +16,7 @@ export default (state = fromJS({}), action = {}) => {
 
   const id = action._id;
   action.type = items[1];
-  let _state = state.get(id, fromJS({}));
+  let _state = state.get(id, undefined);
   _state = reducer(_state, action);
   return state.set(id, _state);
 };
