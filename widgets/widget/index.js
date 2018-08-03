@@ -695,9 +695,16 @@ class Widget extends React.PureComponent {
     return this.context.store.getState();
   }
 
-  getMyState() {
+  getWidgetState() {
     if (!this.props.id) {
       throw new Error('Cannot resolve widget state without an valid id');
+    }
+    return this.getState().widgets.get(this.props.id);
+  }
+
+  getBackendState() {
+    if (!this.props.id) {
+      throw new Error('Cannot resolve backend state without an valid id');
     }
     return this.getState().backend.get(this.props.id);
   }

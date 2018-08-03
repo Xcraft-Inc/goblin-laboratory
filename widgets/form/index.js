@@ -34,7 +34,7 @@ class Form extends Widget {
 
   getFormFieldValue(name) {
     const form = this.formValue;
-    const modelValue = this.getMyState().get(name);
+    const modelValue = this.getBackendState().get(name);
     if (form[name]) {
       if (form[name].value) {
         return form[name].value;
