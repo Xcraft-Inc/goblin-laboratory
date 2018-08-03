@@ -440,17 +440,15 @@ class Widget extends React.PureComponent {
   }
 
   buildCollectionLoader(ids, FinalComp) {
-    const Test = props => {
+    let Loader = props => {
       if (props.test) {
         return <FinalComp collection={this.getCollection(ids)} />;
       }
       return null;
     };
-
-    let Loader = null;
     ids.map(id => {
       Loader = this.mapWidget(
-        Test,
+        Loader,
         item => {
           return {
             test: item !== null,
