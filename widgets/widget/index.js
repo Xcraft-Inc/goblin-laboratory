@@ -439,12 +439,13 @@ class Widget extends React.PureComponent {
     return this.withModel(path, mapProps, true)(component);
   }
 
-  buildCollectionLoader(ids, FinalComp) {
+  buildCollectionLoader(ids, FinalComp, FallbackComp) {
     let Loader = props => {
       if (props.test) {
         return <FinalComp collection={this.getCollection(ids)} />;
+      } else {
+        return FallbackComp ? <FallbackComp /> : null;
       }
-      return null;
     };
     ids.map(id => {
       Loader = this.mapWidget(
@@ -467,12 +468,12 @@ class Widget extends React.PureComponent {
     });
   }
 
-  buildLoader(branch, Loaded) {
+  buildLoader(branch, Loaded, FallbackComp) {
     const Loader = props => {
       if (props.loaded) {
         return <Loaded />;
       } else {
-        return null;
+        return FallbackComp ? <FallbackComp /> : null;
       }
     };
 
