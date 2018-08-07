@@ -1,5 +1,4 @@
 import {fromJS} from 'immutable';
-import transit from 'transit-immutable-js';
 import importer from '../importer/';
 
 const reducerImporter = importer('reducer');
@@ -9,9 +8,8 @@ export default (state = fromJS({}), action = {}) => {
     if (!action.data) {
       return state;
     }
-    const newState = transit.fromJSON(action.data);
-    if (newState.get('_xcraftPatch')) {
-      newState
+    if (action.data.get('_xcraftPatch')) {
+      action.data
         .get('state')
         .filter(
           op =>

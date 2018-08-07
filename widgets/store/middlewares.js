@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import helpers from 'xcraft-core-transport/lib/helpers.js';
+import transit from 'transit-immutable-js';
 
 const questMiddleware = send => store => next => action => {
   if (action.type === 'QUEST') {
@@ -76,5 +77,15 @@ module.exports = send => {
   return {
     formMiddleware: formMiddleware(_send),
     questMiddleware: questMiddleware(_send),
+    transitMiddleware: store => next => action => {
+      if (action.type === 'NEW_BACKEND_STATE') {
+        if (!action.data) {
+          return next(action);
+        }
+        action.data = transit.fromJSON(action.data);
+        return next(action);
+      }
+      return next(action);
+    },
   };
 };
