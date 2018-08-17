@@ -182,7 +182,8 @@ import t00 from '@fortawesome/fontawesome-pro-solid/faTag';
 import t01 from '@fortawesome/fontawesome-pro-solid/faTaxi';
 import t02 from '@fortawesome/fontawesome-pro-solid/faTh';
 import t05 from '@fortawesome/fontawesome-pro-solid/faTimes';
-import t10 from '@fortawesome/fontawesome-pro-solid/faTint';
+import t10 from '@fortawesome/fontawesome-pro-solid/faTimesCircle';
+import t11 from '@fortawesome/fontawesome-pro-solid/faTint';
 import t20 from '@fortawesome/fontawesome-pro-light/faToggleOff';
 import t25 from '@fortawesome/fontawesome-pro-light/faToggleOn';
 import t30 from '@fortawesome/fontawesome-pro-solid/faTrain';
@@ -353,6 +354,7 @@ function boot() {
     t02,
     t05,
     t10,
+    t11,
     t20,
     t25,
     t30,
