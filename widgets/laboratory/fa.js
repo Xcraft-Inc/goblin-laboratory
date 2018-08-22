@@ -47,6 +47,7 @@ import c040 from '@fortawesome/fontawesome-pro-solid/faCertificate';
 import c050 from '@fortawesome/fontawesome-pro-solid/faChartLine';
 import c060 from '@fortawesome/fontawesome-pro-solid/faCheck';
 import c070 from '@fortawesome/fontawesome-pro-solid/faCheckCircle';
+//? import c071 from '@fortawesome/fontawesome-pro-solid/faCheckDouble';
 import c080 from '@fortawesome/fontawesome-pro-regular/faCheckSquare';
 import c090 from '@fortawesome/fontawesome-pro-solid/faCheckSquare';
 import c093 from '@fortawesome/fontawesome-pro-solid/faChessBishop';
@@ -248,6 +249,7 @@ function boot() {
     c050,
     c060,
     c070,
+    //? c071,
     c080,
     c090,
     c093,
