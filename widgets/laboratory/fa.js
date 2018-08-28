@@ -4,6 +4,8 @@ import fontawesome from '@fortawesome/fontawesome';
 /* A */
 import a00 from '@fortawesome/fontawesome-pro-solid/faAngleDoubleDown';
 import a02 from '@fortawesome/fontawesome-pro-solid/faAngleDoubleLeft';
+import a03 from '@fortawesome/fontawesome-pro-solid/faAngleDoubleRight';
+import a04 from '@fortawesome/fontawesome-pro-solid/faAngleDoubleUp';
 import a05 from '@fortawesome/fontawesome-pro-solid/faAngleDown';
 import a10 from '@fortawesome/fontawesome-pro-solid/faAngleUp';
 import a20 from '@fortawesome/fontawesome-pro-solid/faArchive';
@@ -210,6 +212,8 @@ function boot() {
   fontawesome.library.add(
     a00,
     a02,
+    a03,
+    a04,
     a05,
     a10,
     a20,
