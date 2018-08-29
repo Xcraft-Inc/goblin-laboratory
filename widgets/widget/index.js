@@ -451,8 +451,9 @@ class Widget extends React.PureComponent {
       Loader = this.mapWidget(
         Loader,
         item => {
+          console.dir(item);
           return {
-            test: item !== null,
+            test: item !== null && item !== undefined,
           };
         },
         `backend.${id}.id`
