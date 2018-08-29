@@ -441,19 +441,22 @@ class Widget extends React.PureComponent {
 
   buildCollectionLoader(ids, FinalComp, FallbackComp) {
     let Loader = props => {
-      if (props.test) {
+      const loaded = ids.reduce((loaded, id) => {
+        return props[id] === true;
+      }, false);
+      if (loaded) {
         return <FinalComp collection={this.getCollection(ids)} />;
       } else {
         return FallbackComp ? <FallbackComp /> : null;
       }
     };
+
     ids.map(id => {
       Loader = this.mapWidget(
         Loader,
         item => {
-          console.dir(item);
           return {
-            test: item !== null && item !== undefined,
+            [id]: item !== null && item !== undefined,
           };
         },
         `backend.${id}.id`
