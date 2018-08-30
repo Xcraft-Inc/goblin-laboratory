@@ -95,15 +95,6 @@ Goblin.registerQuest(goblinName, 'create', function*(quest, url, config) {
     })
   );
 
-  quest.goblin.defer(
-    quest.sub('goblin.deleted-in-batch', (err, msg) => {
-      quest.cmd('laboratory.del-in-batch', {
-        id: quest.goblin.id,
-        widgetIds: msg.data.ids,
-      });
-    })
-  );
-
   quest.log.info(`Laboratory ${quest.goblin.id} created!`);
   return quest.goblin.id;
 });
@@ -218,13 +209,6 @@ Goblin.registerQuest(goblinName, 'del', function(quest, widgetId) {
   const labId = quest.goblin.id;
   quest.log.info(`Laboratory deleting widget ${widgetId} from window ${wid}`);
   quest.cmd('warehouse.feed.del', {feed: wid, owners: [labId, branch], branch});
-});
-
-Goblin.registerQuest(goblinName, 'del-in-batch', function(quest, widgetIds) {
-  const state = quest.goblin.getState();
-  const wid = state.get('wid');
-  const branches = widgetIds;
-  quest.cmd('warehouse.feed.del-in-batch', {feed: wid, branches});
 });
 
 Goblin.registerQuest(goblinName, 'delete', function*(quest) {
