@@ -553,10 +553,11 @@ class Widget extends React.PureComponent {
    * The `reducer.js` file must be present for working.
    *
    * @param {Object} action - Redux action.
+   * @param {Object} name - Redux action.
    */
-  dispatch(action) {
+  dispatch(action, name) {
     action._id = this.props.id;
-    action._type = this.name;
+    action._type = name || this.name;
     action.type = `@widgets_${action.type}`;
     this.context.store.dispatch(action);
   }
