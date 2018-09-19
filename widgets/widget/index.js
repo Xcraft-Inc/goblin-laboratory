@@ -10,7 +10,7 @@ import fasterStringify from 'faster-stable-stringify';
 import {StyleSheet as Aphrodite, flushToStyleTag} from 'aphrodite/no-important';
 import traverse from 'traverse';
 import importer from '../importer/';
-import shallowEqualShredder from '../../utils/shallowEqualShredder';
+import shallowEqualShredder from './utils/shallowEqualShredder';
 
 const stylesImporter = importer('styles');
 
