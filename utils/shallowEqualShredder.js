@@ -1,21 +1,13 @@
+import {isImmutable, isShredder} from 'xcraft-core-shredder';
+
 // See 'react-redux/src/utils/shallowEqual.js'
-
-function isShredder(obj) {
-  return typeof obj === 'object' && obj !== null && obj._isSuperReaper6000;
-}
-
-function unwrapShredder(obj) {
-  if (isShredder(obj)) {
-    return obj.state;
-  }
-  return obj;
-}
 
 const hasOwn = Object.prototype.hasOwnProperty;
 
 function is(x, y) {
-  x = unwrapShredder(x);
-  y = unwrapShredder(y);
+  if (isShredder(x) || isImmutable(x)) {
+    return x.equals(y);
+  }
   return Object.is(x, y);
 }
 
