@@ -11,6 +11,9 @@ import {StyleSheet as Aphrodite, flushToStyleTag} from 'aphrodite/no-important';
 import traverse from 'traverse';
 import importer from '../importer/';
 import shallowEqualShredder from './utils/shallowEqualShredder';
+import _connect from './utils/connect';
+import connectWidget from './utils/connectWidget';
+import connectBackend from './utils/connectBackend';
 
 const stylesImporter = importer('styles');
 
@@ -282,6 +285,18 @@ class Widget extends React.Component {
 
   static shred(state) {
     return new Shredder(state);
+  }
+
+  static connect(...args) {
+    return _connect(...args);
+  }
+
+  static connectWidget(...args) {
+    return connectWidget(...args);
+  }
+
+  static connectBackend(...args) {
+    return connectBackend(...args);
   }
 
   withState(mapProps, path) {
