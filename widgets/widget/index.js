@@ -10,6 +10,7 @@ import fasterStringify from 'faster-stable-stringify';
 import {StyleSheet as Aphrodite, flushToStyleTag} from 'aphrodite/no-important';
 import traverse from 'traverse';
 import importer from '../importer/';
+import shallowEqualShredder from '../../utils/shallowEqualShredder';
 
 const stylesImporter = importer('styles');
 
@@ -77,7 +78,7 @@ const injectCSS = classes => {
   return sheet;
 };
 
-class Widget extends React.PureComponent {
+class Widget extends React.Component {
   constructor() {
     super(...arguments);
     this._name = this.constructor.name
@@ -152,6 +153,13 @@ class Widget extends React.PureComponent {
     flushToStyleTag();
   }
 
+  shouldComponentUpdate(newProps, newState) {
+    return (
+      !shallowEqualShredder(this.props, newProps) ||
+      !shallowEqualShredder(this.state, newState)
+    );
+  }
+
   ///////////STATE MGMT:
   static withRoute(path, watchedParams, watchedSearchs, watchHash) {
     return connect(
@@ -208,7 +216,12 @@ class Widget extends React.PureComponent {
       },
       null,
       null,
-      {pure: true}
+      {
+        pure: true,
+        areOwnPropsEqual: shallowEqualShredder,
+        areStatePropsEqual: shallowEqualShredder,
+        areMergedPropsEqual: shallowEqualShredder,
+      }
     );
   }
 
@@ -251,7 +264,12 @@ class Widget extends React.PureComponent {
       },
       null,
       null,
-      {pure: true}
+      {
+        pure: true,
+        areOwnPropsEqual: shallowEqualShredder,
+        areStatePropsEqual: shallowEqualShredder,
+        areMergedPropsEqual: shallowEqualShredder,
+      }
     );
   }
 
@@ -282,7 +300,12 @@ class Widget extends React.PureComponent {
       },
       null,
       null,
-      {pure: true}
+      {
+        pure: true,
+        areOwnPropsEqual: shallowEqualShredder,
+        areStatePropsEqual: shallowEqualShredder,
+        areMergedPropsEqual: shallowEqualShredder,
+      }
     );
   }
 
@@ -321,7 +344,12 @@ class Widget extends React.PureComponent {
       },
       null,
       null,
-      {pure: true}
+      {
+        pure: true,
+        areOwnPropsEqual: shallowEqualShredder,
+        areStatePropsEqual: shallowEqualShredder,
+        areMergedPropsEqual: shallowEqualShredder,
+      }
     );
   }
 
