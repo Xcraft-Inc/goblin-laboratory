@@ -49,7 +49,9 @@ import c030 from '@fortawesome/fontawesome-pro-solid/faCartPlus';
 import c035 from '@fortawesome/fontawesome-pro-regular/faCreditCard';
 import c036 from '@fortawesome/fontawesome-pro-regular/faCreditCardBlank';
 import c040 from '@fortawesome/fontawesome-pro-solid/faCertificate';
-import c050 from '@fortawesome/fontawesome-pro-solid/faChartLine';
+import c050 from '@fortawesome/fontawesome-pro-solid/faChartBar';
+import c051 from '@fortawesome/fontawesome-pro-solid/faChartLine';
+import c052 from '@fortawesome/fontawesome-pro-solid/faChartPie';
 import c060 from '@fortawesome/fontawesome-pro-solid/faCheck';
 import c070 from '@fortawesome/fontawesome-pro-solid/faCheckCircle';
 //? import c071 from '@fortawesome/fontawesome-pro-solid/faCheckDouble';
@@ -258,6 +260,8 @@ function boot() {
     c036,
     c040,
     c050,
+    c051,
+    c052,
     c060,
     c070,
     //? c071,
