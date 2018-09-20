@@ -108,7 +108,8 @@ import f40 from '@fortawesome/fontawesome-pro-solid/faFrown';
 
 /* G */
 import g00 from '@fortawesome/fontawesome-pro-solid/faGem';
-import g10 from '@fortawesome/fontawesome-pro-solid/faGraduationCap';
+import g10 from '@fortawesome/fontawesome-pro-solid/faGlobe';
+import g20 from '@fortawesome/fontawesome-pro-solid/faGraduationCap';
 
 /* H */
 import h00 from '@fortawesome/fontawesome-pro-solid/faHandPointRight';
@@ -308,6 +309,7 @@ function boot() {
     f40,
     g00,
     g10,
+    g20,
     h00,
     h01,
     h05,
