@@ -174,6 +174,7 @@ import r20 from '@fortawesome/fontawesome-pro-solid/faRocket';
 import s00 from '@fortawesome/fontawesome-pro-solid/faSearch';
 import s05 from '@fortawesome/fontawesome-pro-solid/faShareAlt';
 import s07 from '@fortawesome/fontawesome-pro-solid/faShoppingBasket';
+import s08 from '@fortawesome/fontawesome-pro-solid/faShoppingCart';
 import s10 from '@fortawesome/fontawesome-pro-solid/faSignInAlt';
 import s15 from '@fortawesome/fontawesome-free-brands/faSkype';
 import s20 from '@fortawesome/fontawesome-pro-solid/faSmile';
@@ -359,6 +360,7 @@ function boot() {
     s00,
     s05,
     s07,
+    s08,
     s10,
     s15,
     s20,
