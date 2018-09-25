@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "xcraft-core-goblin": "^2.0.0",
+    "xcraft-core-probe": "^0.0.1",
     "xcraft-core-transport": "^0.0.1"
   },
   "devDependencies": {
