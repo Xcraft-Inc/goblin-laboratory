@@ -5,6 +5,24 @@ class ElectronRenderer extends Renderer {
     const electron = require('electron');
     const {ipcRenderer, webFrame, remote} = electron;
 
+    let xProbe = null;
+    let probing = false;
+    if (process.env.XCRAFT_PROBE && parseInt(process.env.XCRAFT_PROBE) !== 0) {
+      xProbe = remote.require('xcraft-core-probe');
+      probing = xProbe.isAvailable();
+    }
+
+    const probe = (handler, id) => {
+      if (!probing) {
+        handler();
+        return;
+      }
+
+      const end = xProbe.push('wm/ipc/receive', id);
+      handler();
+      end();
+    };
+
     super(ipcRenderer.send);
 
     window.zoomable = true;
@@ -12,21 +30,21 @@ class ElectronRenderer extends Renderer {
     window.unZoom = () =>
       webFrame.setZoomFactor(webFrame.getZoomFactor() - 0.1);
 
-    ipcRenderer.on('PUSH_PATH', (event, path) => {
-      this.store.dispatch(this.push(path));
-    });
+    ipcRenderer.on('PUSH_PATH', (event, path) =>
+      probe(() => this.store.dispatch(this.push(path)))
+    );
 
-    ipcRenderer.on('DISPATCH_IN_APP', (event, action) => {
-      this.store.dispatch(action);
-    });
+    ipcRenderer.on('DISPATCH_IN_APP', (event, action) =>
+      probe(() => this.store.dispatch(action))
+    );
 
-    ipcRenderer.on('NEW_BACKEND_STATE', (event, transitState) => {
-      this.newBackendState(transitState);
-    });
+    ipcRenderer.on('NEW_BACKEND_STATE', (event, transitState) =>
+      probe(() => this.newBackendState(transitState), transitState.id)
+    );
 
-    ipcRenderer.on('NEW_BACKEND_INFOS', (event, transitState) => {
-      this.newBackendInfos(transitState);
-    });
+    ipcRenderer.on('NEW_BACKEND_INFOS', (event, transitState) =>
+      probe(() => this.newBackendInfos(transitState))
+    );
 
     if (module.hot) {
       const wid = remote.getCurrentWindow().id;
