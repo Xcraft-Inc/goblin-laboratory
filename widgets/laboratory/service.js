@@ -7,19 +7,6 @@ const goblinName = path.basename(module.parent.filename, '.js');
 // Define initial logic values
 const logicState = {};
 
-// THEMES
-const themes = [
-  'default',
-  'default-dark',
-  'default-dragula',
-  'compact-mono',
-  'default-green',
-  'special-green',
-  'smooth-green',
-  'compact-pink',
-  'default-pink',
-];
-
 // Define logic handlers according rc.json
 const logicHandlers = {
   create: (state, action) => {

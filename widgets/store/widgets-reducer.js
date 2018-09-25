@@ -1,6 +1,5 @@
 import {fromJS} from 'immutable';
 import importer from '../importer/';
-import Shredder from 'xcraft-core-shredder';
 
 const reducerImporter = importer('reducer');
 
