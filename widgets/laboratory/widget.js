@@ -5,7 +5,6 @@ import cssKey from 'css-key';
 import PropTypes from 'prop-types';
 import {Theme} from 'electrum-theme';
 import Widget from 'laboratory/widget';
-import ReactTooltip from 'react-tooltip';
 import Maintenance from 'laboratory/maintenance/widget';
 import Fa from './fa.js';
 import importer from '../importer/';
@@ -173,7 +172,7 @@ class ThemeContext extends React.PureComponent {
           this.props.theme.palette.scrollerThumbHoverBackground,
       },
 
-      /* Begin tooltip section */
+      /* Begin tooltip section (not used anymore) */
 
       '.tooltip': {
         fontSize: `${this.props.theme.shapes.tooltipFontSize} !important`,
@@ -235,14 +234,6 @@ class ThemeContext extends React.PureComponent {
           </Helmet>
         ) : null}
         {this.props.children}
-        <ReactTooltip
-          multiline={true}
-          delayShow={400}
-          globalEventOff="click"
-          effect="solid"
-          border={true}
-          className="tooltip"
-        />
       </div>
     );
   }
