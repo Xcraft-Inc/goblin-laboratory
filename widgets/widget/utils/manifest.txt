@@ -1,0 +1,48 @@
+------------------------------------------
+backend.toto@1
+------------------------------------------
+id: toto@1
+collection: [tata@0,tat@1,tata@2]
+------------------------------------------
+
+
+
+
+Connect ('backend.toto@1', (toto, ownProps) => return {
+    id: ownProps.id
+    collection: toto.collection
+});
+
+
+
+class App
+
+    render () {
+        <Toto id={toto@1} />
+    }
+
+class Toto extend widget
+
+
+    static LoadingComponent (props) {
+       return <j'attend la collection>
+    }
+
+   render () {
+      this.props.collection.map (id => <Tata id={id}/>)
+   }
+
+
+
+ConnectBackend ((tata) => {
+    return {
+        info: tata.get('info')
+    }
+})
+
+class Tata
+
+  render () {
+
+      this.props.info
+  }
