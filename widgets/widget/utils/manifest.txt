@@ -3,15 +3,27 @@ backend.toto@1
 ------------------------------------------
 id: toto@1
 collection: [tata@0,tat@1,tata@2]
+layout: 'modeX'
+------------------------------------------
+
+------------------------------------------
+widgets.toto@1
+------------------------------------------
+id: toto@1
+extend: tata@0,
+selecteds: {tata@0: true,tat@1:false,tata@2:false}
+------------------------------------------
+
+------------------------------------------
+widgets.tata@0
+------------------------------------------
+id: tata@0
+extend: true,
+selected: true
 ------------------------------------------
 
 
 
-
-Connect ('backend.toto@1', (toto, ownProps) => return {
-    id: ownProps.id
-    collection: toto.collection
-});
 
 
 
@@ -21,7 +33,13 @@ class App
         <Toto id={toto@1} />
     }
 
-class Toto extend widget
+
+
+widget.js
+export default ConnectBackend ((toto, ownProps) => return {
+    collection: toto.get('collection')
+})(Toto);
+class Toto extend Widget
 
 
     static LoadingComponent (props) {
@@ -29,20 +47,88 @@ class Toto extend widget
     }
 
    render () {
-      this.props.collection.map (id => <Tata id={id}/>)
+      this.props.collection.map (id => <Tata id={id} parent={props.id}/>)
    }
+}
 
 
-
-ConnectBackend ((tata) => {
+const TataWithBackend =  ConnectBackend ((tata) => {
     return {
         info: tata.get('info')
     }
-})
+})(Tata)
+
+
+export default ConnectParentWidget ((toto,ownProps) => return {
+    extend: toto.extend === ownProps.id
+    selected: toto.get ('selecteds.$(ownProps.id)')
+})(TataWithBackend)
+
+
+
+
+
+
+
+const getParentWidget = (state, props) =>
+  state.get ('widgets.${props.parendId}')
+
+
+const selected = (state, props) =>
+  state.get ('selected')
+
+const withSelectedInParent = createSelector(
+  [ getParentInBackend, selected ],
+  (parent,selected) => {
+    return parent
+  }
+)
+
+
+w
+state = {
+    widgets: {
+        parent : state.get ('widgets.${ownProps.parendId}')
+    }
+}
+
+Connect ((state,ownProps) => {
+    return  {
+        state.widgets.parent.
+        state.backend.
+
+
+Connect ((state,props) => {
+    return  {
+
+
+        extend: state.get ('widgets.${props.parendId}.extend') === ownProps.id,
+        extend: getParentWidget(state, props,'extend') === ownProps.id,
+        extend: getParentWidget(state, props, 'path') === ownProps.id,
+        extend: state.widgets.parent.get('extend') === ownProps.id
+        selected state.get ('widgets.${ownProps.parentId}).get ('selecteds.$(ownProps.id)'),
+        selected:  withSelectedInParent(state,props)
+        mode: state.get ('backend.${ownProps.parentId}.layout),
+        mode: getParentBackend(state,props,'layout')
+        xxx: getBackend(state,props,'layout')
+        yyy:getWidget (state,props,'xxxx)
+    }
+
+    return {
+        extend: withWidget(state,ownProps,'extend')  === ownProps.id
+    }
+}
+
+const withBackend = expr => (state,ownProps) => withBackend (ownProps)(expr)
+
+
+
+( Connect (withBackend((x) => x.extend === ownProps.id, 'extent').withWidget(...).withBackend()) ) 
+
 
 class Tata
-
+  
   render () {
 
-      this.props.info
+      this.props.info, this.props.extended
   }
