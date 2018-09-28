@@ -6,11 +6,17 @@ function withBackendPath(mapStateToProps) {
   mapStateToProps = wrapMapStateToProps(mapStateToProps);
   return (state, ownProps) => {
     if (!ownProps.id) {
+      throw new Error(
+        'Cannot connect backend state without an id. You must add a prop "id" to the connected component'
+      );
+    }
+    const backendState = state.get(`backend.${ownProps.id}`);
+    if (!backendState) {
       return {
         _loading: true,
       };
     }
-    return mapStateToProps(state.get(`backend.${ownProps.id}`), ownProps);
+    return mapStateToProps(backendState, ownProps);
   };
 }
 
@@ -31,7 +37,7 @@ export default function(
         if (Comp.LoadingComponent) {
           return <Comp.LoadingComponent />;
         } else {
-          return <div>loading</div>;
+          return null;
         }
       } else {
         return <Comp {...props} />;
