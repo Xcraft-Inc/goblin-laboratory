@@ -68,7 +68,12 @@ export default kind => {
         require.context('../../../', true, /\/widgets\/[^/]+\/reducer\.js$/)
       );
       break;
-
+    case 'compensator':
+      importAll(
+        kind,
+        require.context('../../../', true, /\/widgets\/[^/]+\/compensator\.js$/)
+      );
+      break;
     default:
       throw new Error(`Unsupported kind: ${kind} for importer`);
   }
