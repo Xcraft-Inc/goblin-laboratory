@@ -7,6 +7,7 @@ class ElectronRenderer extends Renderer {
 
     let xProbe = null;
     let probing = false;
+    /* FIXME: runtime probes for renderer are not supported (too slow) */
     if (process.env.XCRAFT_PROBE && parseInt(process.env.XCRAFT_PROBE) !== 0) {
       xProbe = remote.require('xcraft-core-probe');
       probing = xProbe.isAvailable();
