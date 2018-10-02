@@ -40,8 +40,10 @@ import b61 from '@fortawesome/fontawesome-pro-solid/faBoxFull';
 /* C */
 import c000 from '@fortawesome/fontawesome-pro-solid/faCalendar';
 import c001 from '@fortawesome/fontawesome-pro-regular/faCalendarAlt';
-import c002 from '@fortawesome/fontawesome-pro-regular/faCalendarCheck';
-import c003 from '@fortawesome/fontawesome-pro-solid/faCalendarPlus';
+import c002 from '@fortawesome/fontawesome-pro-solid/faCalendarAlt';
+import c003 from '@fortawesome/fontawesome-pro-regular/faCalendarCheck';
+import c004 from '@fortawesome/fontawesome-pro-solid/faCalendarPlus';
+import c005 from '@fortawesome/fontawesome-pro-solid/faCalendarTimes';
 import c010 from '@fortawesome/fontawesome-pro-solid/faCar';
 import c020 from '@fortawesome/fontawesome-pro-solid/faCaretDown';
 import c025 from '@fortawesome/fontawesome-pro-solid/faCaretUp';
@@ -196,7 +198,8 @@ import t01 from '@fortawesome/fontawesome-pro-solid/faTaxi';
 import t02 from '@fortawesome/fontawesome-pro-solid/faTh';
 import t05 from '@fortawesome/fontawesome-pro-solid/faTimes';
 import t10 from '@fortawesome/fontawesome-pro-solid/faTimesCircle';
-import t11 from '@fortawesome/fontawesome-pro-solid/faTint';
+import t11 from '@fortawesome/fontawesome-pro-regular/faTimesSquare';
+import t12 from '@fortawesome/fontawesome-pro-solid/faTint';
 import t20 from '@fortawesome/fontawesome-pro-light/faToggleOff';
 import t25 from '@fortawesome/fontawesome-pro-light/faToggleOn';
 import t30 from '@fortawesome/fontawesome-pro-solid/faTrain';
@@ -254,6 +257,8 @@ function boot() {
     c001,
     c002,
     c003,
+    c004,
+    c005,
     c010,
     c020,
     c025,
@@ -381,6 +386,7 @@ function boot() {
     t05,
     t10,
     t11,
+    t12,
     t20,
     t25,
     t30,
