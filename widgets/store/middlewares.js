@@ -9,7 +9,7 @@ const questMiddleware = send => store => next => action => {
 };
 
 //TODO: better handling of model/service field
-const _handleChange = (send, action, registry) => {
+const handleChange = (send, action, registry) => {
   const model = action.model.replace('backend.', '');
   const fields = model.split('.');
   if (fields.lenght === 0) {
@@ -41,7 +41,7 @@ const _handleChange = (send, action, registry) => {
   }
 };
 
-const handleChange = _.throttle(_handleChange, 100);
+const handleChangeWithThrottle = _.throttle(handleChange, 100);
 
 const formMiddleware = send => store => next => action => {
   switch (action.type) {
@@ -60,7 +60,11 @@ const formMiddleware = send => store => next => action => {
       break;
     }
     case 'hinter/search': {
-      handleChange(send, action, store.getState().commands.get('registry'));
+      handleChangeWithThrottle(
+        send,
+        action,
+        store.getState().commands.get('registry')
+      );
       break;
     }
   }
