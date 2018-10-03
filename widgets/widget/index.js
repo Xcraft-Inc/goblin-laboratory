@@ -602,6 +602,10 @@ class Widget extends React.Component {
     action._id = this.props.id;
     action._type = name || this.name;
     action.type = `@widgets_${action.type}`;
+    this.rawDispatch(action);
+  }
+
+  rawDispatch(action) {
     this.context.store.dispatch(action);
   }
 

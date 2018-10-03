@@ -59,6 +59,10 @@ const formMiddleware = send => store => next => action => {
       }
       break;
     }
+    case 'hinter/search': {
+      handleChange(send, action, store.getState().commands.get('registry'));
+      break;
+    }
   }
   return next(action);
 };
