@@ -2,7 +2,9 @@ import patch from 'immutablepatch';
 import {fromJS} from 'immutable';
 import Shredder from 'xcraft-core-shredder';
 import importer from '../importer/';
+
 const compensatorImporter = importer('compensator');
+
 function injectActionDataGetter(action) {
   action.get = key => {
     if (action.data) {
