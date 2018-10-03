@@ -16,14 +16,21 @@ function injectActionDataGetter(action) {
     return null;
   };
 }
+
+let prevState = fromJS({});
+
 export default (state = fromJS({}), action = {}) => {
   if (action.type === 'NEW_BACKEND_STATE') {
     if (!action.data) {
+      prevState = state;
       return state;
     }
-    return action.data.get('_xcraftPatch')
-      ? patch(state, action.data.get('state'))
+
+    state = action.data.get('_xcraftPatch')
+      ? patch(prevState, action.data.get('state'))
       : action.data.get('state');
+    prevState = state;
+    return state;
   }
 
   if (action.type === 'QUEST') {
