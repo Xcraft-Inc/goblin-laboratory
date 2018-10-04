@@ -22,14 +22,19 @@ let prevState = fromJS({});
 export default (state = fromJS({}), action = {}) => {
   if (action.type === 'NEW_BACKEND_STATE') {
     if (!action.data) {
-      prevState = state;
       return state;
     }
 
-    state = action.data.get('_xcraftPatch')
-      ? patch(prevState, action.data.get('state'))
-      : action.data.get('state');
-    prevState = state;
+    const generation = action.data.get('generation');
+    const nextGeneration = action.nextGeneration;
+
+    if (generation === nextGeneration) {
+      state = action.data.get('_xcraftPatch')
+        ? patch(prevState, action.data.get('state'))
+        : action.data.get('state');
+      prevState = state;
+    }
+
     return state;
   }
 

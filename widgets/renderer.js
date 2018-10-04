@@ -34,6 +34,7 @@ class Renderer {
     this.store.dispatch({
       type: 'NEW_BACKEND_STATE',
       data: transitState,
+      renderer: this,
     });
 
     if (!this._rootMounted) {
