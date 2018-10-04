@@ -2,9 +2,7 @@ import patch from 'immutablepatch';
 import {fromJS} from 'immutable';
 import Shredder from 'xcraft-core-shredder';
 import importer from '../importer/';
-
 const compensatorImporter = importer('compensator');
-
 function injectActionDataGetter(action) {
   action.get = key => {
     if (action.data) {
@@ -16,26 +14,14 @@ function injectActionDataGetter(action) {
     return null;
   };
 }
-
-let prevState = fromJS({});
-
 export default (state = fromJS({}), action = {}) => {
   if (action.type === 'NEW_BACKEND_STATE') {
     if (!action.data) {
       return state;
     }
-
-    const generation = action.data.get('generation');
-    const nextGeneration = action.nextGeneration;
-
-    if (generation === nextGeneration) {
-      state = action.data.get('_xcraftPatch')
-        ? patch(prevState, action.data.get('state'))
-        : action.data.get('state');
-      prevState = state;
-    }
-
-    return state;
+    return action.data.get('_xcraftPatch')
+      ? patch(state, action.data.get('state'))
+      : action.data.get('state');
   }
 
   if (action.type === 'QUEST') {
