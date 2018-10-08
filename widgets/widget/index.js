@@ -62,6 +62,7 @@ const getPropsForStyles = props =>
           props[k] !== undefined &&
           props[k] !== null &&
           k !== 'children' &&
+          k !== 'id' &&
           typeof props[k] !== 'function'
       )
       .map(k => ({
