@@ -9,7 +9,7 @@ const questMiddleware = send => store => next => action => {
 };
 
 //TODO: better handling of model/service field
-const _handleChange = (send, action, registry) => {
+const handleChange = (send, action, registry) => {
   const model = action.model.replace('backend.', '');
   const fields = model.split('.');
   if (fields.lenght === 0) {
@@ -41,7 +41,7 @@ const _handleChange = (send, action, registry) => {
   }
 };
 
-const handleChange = _.throttle(_handleChange, 100);
+const handleChangeWithThrottle = _.throttle(handleChange, 100);
 
 const formMiddleware = send => store => next => action => {
   switch (action.type) {
@@ -59,9 +59,19 @@ const formMiddleware = send => store => next => action => {
       }
       break;
     }
+    case 'hinter/search': {
+      handleChangeWithThrottle(
+        send,
+        action,
+        store.getState().commands.get('registry')
+      );
+      break;
+    }
   }
   return next(action);
 };
+
+let nextGeneration = 0;
 
 module.exports = send => {
   const _send = (type, action) => {
@@ -83,6 +93,22 @@ module.exports = send => {
         action.data._xcraftMessage
       ) {
         action.data = helpers.fromXcraftJSON(action.data)[0].data;
+
+        const generation = action.data.get('generation');
+        if (action.data.get('_xcraftPath')) {
+          nextGeneration++;
+
+          if (generation !== nextGeneration) {
+            /* Resend the whole state because in this case, we lose some generations. */
+            console.log(
+              `${generation - nextGeneration - 1} generation(s) lost, resend`
+            );
+            action.renderer.send('RESEND');
+          }
+        } else {
+          nextGeneration = generation;
+        }
+        action.nextGeneration = nextGeneration;
       }
       return next(action);
     },
