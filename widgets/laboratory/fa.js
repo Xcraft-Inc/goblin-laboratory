@@ -301,6 +301,7 @@ function boot() {
     c176,
     c180,
     d00,
+    d01,
     e00,
     e03,
     e05,
