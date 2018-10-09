@@ -86,7 +86,8 @@ import c176 from '@fortawesome/fontawesome-pro-solid/faCompress';
 import c180 from '@fortawesome/fontawesome-pro-light/faCube';
 
 /* D */
-import d00 from '@fortawesome/fontawesome-pro-regular/faDotCircle';
+import d00 from '@fortawesome/fontawesome-pro-solid/faDatabase';
+import d01 from '@fortawesome/fontawesome-pro-regular/faDotCircle';
 
 /* E */
 import e00 from '@fortawesome/fontawesome-pro-solid/faEllipsisH';
