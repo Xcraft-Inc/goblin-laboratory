@@ -17,6 +17,8 @@ function injectActionDataGetter(action) {
   };
 }
 
+const compensatorStates = {};
+
 let prevState = fromJS({});
 
 export default (state = fromJS({}), action = {}) => {
@@ -34,6 +36,23 @@ export default (state = fromJS({}), action = {}) => {
         : action.data.get('state');
       prevState = state;
     }
+
+    /* Apply compensators with a debounce of 500ms */
+    const timestamp = new Date().getTime() - 500;
+    Object.keys(compensatorStates).forEach(id => {
+      const comp = compensatorStates[id];
+      if (timestamp > comp.timestamp) {
+        delete compensatorStates[id];
+        return;
+      }
+      const serviceState = state.get(id);
+      const newServiceState = comp.reducer(
+        new Shredder(serviceState),
+        comp.action
+      );
+
+      state = state.set(id, newServiceState.state);
+    });
 
     return state;
   }
@@ -59,6 +78,11 @@ export default (state = fromJS({}), action = {}) => {
       };
       injectActionDataGetter(newAction);
       const newServiceState = reducer(backendState, newAction);
+      compensatorStates[action.data.id] = {
+        action: newAction,
+        reducer,
+        timestamp: new Date().getTime(),
+      };
       const newBackendState = state.set(action.data.id, newServiceState);
       return newBackendState.state;
     }
