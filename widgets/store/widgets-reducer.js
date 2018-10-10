@@ -10,7 +10,7 @@ export default (state = fromJS({}), action = {}) => {
     }
     if (action.data.get('_xcraftPatch')) {
       /* FIXME: the garbage collector is not working when the whole state
-       * is chaning in one shot.
+       * is changing in one shot.
        */
       action.data
         .get('state')
