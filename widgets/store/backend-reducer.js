@@ -32,7 +32,6 @@ function applyCompensators(state, action) {
     const comp = action.compensatorStates[id];
     if (timestamp > comp.timestamp) {
       delete action.compensatorStates[id];
-      return;
     }
 
     if (!action.data) {
