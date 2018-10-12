@@ -19,7 +19,42 @@ function injectActionDataGetter(action) {
 
 let prevState = fromJS({});
 
+/* Apply compensators with a debounce of 500ms */
+function applyCompensators(state, action) {
+  const ids = Object.keys(action.compensatorStates);
+  if (!ids.length) {
+    return state;
+  }
+
+  const timestamp = new Date().getTime() - 500;
+
+  ids.forEach(id => {
+    const comp = action.compensatorStates[id];
+    if (timestamp > comp.timestamp) {
+      delete action.compensatorStates[id];
+    }
+
+    if (!action.data) {
+      return;
+    }
+
+    const serviceState = state.get(id);
+    const newServiceState = comp.reducer(
+      new Shredder(serviceState),
+      comp.action
+    );
+
+    state = state.set(id, newServiceState.state);
+  });
+
+  return state;
+}
+
 export default (state = fromJS({}), action = {}) => {
+  if (action.type === 'COMPENSATORS') {
+    return applyCompensators(prevState, action);
+  }
+
   if (action.type === 'NEW_BACKEND_STATE') {
     if (!action.data) {
       return state;
@@ -35,7 +70,7 @@ export default (state = fromJS({}), action = {}) => {
       prevState = state;
     }
 
-    return state;
+    return applyCompensators(state, action);
   }
 
   if (action.type === 'QUEST') {
@@ -59,6 +94,11 @@ export default (state = fromJS({}), action = {}) => {
       };
       injectActionDataGetter(newAction);
       const newServiceState = reducer(backendState, newAction);
+      action.compensatorStates[action.data.id] = {
+        action: newAction,
+        reducer,
+        timestamp: new Date().getTime(),
+      };
       const newBackendState = state.set(action.data.id, newServiceState);
       return newBackendState.state;
     }
