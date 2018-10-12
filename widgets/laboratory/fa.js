@@ -125,6 +125,7 @@ import h10 from '@fortawesome/fontawesome-pro-solid/faHeart';
 import h20 from '@fortawesome/fontawesome-pro-solid/faHexagon';
 import h25 from '@fortawesome/fontawesome-pro-solid/faHome';
 import h30 from '@fortawesome/fontawesome-pro-regular/faHospital';
+import h31 from '@fortawesome/fontawesome-pro-regular/faHourglassStart';
 
 /* I */
 import i00 from '@fortawesome/fontawesome-pro-solid/faInbox';
@@ -331,6 +332,7 @@ function boot() {
     h20,
     h25,
     h30,
+    h31,
     i00,
     i10,
     i20,
