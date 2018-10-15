@@ -1,8 +1,32 @@
 import _ from 'lodash';
 import helpers from 'xcraft-core-transport/lib/helpers.js';
 
+let nextGeneration = 0;
+const compensatorStates = {};
+let compensatorTimeout = null;
+
+function insertCompensators(store, action) {
+  /* Provide the compensatored states to the reducer */
+  action.compensatorStates = compensatorStates;
+
+  /* (Re)start a timeout in case of no more NEW_BACKEND_STATE are received */
+  if (compensatorTimeout) {
+    clearTimeout(compensatorTimeout);
+    compensatorTimeout = null;
+  }
+
+  if (Object.keys(compensatorStates).length) {
+    compensatorTimeout = setTimeout(() => {
+      store.dispatch({type: 'COMPENSATORS', compensatorStates});
+    }, 300);
+  }
+}
+
 const questMiddleware = send => store => next => action => {
   if (action.type === 'QUEST') {
+    /* Provide the compensatored states to the reducer */
+    insertCompensators(store, action);
+
     send('QUEST', action);
   }
   return next(action);
@@ -71,8 +95,6 @@ const formMiddleware = send => store => next => action => {
   return next(action);
 };
 
-let nextGeneration = 0;
-
 module.exports = send => {
   const _send = (type, action) => {
     let data = action;
@@ -109,6 +131,8 @@ module.exports = send => {
           nextGeneration = generation;
         }
         action.nextGeneration = nextGeneration;
+
+        insertCompensators(store, action);
       }
       return next(action);
     },
