@@ -1,3 +1,4 @@
+import React from 'react';
 import connect from './connect';
 import wrapMapStateToProps from './wrapMapStateToProps';
 
@@ -9,7 +10,13 @@ function withBackendPath(mapStateToProps) {
         'Cannot connect backend state without an id. You must add a prop "id" to the connected component'
       );
     }
-    return mapStateToProps(state.get(`backend.${ownProps.id}`), ownProps);
+    const backendState = state.get(`backend.${ownProps.id}`);
+    if (!backendState) {
+      return {
+        _loading: true,
+      };
+    }
+    return mapStateToProps(backendState, ownProps);
   };
 }
 
@@ -19,10 +26,21 @@ export default function(
   mergeProps,
   options
 ) {
-  return connect(
-    withBackendPath(mapStateToProps),
-    mapDispatchToProps,
-    mergeProps,
-    options
-  );
+  return Comp =>
+    connect(
+      withBackendPath(mapStateToProps),
+      mapDispatchToProps,
+      mergeProps,
+      options
+    )(props => {
+      if (props._loading) {
+        if (Comp.LoadingComponent) {
+          return <Comp.LoadingComponent />;
+        } else {
+          return null;
+        }
+      } else {
+        return <Comp {...props} />;
+      }
+    });
 }
