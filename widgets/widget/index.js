@@ -15,9 +15,14 @@ import _connect from './utils/connect';
 import connectWidget from './utils/connectWidget';
 import connectBackend from './utils/connectBackend';
 
+// FIXME: use reflect from xUtils.reflect
+// const xUtils = require('xcraft-core-utils');
+import reflect from './utils/reflect';
+
 const stylesImporter = importer('styles');
 
-const hashStyles = {};
+const stylesCache = {};
+const myStyleCache = {};
 
 function isFunction(functionToCheck) {
   var getType = {};
@@ -120,24 +125,88 @@ class Widget extends React.Component {
   }
 
   get styles() {
-    let myStyle = stylesImporter(this.name);
-    if (!myStyle) {
-      return {};
+    if (this.lastStyleProps === this.props) {
+      return this.lastStyle;
+    }
+    this.lastStyleProps = this.props;
+
+    const myStyle = this.getMyStyle();
+
+    const params = myStyle.propNamesUsed.map(p => this.props[p]);
+    const hash = this.computeStyleHash(myStyle, params);
+
+    const style = stylesCache[hash];
+    if (style) {
+      this.lastStyle = style;
+      return style;
     }
 
-    const styleProps = getPropsForStyles(this.props);
-    const h = fasterStringify(styleProps);
-    const k = `${this.name}${this.context.theme.name}${h}`;
+    if (myStyle.hasPropsParam) {
+      params.unshift(this.props);
+    }
+    if (myStyle.hasThemeParam) {
+      params.unshift(this.context.theme);
+    }
+    const jsStyles = myStyle.func(...params);
+    const newStyle = {
+      classNames: injectCSS(jsStyles),
+      props: jsStyles,
+    };
 
-    if (hashStyles[k]) {
-      return hashStyles[k];
+    stylesCache[hash] = newStyle;
+    this.lastStyle = newStyle;
+    return newStyle;
+  }
+
+  computeStyleHash(myStyle, styleProps) {
+    if (myStyle.hasPropsParam) {
+      styleProps = getPropsForStyles(this.props);
+    }
+    const hashProps = fasterStringify(styleProps);
+
+    let hashTheme = '';
+    if (myStyle.hasThemeParam) {
+      hashTheme = this.context.theme.name;
     }
 
-    const styles = myStyle(this.context.theme, styleProps);
-    return (hashStyles[k] = {
-      classNames: injectCSS(styles),
-      props: styles,
-    });
+    return `${this.name}${hashTheme}${hashProps}`;
+  }
+
+  getMyStyle() {
+    let myStyle = myStyleCache[this.name];
+    if (myStyle) {
+      return myStyle;
+    }
+
+    let myStyleFunc = stylesImporter(this.name);
+    if (!myStyleFunc) {
+      throw new Error(`No styles.js file for component '${this.name}'`);
+    }
+
+    const myStyleParams = reflect.funcParams(myStyleFunc);
+    let hasPropsParam = false;
+    let hasThemeParam = false;
+
+    let i = 0;
+    if (myStyleParams[i] === 'theme') {
+      hasThemeParam = true;
+      i++;
+    }
+    if (myStyleParams[i] === 'props') {
+      hasPropsParam = true;
+      i++;
+    }
+
+    myStyle = {
+      hasPropsParam,
+      hasThemeParam,
+      propNamesUsed: myStyleParams.slice(i),
+      func: myStyleFunc,
+    };
+
+    myStyleCache[this.name] = myStyle;
+
+    return myStyle;
   }
 
   read(key) {
