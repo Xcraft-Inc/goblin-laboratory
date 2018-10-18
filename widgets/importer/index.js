@@ -13,9 +13,12 @@ const importAll = (kind, r) => {
   });
 };
 
-const getter = kind => name => {
+const getter = kind => (name, key) => {
   if (!cache[kind][name]) {
     return null;
+  }
+  if (key) {
+    return cache[kind][name][key];
   }
   return cache[kind][name].default;
 };
