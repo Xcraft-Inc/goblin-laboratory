@@ -141,10 +141,13 @@ class Widget extends React.Component {
       );
     }
 
-    const styleProps = {};
+    let styleProps = {};
     propNamesUsed.forEach(p => {
       styleProps[p] = this.props[p];
     });
+    if (myStyle.mapProps) {
+      styleProps = myStyle.mapProps(styleProps);
+    }
     return styleProps;
   }
 
@@ -173,12 +176,11 @@ class Widget extends React.Component {
       throw new Error(`No styles.js file for component '${this.name}'`);
     }
 
-    let propNamesUsed = stylesImporter(this.name, 'propNames');
-
     myStyle = {
       hasThemeParam: myStyleFunc.length > 0,
       hasPropsParam: myStyleFunc.length > 1,
-      propNamesUsed,
+      propNamesUsed: stylesImporter(this.name, 'propNames'),
+      mapProps: stylesImporter(this.name, 'mapProps'),
       func: myStyleFunc,
     };
 
