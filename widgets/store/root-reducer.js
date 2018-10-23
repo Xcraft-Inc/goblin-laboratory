@@ -19,6 +19,7 @@ export function routerReducer(state = initialState, {type, payload} = {}) {
   if (type === LOCATION_CHANGE) {
     const location = state.get('location');
     if (location) {
+      //This complexity:
       //Prevent loosing hash when a nav is initiated in front-end and erased by a backend nav
       const currentLoc = location.get('pathname');
       const currentSearch = location.get('search');
@@ -26,7 +27,18 @@ export function routerReducer(state = initialState, {type, payload} = {}) {
         currentLoc.startsWith(payload.pathname) &&
         currentSearch === payload.search
       ) {
-        return state;
+        // pathname looks similar, we can investigate
+        const currentPath = currentLoc.split('/');
+        const newPath = payload.pathname.split('/');
+        const cPl = currentPath.length - 1;
+        const nPl = newPath.length - 1;
+        if (cPl > nPl) {
+          //Current path contains more info (for ex. hinter) in this case, we must skip the nav
+          return state;
+        } else if (cPl === nPl && currentPath[cPl] === newPath[nPl]) {
+          //Same path, but same value?
+          return state;
+        }
       }
     }
     return state.merge({location: payload});
