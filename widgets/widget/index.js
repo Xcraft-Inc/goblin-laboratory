@@ -17,7 +17,8 @@ import connectBackend from './utils/connectBackend';
 
 const stylesImporter = importer('styles');
 
-const hashStyles = {};
+const stylesCache = {};
+const myStyleCache = {};
 
 function isFunction(functionToCheck) {
   var getType = {};
@@ -46,29 +47,6 @@ const {StyleSheet, css} = Aphrodite.extend([
     },
   },
 ]);
-
-/**
- * Remove props that are functions, 'children' or undefined, null
- *
- * @param {object} props - Component properties.
- * @returns {object} the filtered props.
- */
-const getPropsForStyles = props =>
-  Object.assign(
-    {},
-    ...Object.keys(props)
-      .filter(
-        k =>
-          props[k] !== undefined &&
-          props[k] !== null &&
-          k !== 'children' &&
-          k !== 'id' &&
-          typeof props[k] !== 'function'
-      )
-      .map(k => ({
-        [k]: props[k],
-      }))
-  );
 
 const injectCSS = classes => {
   traverse(classes).forEach(function(style) {
@@ -120,24 +98,95 @@ class Widget extends React.Component {
   }
 
   get styles() {
-    let myStyle = stylesImporter(this.name);
-    if (!myStyle) {
-      return {};
+    if (this.lastStyleProps === this.props) {
+      return this.lastStyle;
+    }
+    this.lastStyleProps = this.props;
+
+    const myStyle = this.getMyStyle();
+
+    const styleProps = this.getStyleProps(myStyle);
+    const hash = this.computeStyleHash(myStyle, styleProps);
+
+    const style = stylesCache[hash];
+    if (style) {
+      this.lastStyle = style;
+      return style;
     }
 
-    const styleProps = getPropsForStyles(this.props);
-    const h = fasterStringify(styleProps);
-    const k = `${this.name}${this.context.theme.name}${h}`;
+    const jsStyles = myStyle.func(this.context.theme, styleProps);
+    const newStyle = {
+      classNames: injectCSS(jsStyles),
+      props: jsStyles,
+    };
 
-    if (hashStyles[k]) {
-      return hashStyles[k];
+    stylesCache[hash] = newStyle;
+    this.lastStyle = newStyle;
+    return newStyle;
+  }
+
+  getStyleProps(myStyle) {
+    if (!myStyle.hasPropsParam) {
+      return null;
+    }
+    let propNamesUsed = myStyle.propNamesUsed;
+    if (!propNamesUsed) {
+      propNamesUsed = Object.keys(this.props).filter(
+        k =>
+          this.props[k] !== undefined &&
+          this.props[k] !== null &&
+          k !== 'children' &&
+          k !== 'id' &&
+          typeof this.props[k] !== 'function'
+      );
     }
 
-    const styles = myStyle(this.context.theme, styleProps);
-    return (hashStyles[k] = {
-      classNames: injectCSS(styles),
-      props: styles,
+    let styleProps = {};
+    propNamesUsed.forEach(p => {
+      styleProps[p] = this.props[p];
     });
+    if (myStyle.mapProps) {
+      styleProps = myStyle.mapProps(styleProps);
+    }
+    return styleProps;
+  }
+
+  computeStyleHash(myStyle, styleProps) {
+    let hashProps = '';
+    if (myStyle.hasPropsParam) {
+      hashProps = fasterStringify(styleProps);
+    }
+
+    let hashTheme = '';
+    if (myStyle.hasThemeParam) {
+      hashTheme = this.context.theme.name;
+    }
+
+    return `${this.name}${hashTheme}${hashProps}`;
+  }
+
+  getMyStyle() {
+    let myStyle = myStyleCache[this.name];
+    if (myStyle) {
+      return myStyle;
+    }
+
+    let myStyleFunc = stylesImporter(this.name);
+    if (!myStyleFunc) {
+      throw new Error(`No styles.js file for component '${this.name}'`);
+    }
+
+    myStyle = {
+      hasThemeParam: myStyleFunc.length > 0,
+      hasPropsParam: myStyleFunc.length > 1,
+      propNamesUsed: stylesImporter(this.name, 'propNames'),
+      mapProps: stylesImporter(this.name, 'mapProps'),
+      func: myStyleFunc,
+    };
+
+    myStyleCache[this.name] = myStyle;
+
+    return myStyle;
   }
 
   read(key) {
