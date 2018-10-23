@@ -17,6 +17,18 @@ const initialState = new Shredder({
 
 export function routerReducer(state = initialState, {type, payload} = {}) {
   if (type === LOCATION_CHANGE) {
+    const location = state.get('location');
+    if (location) {
+      //Prevent loosing hash when a nav is initiated in front-end and erased by a backend nav
+      const currentLoc = location.get('pathname');
+      const currentSearch = location.get('search');
+      if (
+        currentLoc.startsWith(payload.pathname) &&
+        currentSearch === payload.search
+      ) {
+        return state;
+      }
+    }
     return state.merge({location: payload});
   }
 
