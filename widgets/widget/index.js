@@ -14,11 +14,17 @@ import shallowEqualShredder from './utils/shallowEqualShredder';
 import _connect from './utils/connect';
 import connectWidget from './utils/connectWidget';
 import connectBackend from './utils/connectBackend';
+import * as widgetsActions from './utils/widgets-actions';
 
 const stylesImporter = importer('styles');
+const reducerImporter = importer('reducer');
 
 const stylesCache = {};
 const myStyleCache = {};
+
+const debounceCollect = _.debounce(fct => {
+  fct();
+}, 500);
 
 function isFunction(functionToCheck) {
   var getType = {};
@@ -66,6 +72,14 @@ class Widget extends React.Component {
     this._name = this.constructor.name
       .replace(/([a-z])([A-Z])/g, '$1-$2')
       .toLowerCase();
+
+    const reducer = reducerImporter(this._name);
+    if (reducer) {
+      const widgetId = this.widgetId;
+      if (widgetId) {
+        this.dispatch({type: 'WIDGETS_CREATE'});
+      }
+    }
   }
 
   static get propTypes() {
@@ -95,6 +109,10 @@ class Widget extends React.Component {
 
   get name() {
     return this._name;
+  }
+
+  get widgetId() {
+    return this.props.widgetId || this.props.id;
   }
 
   get styles() {
@@ -211,6 +229,12 @@ class Widget extends React.Component {
       !shallowEqualShredder(this.props, newProps) ||
       !shallowEqualShredder(this.state, newState)
     );
+  }
+
+  componentWillUnmount() {
+    debounceCollect(() => {
+      this.rawDispatch(widgetsActions.collect());
+    });
   }
 
   ///////////STATE MGMT:
@@ -649,8 +673,17 @@ class Widget extends React.Component {
    * @param {Object} name - Redux action.
    */
   dispatch(action, name) {
-    action._id = this.props.id;
+    action._id = this.widgetId;
     action._type = name || this.name;
+    action.type = `@widgets_${action.type}`;
+    this.rawDispatch(action);
+  }
+
+  dispatchTo(id, action, name) {
+    action._id = id;
+    if (name) {
+      action._type = name;
+    }
     action.type = `@widgets_${action.type}`;
     this.rawDispatch(action);
   }
@@ -800,7 +833,7 @@ class Widget extends React.Component {
     if (!this.props.id) {
       throw new Error('Cannot resolve widget state without a valid id');
     }
-    return this.getState().widgets.get(this.props.id);
+    return this.getState().widgets.get(this.widgetId);
   }
 
   getBackendState() {
