@@ -112,7 +112,6 @@ Goblin.registerQuest(goblinName, 'when-ui-crash', function(
   info
 ) {
   quest.log.err('UI generate errors !');
-  console.log(info);
   quest.log.err(info);
   /*quest.fail(
     'Erreur UI',
