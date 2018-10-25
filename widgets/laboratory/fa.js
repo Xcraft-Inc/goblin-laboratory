@@ -84,6 +84,7 @@ import c170 from '@fortawesome/fontawesome-pro-regular/faComment';
 import c175 from '@fortawesome/fontawesome-pro-solid/faComment';
 import c176 from '@fortawesome/fontawesome-pro-solid/faCompress';
 import c180 from '@fortawesome/fontawesome-pro-light/faCube';
+import c181 from '@fortawesome/fontawesome-pro-light/faCubes';
 
 /* D */
 import d00 from '@fortawesome/fontawesome-pro-solid/faDatabase';
@@ -301,6 +302,7 @@ function boot() {
     c175,
     c176,
     c180,
+    c181,
     d00,
     d01,
     e00,
