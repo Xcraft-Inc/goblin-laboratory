@@ -15,6 +15,7 @@ const logicHandlers = {
     return state.set('', {
       id: id,
       url: action.get('url'),
+      feed: action.get('feed'),
       wid: action.get('wid'),
       feeds: conf.feeds,
       theme: 'default',
@@ -60,7 +61,7 @@ Goblin.registerQuest(goblinName, 'create', function*(quest, url, config) {
   });
 
   yield win.feedSub({wid: winId, feeds: config.feeds});
-  quest.do({id: quest.goblin.id, wid: winId, url, config});
+  quest.do({id: quest.goblin.id, feed, wid: winId, url, config});
 
   quest.cmd('warehouse.feed.add', {feed, branch: winId});
 
