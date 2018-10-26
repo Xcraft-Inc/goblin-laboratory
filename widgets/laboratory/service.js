@@ -87,6 +87,14 @@ Goblin.registerQuest(goblinName, 'create', function*(quest, url, config) {
   return quest.goblin.id;
 });
 
+Goblin.registerQuest(goblinName, 'get-win-feed', function(quest) {
+  const state = quest.goblin.getState();
+  return {
+    feed: state.get('feed'),
+    wid: state.get('wid'),
+  };
+});
+
 Goblin.registerQuest(goblinName, 'get-feed', function(quest) {
   return quest.goblin.feed;
 });
