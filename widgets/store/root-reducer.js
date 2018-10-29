@@ -25,7 +25,8 @@ export function routerReducer(state = initialState, {type, payload} = {}) {
       const currentSearch = location.get('search');
       if (
         currentLoc.startsWith(payload.pathname) &&
-        currentSearch === payload.search
+        (payload.search.startsWith(currentSearch) ||
+          currentSearch.startsWith(payload.search))
       ) {
         // pathname looks similar, we can investigate
         const currentPath = currentLoc.split('/');
@@ -34,10 +35,16 @@ export function routerReducer(state = initialState, {type, payload} = {}) {
         const nPl = newPath.length - 1;
         if (cPl > nPl) {
           //Current path contains more info (for ex. hinter) in this case, we must skip the nav
-          return state;
+          return state.set(
+            'location',
+            state.get('location').set('search', payload.search)
+          );
         } else if (cPl === nPl && currentPath[cPl] === newPath[nPl]) {
           //Same path, but same value?
-          return state;
+          return state.set(
+            'location',
+            state.get('location').set('search', payload.search)
+          );
         }
       }
     }
