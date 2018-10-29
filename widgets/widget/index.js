@@ -82,12 +82,6 @@ class Widget extends React.Component {
     this._name = this.constructor.name
       .replace(/([a-z])([A-Z])/g, '$1-$2')
       .toLowerCase();
-
-    if (this.props.id) {
-      this.getChildContext = () => {
-        return {...this.context, ...{nearestParentId: this.props.id}};
-      };
-    }
   }
 
   static get propTypes() {
@@ -100,6 +94,14 @@ class Widget extends React.Component {
 
   static get contextTypes() {
     return contextTypes;
+  }
+
+  getChildContext() {
+    if (this.props.id) {
+      return {...this.context, ...{nearestParentId: this.props.id}};
+    }
+
+    return this.context;
   }
 
   static get childContextTypes() {
