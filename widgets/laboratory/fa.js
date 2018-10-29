@@ -84,6 +84,7 @@ import c170 from '@fortawesome/fontawesome-pro-regular/faComment';
 import c175 from '@fortawesome/fontawesome-pro-solid/faComment';
 import c176 from '@fortawesome/fontawesome-pro-solid/faCompress';
 import c180 from '@fortawesome/fontawesome-pro-light/faCube';
+import c181 from '@fortawesome/fontawesome-pro-light/faCubes';
 
 /* D */
 import d00 from '@fortawesome/fontawesome-pro-solid/faDatabase';
@@ -153,10 +154,11 @@ import m50 from '@fortawesome/fontawesome-pro-solid/faMoneyBillAlt';
 import o00 from '@fortawesome/fontawesome-pro-solid/faOctagon';
 
 /* P */
-import p00 from '@fortawesome/fontawesome-pro-solid/faPaperclip';
-import p01 from '@fortawesome/fontawesome-pro-solid/faPaperPlane';
-import p02 from '@fortawesome/fontawesome-pro-solid/faPaste';
-import p03 from '@fortawesome/fontawesome-pro-solid/faPencil';
+import p00 from '@fortawesome/fontawesome-pro-solid/faPalette';
+import p01 from '@fortawesome/fontawesome-pro-solid/faPaperclip';
+import p02 from '@fortawesome/fontawesome-pro-solid/faPaperPlane';
+import p03 from '@fortawesome/fontawesome-pro-solid/faPaste';
+import p04 from '@fortawesome/fontawesome-pro-solid/faPencil';
 import p05 from '@fortawesome/fontawesome-pro-solid/faPhone';
 import p07 from '@fortawesome/fontawesome-pro-solid/faPlane';
 import p10 from '@fortawesome/fontawesome-pro-solid/faPlus';
@@ -301,6 +303,7 @@ function boot() {
     c175,
     c176,
     c180,
+    c181,
     d00,
     d01,
     e00,
@@ -354,6 +357,7 @@ function boot() {
     p01,
     p02,
     p03,
+    p04,
     p05,
     p07,
     p10,

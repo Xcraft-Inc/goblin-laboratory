@@ -1,48 +1,77 @@
 import {fromJS} from 'immutable';
 import importer from '../importer/';
+import Shredder from 'xcraft-core-shredder';
 
 const reducerImporter = importer('reducer');
+const wrappedReducers = {};
+
+const actionTypePrefix = '@widgets_';
+const findReducerNameRegex = /\$([^@]*)/;
+
+const wrapReducer = reducer => (state, action) => {
+  if (state) {
+    state = new Shredder(state);
+  }
+  const nState = reducer(state, action);
+  if (Shredder.isShredder(nState)) {
+    return nState.state;
+  }
+  return nState;
+};
+
+function findReducerName(action) {
+  if (action._type) {
+    return action._type;
+  }
+  const matches = action._id.match(findReducerNameRegex);
+  if (!matches || !matches[1]) {
+    throw new Error(
+      `Unable to find a reducer name for action: ${JSON.stringify(action)}`
+    );
+  }
+  return matches[1];
+}
+
+function getWrappedReducer(action) {
+  let reducerName = findReducerName(action);
+  let wrappedReducer = wrappedReducers[reducerName];
+  if (!wrappedReducer) {
+    const reducer = reducerImporter(reducerName);
+    if (!reducer) {
+      throw new Error(
+        `No reducer named "${reducerName}" found. Action:\n${JSON.stringify(
+          action
+        )}`
+      );
+    }
+    wrappedReducer = wrapReducer(reducer);
+    wrappedReducers[reducerName] = wrappedReducer;
+  }
+  return wrappedReducer;
+}
 
 export default (state = fromJS({}), action = {}) => {
-  if (action.type === 'NEW_BACKEND_STATE') {
-    if (!action.data) {
-      return state;
-    }
-    if (action.data.get('_xcraftPatch')) {
-      /* FIXME: the garbage collector is not working when the whole state
-       * is changing in one shot.
-       */
-      action.data
-        .get('state')
-        .filter(
-          op =>
-            op.get('op') === 'remove' && state.has(op.get('path').substring(1))
-        )
-        .forEach(op => {
-          const pathToRemove = op.get('path').substring(1);
-          state = state.delete(pathToRemove);
-        });
-
-      return state;
-    }
-  }
-
-  if (!action.type.startsWith('@widgets_')) {
+  if (action.type === 'WIDGETS_COLLECT') {
+    action.ids.forEach(id => {
+      state = state.delete(id);
+    });
     return state;
   }
 
-  const reducer = reducerImporter(action._type);
-  if (!reducer) {
+  if (!action.type.startsWith(actionTypePrefix)) {
     return state;
   }
+
+  const wrappedReducer = getWrappedReducer(action);
+
+  // Remove type prefix
+  action = {
+    ...action,
+    type: action.type.substring(actionTypePrefix.length),
+  };
 
   const id = action._id;
-
-  const items = action.type.split('_');
-  items.shift();
-  action.type = items.join('_');
-
   let _state = state.get(id, undefined);
-  _state = reducer(_state, action);
+  _state = wrappedReducer(_state, action);
   return state.set(id, _state);
 };

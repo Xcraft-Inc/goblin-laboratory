@@ -6,6 +6,7 @@ class ElectronRenderer extends Renderer {
     const {ipcRenderer, webFrame, remote} = electron;
 
     super(ipcRenderer.send);
+    webFrame.setZoomFactor(webFrame.getZoomFactor() - 0.2);
 
     window.zoomable = true;
     window.zoom = () => webFrame.setZoomFactor(webFrame.getZoomFactor() + 0.1);

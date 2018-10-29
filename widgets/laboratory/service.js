@@ -15,6 +15,7 @@ const logicHandlers = {
     return state.set('', {
       id: id,
       url: action.get('url'),
+      feed: action.get('feed'),
       wid: action.get('wid'),
       feeds: conf.feeds,
       theme: 'default',
@@ -60,7 +61,7 @@ Goblin.registerQuest(goblinName, 'create', function*(quest, url, config) {
   });
 
   yield win.feedSub({wid: winId, feeds: config.feeds});
-  quest.do({id: quest.goblin.id, wid: winId, url, config});
+  quest.do({id: quest.goblin.id, feed, wid: winId, url, config});
 
   quest.cmd('warehouse.feed.add', {feed, branch: winId});
 
@@ -84,6 +85,14 @@ Goblin.registerQuest(goblinName, 'create', function*(quest, url, config) {
 
   quest.log.info(`Laboratory ${quest.goblin.id} created!`);
   return quest.goblin.id;
+});
+
+Goblin.registerQuest(goblinName, 'get-win-feed', function(quest) {
+  const state = quest.goblin.getState();
+  return {
+    feed: state.get('feed'),
+    wid: state.get('wid'),
+  };
 });
 
 Goblin.registerQuest(goblinName, 'get-feed', function(quest) {
@@ -112,7 +121,6 @@ Goblin.registerQuest(goblinName, 'when-ui-crash', function(
   info
 ) {
   quest.log.err('UI generate errors !');
-  console.log(info);
   quest.log.err(info);
   /*quest.fail(
     'Erreur UI',
