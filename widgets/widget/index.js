@@ -673,16 +673,18 @@ class Widget extends React.Component {
    * @param {Object} name - Redux action.
    */
   dispatch(action, name) {
-    if (!action.type) {
-      throw new Error(
-        `Cannot dispatch a widget action without a type. Action: ${JSON.stringify(
-          action
-        )}. Widget name: ${this.name}`
-      );
+    if (typeof action !== 'function') {
+      if (!action.type) {
+        throw new Error(
+          `Cannot dispatch a widget action without a type. Action: ${JSON.stringify(
+            action
+          )}. Widget name: ${this.name}`
+        );
+      }
+      action._id = this.widgetId;
+      action._type = name || this.name;
+      action.type = `@widgets_${action.type}`;
     }
-    action._id = this.widgetId;
-    action._type = name || this.name;
-    action.type = `@widgets_${action.type}`;
     this.rawDispatch(action);
   }
 
