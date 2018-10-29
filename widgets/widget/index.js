@@ -837,10 +837,11 @@ class Widget extends React.Component {
   }
 
   getWidgetState() {
-    if (!this.props.id) {
+    const widgetId = this.widgetId;
+    if (!widgetId) {
       throw new Error('Cannot resolve widget state without a valid id');
     }
-    return this.getState().widgets.get(this.widgetId);
+    return this.getState().widgets.get(widgetId);
   }
 
   getBackendState() {
