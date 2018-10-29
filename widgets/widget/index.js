@@ -28,6 +28,22 @@ function isFunction(functionToCheck) {
   );
 }
 
+const contextTypes = {
+  labId: PropTypes.string,
+  dispatch: PropTypes.func,
+  store: PropTypes.object,
+  theme: PropTypes.object,
+  model: PropTypes.any,
+  id: PropTypes.string,
+  desktopId: PropTypes.string,
+  contextId: PropTypes.string,
+  entityId: PropTypes.string,
+  dragControllerId: PropTypes.string,
+  dragServiceId: PropTypes.string,
+  readonly: PropTypes.any,
+  nearestParentId: PropTypes.string,
+};
+
 // See https://github.com/Khan/aphrodite/issues/319#issuecomment-393857964
 const {StyleSheet, css} = Aphrodite.extend([
   {
@@ -66,6 +82,12 @@ class Widget extends React.Component {
     this._name = this.constructor.name
       .replace(/([a-z])([A-Z])/g, '$1-$2')
       .toLowerCase();
+
+    if (this.props.id) {
+      this.getChildContext = () => {
+        return {...this.context, ...{nearestParentId: this.props.id}};
+      };
+    }
   }
 
   static get propTypes() {
@@ -77,20 +99,11 @@ class Widget extends React.Component {
   }
 
   static get contextTypes() {
-    return {
-      labId: PropTypes.string,
-      dispatch: PropTypes.func,
-      store: PropTypes.object,
-      theme: PropTypes.object,
-      model: PropTypes.any,
-      id: PropTypes.string,
-      desktopId: PropTypes.string,
-      contextId: PropTypes.string,
-      entityId: PropTypes.string,
-      dragControllerId: PropTypes.string,
-      dragServiceId: PropTypes.string,
-      readonly: PropTypes.any,
-    };
+    return contextTypes;
+  }
+
+  static get childContextTypes() {
+    return contextTypes;
   }
 
   get name() {
@@ -915,6 +928,10 @@ class Widget extends React.Component {
 
   replaceNav(path) {
     this.context.dispatch(replace(path));
+  }
+
+  getNearestId() {
+    return this.props.id || this.context.nearestParentId;
   }
 }
 
