@@ -673,9 +673,18 @@ class Widget extends React.Component {
    * @param {Object} name - Redux action.
    */
   dispatch(action, name) {
-    action._id = this.widgetId;
-    action._type = name || this.name;
-    action.type = `@widgets_${action.type}`;
+    if (typeof action !== 'function') {
+      if (!action.type) {
+        throw new Error(
+          `Cannot dispatch a widget action without a type. Action: ${JSON.stringify(
+            action
+          )}. Widget name: ${this.name}`
+        );
+      }
+      action._id = this.widgetId;
+      action._type = name || this.name;
+      action.type = `@widgets_${action.type}`;
+    }
     this.rawDispatch(action);
   }
 
@@ -830,10 +839,11 @@ class Widget extends React.Component {
   }
 
   getWidgetState() {
-    if (!this.props.id) {
+    const widgetId = this.widgetId;
+    if (!widgetId) {
       throw new Error('Cannot resolve widget state without a valid id');
     }
-    return this.getState().widgets.get(this.widgetId);
+    return this.getState().widgets.get(widgetId);
   }
 
   getBackendState() {
