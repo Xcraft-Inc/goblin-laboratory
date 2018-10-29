@@ -311,14 +311,18 @@ class Widget extends React.Component {
   }
 
   static wire(connectId, wires) {
+    const useProps = !connectId;
     return connect(
-      state => {
+      (state, props) => {
+        if (useProps) {
+          connectId = props.id;
+        }
         let mapState = {};
         if (state.backend) {
           if (wires) {
             const shredded = new Shredder(state.backend);
             if (!shredded.has(connectId)) {
-              return {_no_props_: true};
+              return {_no_props_: true, id: null};
             }
             Object.keys(wires).forEach(wire => {
               const val = shredded.get(`${connectId}.${wires[wire]}`, null);
