@@ -773,7 +773,11 @@ class Widget extends React.Component {
   }
 
   getModelValue(model, fullPath) {
-    const state = new Shredder(this.getState());
+    const storeState = this.getState();
+    const state = new Shredder({
+      backend: storeState.backend,
+      widgets: storeState.widgets,
+    });
     if (fullPath) {
       if (isFunction(model)) {
         model = model(state.get(model));
@@ -792,7 +796,11 @@ class Widget extends React.Component {
   }
 
   getBackendValue(fullpath) {
-    const state = new Shredder(this.getState());
+    const storeState = this.getState();
+    const state = new Shredder({
+      backend: storeState.backend,
+      widgets: storeState.widgets,
+    });
     return state.get(fullpath);
   }
 
@@ -801,15 +809,13 @@ class Widget extends React.Component {
   }
 
   getFormPluginValue(pluginName, path) {
-    return this.getBackendValue(
-      `backend.${pluginName}@${this.props.id}${path}`
-    );
+    const state = new Shredder(this.getState().backend);
+    return state.get(`${pluginName}@${this.props.id}${path}`);
   }
 
   getEntityPluginValue(pluginName, path) {
-    return this.getBackendValue(
-      `backend.${pluginName}@${this.props.entityId}${path}`
-    );
+    const state = new Shredder(this.getState().backend);
+    return state.get(`${pluginName}@${this.props.entityId}${path}`);
   }
 
   getEntityValue(model) {
@@ -823,8 +829,8 @@ class Widget extends React.Component {
   }
 
   getEntityById(entityId) {
-    const state = new Shredder(this.getState());
-    return state.get(`backend.${entityId}`);
+    const state = new Shredder(this.getState().backend);
+    return state.get(entityId);
   }
 
   getEntityPathInCollection(collectionPath, id, entityPath) {
