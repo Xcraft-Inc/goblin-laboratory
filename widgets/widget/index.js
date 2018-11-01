@@ -380,14 +380,12 @@ class Widget extends React.Component {
   withState(mapProps, path) {
     return connect(
       state => {
-        const s = new Shredder(state);
+        const s = new Shredder(state.backend);
         if (isFunction(mapProps)) {
-          return Object.assign(
-            mapProps(s.get(`backend.${this.props.id}${path}`))
-          );
+          return Object.assign(mapProps(s.get(`${this.props.id}${path}`)));
         } else {
           return {
-            [mapProps]: s.get(`backend.${this.props.id}${path}`),
+            [mapProps]: s.get(`${this.props.id}${path}`),
           };
         }
       },
@@ -411,7 +409,10 @@ class Widget extends React.Component {
   withModel(model, mapProps, fullPath) {
     return connect(
       state => {
-        const s = new Shredder(state);
+        const s = new Shredder({
+          backend: state.backend,
+          widgets: state.widgets,
+        });
         let parentModel = '';
         if (!fullPath) {
           parentModel = `backend.${this.props.id}`;
