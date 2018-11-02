@@ -7,7 +7,10 @@ function withShredder(mapStateToProps) {
   mapStateToProps = wrapMapStateToProps(mapStateToProps);
 
   const mapStateToPropsWithOwnProps = (state, ownProps) => {
-    const s = new Shredder(state);
+    const s = new Shredder({
+      backend: state.backend,
+      widgets: state.widgets,
+    });
     return mapStateToProps(s, ownProps);
   };
 

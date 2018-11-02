@@ -326,14 +326,18 @@ class Widget extends React.Component {
   }
 
   static wire(connectId, wires) {
+    const useProps = !connectId;
     return connect(
-      state => {
+      (state, props) => {
+        if (useProps) {
+          connectId = props.id;
+        }
         let mapState = {};
         if (state.backend) {
           if (wires) {
             const shredded = new Shredder(state.backend);
             if (!shredded.has(connectId)) {
-              return {_no_props_: true};
+              return {_no_props_: true, id: null};
             }
             Object.keys(wires).forEach(wire => {
               const val = shredded.get(`${connectId}.${wires[wire]}`, null);
@@ -391,14 +395,12 @@ class Widget extends React.Component {
   withState(mapProps, path) {
     return connect(
       state => {
-        const s = new Shredder(state);
+        const s = new Shredder(state.backend);
         if (isFunction(mapProps)) {
-          return Object.assign(
-            mapProps(s.get(`backend.${this.props.id}${path}`))
-          );
+          return Object.assign(mapProps(s.get(`${this.props.id}${path}`)));
         } else {
           return {
-            [mapProps]: s.get(`backend.${this.props.id}${path}`),
+            [mapProps]: s.get(`${this.props.id}${path}`),
           };
         }
       },
@@ -422,7 +424,10 @@ class Widget extends React.Component {
   withModel(model, mapProps, fullPath) {
     return connect(
       state => {
-        const s = new Shredder(state);
+        const s = new Shredder({
+          backend: state.backend,
+          widgets: state.widgets,
+        });
         let parentModel = '';
         if (!fullPath) {
           parentModel = `backend.${this.props.id}`;
@@ -783,7 +788,11 @@ class Widget extends React.Component {
   }
 
   getModelValue(model, fullPath) {
-    const state = new Shredder(this.getState());
+    const storeState = this.getState();
+    const state = new Shredder({
+      backend: storeState.backend,
+      widgets: storeState.widgets,
+    });
     if (fullPath) {
       if (isFunction(model)) {
         model = model(state.get(model));
@@ -802,7 +811,11 @@ class Widget extends React.Component {
   }
 
   getBackendValue(fullpath) {
-    const state = new Shredder(this.getState());
+    const storeState = this.getState();
+    const state = new Shredder({
+      backend: storeState.backend,
+      widgets: storeState.widgets,
+    });
     return state.get(fullpath);
   }
 
@@ -811,15 +824,13 @@ class Widget extends React.Component {
   }
 
   getFormPluginValue(pluginName, path) {
-    return this.getBackendValue(
-      `backend.${pluginName}@${this.props.id}${path}`
-    );
+    const state = new Shredder(this.getState().backend);
+    return state.get(`${pluginName}@${this.props.id}${path}`);
   }
 
   getEntityPluginValue(pluginName, path) {
-    return this.getBackendValue(
-      `backend.${pluginName}@${this.props.entityId}${path}`
-    );
+    const state = new Shredder(this.getState().backend);
+    return state.get(`${pluginName}@${this.props.entityId}${path}`);
   }
 
   getEntityValue(model) {
@@ -833,8 +844,8 @@ class Widget extends React.Component {
   }
 
   getEntityById(entityId) {
-    const state = new Shredder(this.getState());
-    return state.get(`backend.${entityId}`);
+    const state = new Shredder(this.getState().backend);
+    return state.get(entityId);
   }
 
   getEntityPathInCollection(collectionPath, id, entityPath) {
