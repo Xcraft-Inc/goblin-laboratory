@@ -72,6 +72,7 @@ import c102 from '@fortawesome/fontawesome-pro-solid/faChevronDown';
 import c103 from '@fortawesome/fontawesome-pro-solid/faChild';
 import c110 from '@fortawesome/fontawesome-pro-regular/faCircle';
 import c115 from '@fortawesome/fontawesome-pro-solid/faCircle';
+import c116 from '@fortawesome/fontawesome-pro-regular/faClipboardCheck';
 import c120 from '@fortawesome/fontawesome-pro-solid/faClock';
 import c121 from '@fortawesome/fontawesome-pro-regular/faClock';
 import c130 from '@fortawesome/fontawesome-pro-regular/faClone';
@@ -225,7 +226,7 @@ import u25 from '@fortawesome/fontawesome-pro-solid/faUnlock';
 import u30 from '@fortawesome/fontawesome-pro-solid/faUser';
 import u31 from '@fortawesome/fontawesome-pro-regular/faUser';
 import u40 from '@fortawesome/fontawesome-pro-solid/faUserSecret';
-import u41 from '@fortawesome/fontawesome-pro-solid/faUtensils';
+import u41 from '@fortawesome/fontawesome-pro-regular/faUtensils';
 
 function boot() {
   fontawesome.library.add(
@@ -295,6 +296,7 @@ function boot() {
     c103,
     c110,
     c115,
+    c116,
     c120,
     c121,
     c130,
