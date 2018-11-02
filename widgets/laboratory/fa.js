@@ -138,6 +138,7 @@ import l00 from '@fortawesome/fontawesome-pro-solid/faLanguage';
 import l10 from '@fortawesome/fontawesome-pro-solid/faLink';
 import l15 from '@fortawesome/fontawesome-pro-solid/faList';
 import l20 from '@fortawesome/fontawesome-pro-solid/faLock';
+import l21 from '@fortawesome/fontawesome-pro-regular/faLock';
 
 /* M */
 import m00 from '@fortawesome/fontawesome-pro-solid/faMale';
@@ -224,6 +225,7 @@ import u25 from '@fortawesome/fontawesome-pro-solid/faUnlock';
 import u30 from '@fortawesome/fontawesome-pro-solid/faUser';
 import u31 from '@fortawesome/fontawesome-pro-regular/faUser';
 import u40 from '@fortawesome/fontawesome-pro-solid/faUserSecret';
+import u41 from '@fortawesome/fontawesome-pro-solid/faUtensils';
 
 function boot() {
   fontawesome.library.add(
@@ -345,6 +347,7 @@ function boot() {
     l10,
     l15,
     l20,
+    l21,
     m00,
     m10,
     m11,
@@ -414,7 +417,8 @@ function boot() {
     u25,
     u30,
     u31,
-    u40
+    u40,
+    u41
   );
 }
 
