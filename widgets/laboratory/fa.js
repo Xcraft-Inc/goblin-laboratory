@@ -142,6 +142,7 @@ import l20 from '@fortawesome/fontawesome-pro-solid/faLock';
 /* M */
 import m00 from '@fortawesome/fontawesome-pro-solid/faMale';
 import m10 from '@fortawesome/fontawesome-pro-solid/faMapMarkerAlt';
+import m11 from '@fortawesome/fontawesome-pro-regular/faMapMarkerAlt';
 import m20 from '@fortawesome/fontawesome-pro-solid/faMeh';
 import m30 from '@fortawesome/fontawesome-pro-solid/faMinus';
 import m35 from '@fortawesome/fontawesome-pro-solid/faMinusCircle';
@@ -346,6 +347,7 @@ function boot() {
     l20,
     m00,
     m10,
+    m11,
     m20,
     m30,
     m35,
