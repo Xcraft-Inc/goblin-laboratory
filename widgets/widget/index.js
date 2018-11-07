@@ -131,8 +131,8 @@ class Widget extends React.Component {
     let item = stylesCache.get(hash);
     if (item) {
       /* When an existing style is used, detach from its current position
-       * and append to the linked-list. The goal is to keep the less used
-       * style in front of the list (head).
+       * and move of one step in the linked-list. The goal is to keep the less
+       * used style in front of the list (head).
        */
       const nextItem = item.next;
       if (nextItem) {
