@@ -187,6 +187,9 @@ import s08 from '@fortawesome/fontawesome-pro-solid/faShoppingCart';
 import s10 from '@fortawesome/fontawesome-pro-solid/faSignInAlt';
 import s15 from '@fortawesome/fontawesome-free-brands/faSkype';
 import s20 from '@fortawesome/fontawesome-pro-solid/faSmile';
+import s24 from '@fortawesome/fontawesome-pro-solid/faSort';
+import s25 from '@fortawesome/fontawesome-pro-solid/faSortAlphaUp';
+import s26 from '@fortawesome/fontawesome-pro-solid/faSortAlphaDown';
 import s30 from '@fortawesome/fontawesome-pro-solid/faSpinner';
 import s40 from '@fortawesome/fontawesome-pro-solid/faSquare';
 import s41 from '@fortawesome/fontawesome-pro-regular/faSquare';
@@ -385,6 +388,9 @@ function boot() {
     s10,
     s15,
     s20,
+    s24,
+    s25,
+    s26,
     s30,
     s40,
     s41,
