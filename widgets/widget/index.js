@@ -157,7 +157,6 @@ class Widget extends React.Component {
       item = stylesCacheUses.head;
       item.detach();
       stylesCache.delete(item.hash);
-      console.log(item.hash);
     }
 
     /* Create a new linked-list item and add this one at the end of the list.
