@@ -160,7 +160,7 @@ class Widget extends React.Component {
       console.log(item.hash);
     }
 
-    /* Create a new linkied-list item and add this one at the end of the list.
+    /* Create a new linked-list item and add this one at the end of the list.
      * Here, it's still not possible to be sure that this style will be often
      * used. Anyway, if it's not used anymore, it will move one-by-one to the
      * front of the list.
