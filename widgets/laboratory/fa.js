@@ -226,6 +226,7 @@ import u20 from '@fortawesome/fontawesome-pro-solid/faUnlink';
 import u25 from '@fortawesome/fontawesome-pro-solid/faUnlock';
 import u30 from '@fortawesome/fontawesome-pro-solid/faUser';
 import u31 from '@fortawesome/fontawesome-pro-regular/faUser';
+import u32 from '@fortawesome/fontawesome-pro-solid/faUsers';
 import u40 from '@fortawesome/fontawesome-pro-solid/faUserSecret';
 import u41 from '@fortawesome/fontawesome-pro-regular/faUtensils';
 
@@ -421,6 +422,7 @@ function boot() {
     u25,
     u30,
     u31,
+    u32,
     u40,
     u41
   );
