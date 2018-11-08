@@ -3,6 +3,7 @@ import _ from 'lodash';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import Shredder from 'xcraft-core-shredder';
+import LinkedList from 'linked-list';
 import {push, replace, goBack} from 'react-router-redux';
 import {actions} from 'react-redux-form/immutable';
 import {matchPath} from 'react-router';
@@ -19,7 +20,8 @@ import * as widgetsActions from './utils/widgets-actions';
 const stylesImporter = importer('styles');
 const reducerImporter = importer('reducer');
 
-const stylesCache = {};
+const stylesCache = new Map();
+const stylesCacheUses = new LinkedList();
 const myStyleCache = {};
 
 const debounceCollect = _.debounce(fct => {
@@ -141,10 +143,20 @@ class Widget extends React.Component {
     const styleProps = this.getStyleProps(myStyle);
     const hash = this.computeStyleHash(myStyle, styleProps);
 
-    const style = stylesCache[hash];
-    if (style) {
-      this.lastStyle = style;
-      return style;
+    let item = stylesCache.get(hash);
+    if (item) {
+      /* When an existing style is used, detach from its current position
+       * and move of one step in the linked-list. The goal is to keep the less
+       * used style in front of the list (head).
+       */
+      const nextItem = item.next;
+      if (nextItem) {
+        item.detach();
+        nextItem.append(item);
+      }
+
+      this.lastStyle = item.style;
+      return item.style;
     }
 
     const jsStyles = myStyle.func(this.context.theme, styleProps);
@@ -153,7 +165,27 @@ class Widget extends React.Component {
       props: jsStyles,
     };
 
-    stylesCache[hash] = newStyle;
+    /* Limit the style cache to 1024 entries. The less used item is deleted
+     * when the limit is reached.
+     */
+    if (stylesCache.size > 1024) {
+      item = stylesCacheUses.head;
+      item.detach();
+      stylesCache.delete(item.hash);
+    }
+
+    /* Create a new linked-list item and add this one at the end of the list.
+     * Here, it's still not possible to be sure that this style will be often
+     * used. Anyway, if it's not used anymore, it will move one-by-one to the
+     * front of the list.
+     */
+    item = new LinkedList.Item();
+    item.hash = hash;
+    item.style = newStyle;
+    stylesCacheUses.append(item);
+
+    stylesCache.set(hash, item);
+
     this.lastStyle = newStyle;
     return newStyle;
   }
