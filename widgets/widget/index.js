@@ -16,6 +16,7 @@ import _connect from './utils/connect';
 import connectWidget from './utils/connectWidget';
 import connectBackend from './utils/connectBackend';
 import * as widgetsActions from './utils/widgets-actions';
+import {ToNabuObject} from 'goblin-nabu/widgets/helpers/helpers.js';
 
 const stylesImporter = importer('styles');
 const reducerImporter = importer('reducer');
@@ -1020,6 +1021,14 @@ class Widget extends React.Component {
 
   getNearestId() {
     return this.props.id || this.context.nearestParentId;
+  }
+
+  static T(...args) {
+    return ToNabuObject(...args);
+  }
+
+  T(...args) {
+    return Widget.T(...args);
   }
 }
 
