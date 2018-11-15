@@ -704,12 +704,31 @@ class Widget extends React.Component {
   /**
    * Dispatch an action in the frontend reducer for this widget.
    *
-   * The `reducer.js` file must be present for working.
-   *
    * @param {Object} action - Redux action.
-   * @param {Object} name - Redux action.
+   * @param {String} name - (optional) Reducer name.
    */
   dispatch(action, name) {
+    this.dispatchTo(this.widgetId, action, name || this.name);
+  }
+
+  /**
+   * Dispatch an action in the frontend reducer for a specified widget.
+   *
+   * A `reducer.js` file must be present in a widget folder that matches the `name`
+   * parameter or the name specified in the `id` parameter, after the `$`.
+   *
+   * Possible values for `id`:
+   * `backendId` (example: desktop@111)
+   * `backendId$name` (exemple: workitem@222$hinter)
+   * `backendId$name@id` (exemple: workitem@222$hinter@333)
+   * `$name` (no backend id, must be manually collected in componentWillUnmount)
+   * `$name@id` (same as above)
+   *
+   * @param {String} id - Destination widget id.
+   * @param {Object} action - Redux action.
+   * @param {String} name - (optional) Reducer name.
+   */
+  dispatchTo(id, action, name) {
     if (typeof action !== 'function') {
       if (!action.type) {
         throw new Error(
@@ -718,19 +737,12 @@ class Widget extends React.Component {
           )}. Widget name: ${this.name}`
         );
       }
-      action._id = this.widgetId;
-      action._type = name || this.name;
+      action._id = id;
+      if (name) {
+        action._type = name;
+      }
       action.type = `@widgets_${action.type}`;
     }
-    this.rawDispatch(action);
-  }
-
-  dispatchTo(id, action, name) {
-    action._id = id;
-    if (name) {
-      action._type = name;
-    }
-    action.type = `@widgets_${action.type}`;
     this.rawDispatch(action);
   }
 
