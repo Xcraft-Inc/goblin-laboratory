@@ -20,9 +20,6 @@ const wrapReducer = reducer => (state, action) => {
 };
 
 function findReducerName(action) {
-  if (action._type) {
-    return action._type;
-  }
   const matches = action._id.match(findReducerNameRegex);
   if (!matches || !matches[1]) {
     throw new Error(
@@ -32,22 +29,38 @@ function findReducerName(action) {
   return matches[1];
 }
 
-function getWrappedReducer(action) {
-  let reducerName = findReducerName(action);
+function getWrappedReducer(reducerName) {
   let wrappedReducer = wrappedReducers[reducerName];
   if (!wrappedReducer) {
     const reducer = reducerImporter(reducerName);
     if (!reducer) {
-      throw new Error(
-        `No reducer named "${reducerName}" found. Action:\n${JSON.stringify(
-          action
-        )}`
-      );
+      return null;
     }
     wrappedReducer = wrapReducer(reducer);
     wrappedReducers[reducerName] = wrappedReducer;
   }
   return wrappedReducer;
+}
+
+function getReducerForAction(action) {
+  if (action._type) {
+    const reducer = getWrappedReducer(action._type);
+    if (reducer) {
+      return reducer;
+    }
+  }
+
+  const reducerName = findReducerName(action);
+  const reducer = getWrappedReducer(reducerName);
+  if (reducer) {
+    return reducer;
+  }
+
+  throw new Error(
+    `No reducer named "${reducerName}" found. Action:\n${JSON.stringify(
+      action
+    )}`
+  );
 }
 
 export default (state = fromJS({}), action = {}) => {
@@ -62,7 +75,7 @@ export default (state = fromJS({}), action = {}) => {
     return state;
   }
 
-  const wrappedReducer = getWrappedReducer(action);
+  const wrappedReducer = getReducerForAction(action);
 
   // Remove type prefix
   action = {
