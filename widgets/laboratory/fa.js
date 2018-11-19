@@ -22,6 +22,7 @@ import a70 from '@fortawesome/fontawesome-pro-solid/faAt';
 
 /* B */
 import b00 from '@fortawesome/fontawesome-pro-solid/faBadge';
+import b01 from '@fortawesome/fontawesome-pro-solid/faBadgeCheck';
 import b05 from '@fortawesome/fontawesome-pro-solid/faBan';
 import b10 from '@fortawesome/fontawesome-pro-solid/faBars';
 import b20 from '@fortawesome/fontawesome-pro-solid/faBalanceScale';
@@ -250,6 +251,7 @@ function boot() {
     a60,
     a70,
     b00,
+    b01,
     b05,
     b10,
     b20,
