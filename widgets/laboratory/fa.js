@@ -93,7 +93,8 @@ import d00 from '@fortawesome/fontawesome-pro-solid/faDatabase';
 import d01 from '@fortawesome/fontawesome-pro-regular/faDotCircle';
 
 /* E */
-import e00 from '@fortawesome/fontawesome-pro-solid/faEllipsisH';
+import e00 from '@fortawesome/fontawesome-pro-light/faEdit';
+import e01 from '@fortawesome/fontawesome-pro-solid/faEllipsisH';
 import e03 from '@fortawesome/fontawesome-pro-solid/faEllipsisV';
 import e05 from '@fortawesome/fontawesome-pro-regular/faEnvelope';
 import e10 from '@fortawesome/fontawesome-pro-solid/faEnvelope';
@@ -119,6 +120,7 @@ import f40 from '@fortawesome/fontawesome-pro-solid/faFrown';
 import g00 from '@fortawesome/fontawesome-pro-solid/faGem';
 import g10 from '@fortawesome/fontawesome-pro-solid/faGlobe';
 import g20 from '@fortawesome/fontawesome-pro-solid/faGraduationCap';
+import g21 from '@fortawesome/fontawesome-pro-light/faGraduationCap';
 
 /* H */
 import h00 from '@fortawesome/fontawesome-pro-solid/faHandPointRight';
@@ -179,6 +181,7 @@ import q00 from '@fortawesome/fontawesome-pro-solid/faQuestionCircle';
 import r00 from '@fortawesome/fontawesome-pro-solid/faRandom';
 import r10 from '@fortawesome/fontawesome-pro-regular/faRectangleLandscape';
 import r20 from '@fortawesome/fontawesome-pro-solid/faRocket';
+import r21 from '@fortawesome/fontawesome-pro-light/faRocket';
 
 /* S */
 import s00 from '@fortawesome/fontawesome-pro-solid/faSearch';
@@ -317,6 +320,7 @@ function boot() {
     d00,
     d01,
     e00,
+    e01,
     e03,
     e05,
     e10,
@@ -338,6 +342,7 @@ function boot() {
     g00,
     g10,
     g20,
+    g21,
     h00,
     h01,
     h05,
@@ -382,6 +387,7 @@ function boot() {
     r00,
     r10,
     r20,
+    r21,
     s00,
     s05,
     s07,
