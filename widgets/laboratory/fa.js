@@ -202,6 +202,7 @@ import s80 from '@fortawesome/fontawesome-pro-solid/faStepForward';
 import s90 from '@fortawesome/fontawesome-pro-solid/faSubway';
 import s95 from '@fortawesome/fontawesome-pro-regular/faSun';
 import s96 from '@fortawesome/fontawesome-pro-solid/faSync';
+import s97 from '@fortawesome/fontawesome-pro-light/faSync';
 
 /* T */
 import t00 from '@fortawesome/fontawesome-pro-solid/faTag';
@@ -406,6 +407,7 @@ function boot() {
     s90,
     s95,
     s96,
+    s97,
     t00,
     t01,
     t02,
