@@ -57,6 +57,7 @@ Goblin.registerQuest(goblinName, 'create', function*(quest, url, config) {
       openDevTools: process.env.XCRAFT_APPENV !== 'release',
       useWS: config.useWS,
       target: config.target,
+      //enableTestAutomationLogguer: true,
     },
   });
 
