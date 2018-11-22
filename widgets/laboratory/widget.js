@@ -7,6 +7,14 @@ import {Theme} from 'electrum-theme';
 import Widget from 'laboratory/widget';
 import Maintenance from 'laboratory/maintenance/widget';
 import Fa from './fa.js';
+
+import OpenSansRegularWoff from './fonts/open-sans-v15-latin-regular.woff';
+import OpenSansRegularWoff2 from './fonts/open-sans-v15-latin-regular.woff2';
+import OpenSansItalicWoff from './fonts/open-sans-v15-latin-italic.woff';
+import OpenSansItalicWoff2 from './fonts/open-sans-v15-latin-italic.woff2';
+import OpenSansBoldWoff from './fonts/open-sans-v15-latin-700.woff';
+import OpenSansBoldWoff2 from './fonts/open-sans-v15-latin-700.woff2';
+
 import importer from '../importer/';
 const widgetImporter = importer('widget');
 
@@ -41,6 +49,37 @@ class ThemeContext extends React.PureComponent {
     };
   }
 
+  get globalFonts() {
+    return `
+      @font-face {
+        font-family: 'Open Sans';
+        font-style: normal;
+        font-weight: 400;
+        src:
+          url('${OpenSansRegularWoff2}') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+          url('${OpenSansRegularWoff}') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+      }
+
+      @font-face {
+        font-family: 'Open Sans';
+        font-style: italic;
+        font-weight: 400;
+        src:
+          url('${OpenSansItalicWoff2}') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+          url('${OpenSansItalicWoff}') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+      }
+
+      @font-face {
+        font-family: 'Open Sans';
+        font-style: normal;
+        font-weight: 700;
+        src:
+          url('${OpenSansBoldWoff2}') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+          url('${OpenSansBoldWoff}') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+      }
+    `;
+  }
+
   get globalStyles() {
     if (!this.props.theme) {
       console.warn('Theme is undefined in globalStyles');
@@ -59,13 +98,7 @@ class ThemeContext extends React.PureComponent {
     return {
       body: {
         color: '#999',
-        fontFamily: [
-          'Open Sans',
-          'Helvetica',
-          'Arial',
-          'Verdana',
-          'sans-serif',
-        ],
+        fontFamily: ['Open Sans', 'Helvetica', 'Arial', 'sans-serif'],
         fontWeight: 300,
         margin: 0,
         padding: 0,
@@ -230,6 +263,7 @@ class ThemeContext extends React.PureComponent {
       <div>
         {this.props.globalStyles === true ? (
           <Helmet>
+            <style>{this.globalFonts}</style>
             <style>{jsToCSS(this.globalStyles)}</style>
           </Helmet>
         ) : null}
