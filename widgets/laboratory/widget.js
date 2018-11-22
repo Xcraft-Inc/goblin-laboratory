@@ -12,8 +12,10 @@ import OpenSansRegularWoff from './fonts/open-sans-v15-latin-regular.woff';
 import OpenSansRegularWoff2 from './fonts/open-sans-v15-latin-regular.woff2';
 import OpenSansItalicWoff from './fonts/open-sans-v15-latin-italic.woff';
 import OpenSansItalicWoff2 from './fonts/open-sans-v15-latin-italic.woff2';
-import OpenSansBoldWoff from './fonts/open-sans-v15-latin-700.woff';
-import OpenSansBoldWoff2 from './fonts/open-sans-v15-latin-700.woff2';
+import OpenSans700Woff from './fonts/open-sans-v15-latin-700.woff';
+import OpenSans700Woff2 from './fonts/open-sans-v15-latin-700.woff2';
+import OpenSans700ItalicWoff from './fonts/open-sans-v15-latin-700italic.woff';
+import OpenSans700ItalicWoff2 from './fonts/open-sans-v15-latin-700italic.woff2';
 
 import importer from '../importer/';
 const widgetImporter = importer('widget');
@@ -74,8 +76,17 @@ class ThemeContext extends React.PureComponent {
         font-style: normal;
         font-weight: 700;
         src:
-          url('${OpenSansBoldWoff2}') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-          url('${OpenSansBoldWoff}') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+          url('${OpenSans700Woff2}') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+          url('${OpenSans700Woff}') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+      }
+
+      @font-face {
+        font-family: 'Open Sans';
+        font-style: italic;
+        font-weight: 700;
+        src:
+          url('${OpenSans700ItalicWoff2}') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+          url('${OpenSans700ItalicWoff}') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
       }
     `;
   }
