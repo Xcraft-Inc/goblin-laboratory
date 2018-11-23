@@ -271,7 +271,7 @@ class ThemeContext extends React.PureComponent {
 
   render() {
     return (
-      <div>
+      <React.Fragment>
         {this.props.globalStyles === true ? (
           <Helmet>
             <style>{this.globalFonts}</style>
@@ -279,7 +279,7 @@ class ThemeContext extends React.PureComponent {
           </Helmet>
         ) : null}
         {this.props.children}
-      </div>
+      </React.Fragment>
     );
   }
 }
