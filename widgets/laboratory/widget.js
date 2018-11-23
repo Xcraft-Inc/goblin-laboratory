@@ -21,7 +21,7 @@ class Laboratory extends Widget {
   }
 
   render() {
-    const {id, root, rootId, maintenanceMode, theme, themeContext} = this.props;
+    const {id, root, rootId, maintenanceMode} = this.props;
 
     if (!id) {
       return null;
@@ -52,7 +52,7 @@ class Laboratory extends Widget {
     );
 
     return (
-      <ThemeContext theme={theme} themeContext={themeContext}>
+      <ThemeContext labId={id}>
         <WithMaintenance />
       </ThemeContext>
     );

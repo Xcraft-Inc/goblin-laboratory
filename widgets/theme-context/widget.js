@@ -30,16 +30,7 @@ function jsToCSS(jsStyles) {
 class ThemeContext extends Widget {
   constructor() {
     super(...arguments);
-
-    const themeContext = this.props.themeContext || 'theme';
-    this._themeContext = themeContextImporter(`${themeContext}`);
-  }
-
-  static get wiring() {
-    return {
-      theme: 'theme',
-      themeContext: 'themeContext',
-    };
+    this._theme = null;
   }
 
   getChildContext() {
@@ -55,9 +46,13 @@ class ThemeContext extends Widget {
   }
 
   render() {
-    this._theme = Theme.create(this.props.theme || this._themeContext.theme);
-    const globalStyles = this._themeContext.getGlobalStyles(this._theme);
-    const fonts = this._themeContext.getFonts(this._theme);
+    const themeContext = themeContextImporter(
+      `${this.props.themeContext || 'theme'}`
+    );
+
+    this._theme = Theme.create(this.props.theme || themeContext.theme);
+    const globalStyles = themeContext.getGlobalStyles(this._theme);
+    const fonts = themeContext.getFonts(this._theme);
 
     return (
       <React.Fragment>
@@ -77,4 +72,9 @@ class ThemeContext extends Widget {
   }
 }
 
-export default ThemeContext;
+export default Widget.connect((state, props) => {
+  return {
+    theme: state.get(`backend.${props.labId}.theme`),
+    themeContext: state.get(`backend.${props.labId}.themeContext`),
+  };
+})(ThemeContext);
