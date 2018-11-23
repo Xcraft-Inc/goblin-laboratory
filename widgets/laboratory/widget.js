@@ -1,5 +1,4 @@
 import React from 'react';
-import {Theme} from 'electrum-theme';
 import Widget from 'laboratory/widget';
 import Maintenance from 'laboratory/maintenance/widget';
 import ThemeContext from 'laboratory/theme-context/widget';
@@ -18,12 +17,11 @@ class Laboratory extends Widget {
       root: 'root',
       rootId: 'rootId',
       theme: 'theme',
-      globalStyles: 'globalStyles',
     };
   }
 
   render() {
-    const {id, root, rootId, maintenanceMode, globalStyles} = this.props;
+    const {id, root, rootId, maintenanceMode, theme, themeContext} = this.props;
 
     if (!id) {
       return null;
@@ -54,10 +52,7 @@ class Laboratory extends Widget {
     );
 
     return (
-      <ThemeContext
-        theme={Theme.create(this.props.theme)}
-        globalStyles={globalStyles}
-      >
+      <ThemeContext theme={theme} themeContext={themeContext}>
         <WithMaintenance />
       </ThemeContext>
     );

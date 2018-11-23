@@ -18,8 +18,8 @@ const logicHandlers = {
       feed: action.get('feed'),
       wid: action.get('wid'),
       feeds: conf.feeds,
-      theme: 'default',
-      globalStyles: conf.disableGlobalStyles ? false : true,
+      theme: null,
+      themeContext: conf.themeContext,
     });
   },
   'set-root': (state, action) => {
