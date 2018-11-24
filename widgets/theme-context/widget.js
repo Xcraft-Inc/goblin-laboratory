@@ -1,7 +1,6 @@
 import React from 'react';
 import Widget from 'laboratory/widget';
 import {Theme} from 'electrum-theme';
-import {Helmet} from 'react-helmet';
 import toCss from 'obj-to-css';
 import cssKey from 'css-key';
 import PropTypes from 'prop-types';
@@ -31,41 +30,42 @@ class ThemeContext extends Widget {
   constructor() {
     super(...arguments);
     this._theme = null;
+    this._themeContextName = null;
   }
 
   getChildContext() {
     return {
       theme: this._theme,
+      themeContextName: this._themeContextName,
     };
   }
 
   static get childContextTypes() {
     return {
       theme: PropTypes.object,
+      themeContextName: PropTypes.string,
     };
   }
 
   render() {
-    const themeContext = themeContextImporter(
-      `${this.props.themeContext || 'theme'}`
-    );
+    this._themeContextName =
+      this.props.frameThemeContext || this.props.themeContext || 'theme';
+    const themeContext = themeContextImporter(this._themeContextName);
 
     this._theme = Theme.create(this.props.theme || themeContext.theme);
     const globalStyles = themeContext.getGlobalStyles(this._theme);
+    if (this.props.frameThemeContext && globalStyles['.root']) {
+      globalStyles[`.root-${this.props.labId.replace(/@/g, '-')}`] =
+        globalStyles['.root'];
+      delete globalStyles['.root'];
+    }
     const fonts = themeContext.getFonts(this._theme);
 
     return (
       <React.Fragment>
-        {globalStyles && (
-          <Helmet>
-            <style>{jsToCSS(globalStyles)}</style>
-          </Helmet>
-        )}
-        {fonts && (
-          <Helmet>
-            <style>{fonts}</style>
-          </Helmet>
-        )}
+        <style type="text/css" data-aphrodite />
+        {globalStyles && <style type="text/css">{jsToCSS(globalStyles)}</style>}
+        {fonts && <style type="text/css">{fonts}</style>}
         {this.props.children}
       </React.Fragment>
     );

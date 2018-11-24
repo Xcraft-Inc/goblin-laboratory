@@ -106,6 +106,7 @@ class Widget extends React.Component {
       dragControllerId: PropTypes.string,
       dragServiceId: PropTypes.string,
       readonly: PropTypes.any,
+      themeContextName: PropTypes.string,
     };
   }
 

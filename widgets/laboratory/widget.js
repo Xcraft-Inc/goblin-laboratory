@@ -20,40 +20,47 @@ class Laboratory extends Widget {
     };
   }
 
-  render() {
+  renderRoot() {
     const {id, root, rootId, maintenanceMode} = this.props;
-
-    if (!id) {
-      return null;
-    }
-
-    if (!rootId) {
-      return null;
-    }
-
-    const widgetName = root.split('@')[0];
-    const RootWidget = widgetImporter(widgetName);
-    const WiredRoot = Widget.Wired(RootWidget)(rootId);
 
     const Root = props => {
       if (props.status && props.status !== 'off') {
         return <Maintenance mode={maintenanceMode} />;
       } else {
+        const widgetName = root.split('@')[0];
+        const RootWidget = widgetImporter(widgetName);
+        const WiredRoot = Widget.Wired(RootWidget)(rootId);
         return <WiredRoot />;
       }
     };
 
     const WithMaintenance = this.mapWidget(
       Root,
-      status => {
-        return {status};
-      },
+      status => ({status}),
       'backend.workshop.maintenance.status'
     );
 
     return (
       <ThemeContext labId={id}>
         <WithMaintenance />
+      </ThemeContext>
+    );
+  }
+
+  render() {
+    const {id, rootId} = this.props;
+
+    if (!id) {
+      return null;
+    }
+
+    if (rootId) {
+      return this.renderRoot();
+    }
+
+    return (
+      <ThemeContext labId={id} frameThemeContext={this.props.frameThemeContext}>
+        {this.props.children}
       </ThemeContext>
     );
   }
