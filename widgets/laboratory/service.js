@@ -54,7 +54,9 @@ Goblin.registerQuest(goblinName, 'create', function*(quest, url, config) {
     labId: quest.goblin.id,
     feeds: config.feeds,
     options: {
-      openDevTools: process.env.XCRAFT_APPENV !== 'release',
+      openDevTools:
+        process.env.XCRAFT_APPENV !== 'release' ||
+        process.env.WESTEROS_DEVTOOLS === '1',
       useWS: config.useWS,
       target: config.target,
       //enableTestAutomationLogguer: true,
