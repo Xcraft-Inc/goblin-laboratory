@@ -202,11 +202,11 @@ Goblin.registerQuest(goblinName, 'add', function(quest, widgetId) {
 
 Goblin.registerQuest(goblinName, 'del', function(quest, widgetId) {
   const state = quest.goblin.getState();
-  const wid = state.get('wid');
+  const feed = state.get('wid');
   const branch = widgetId;
   const labId = quest.goblin.id;
-  quest.log.info(`Laboratory deleting widget ${widgetId} from window ${wid}`);
-  quest.cmd('warehouse.feed.del', {feed: wid, owners: [labId, branch], branch});
+  quest.log.info(`Laboratory deleting widget ${widgetId} from window ${feed}`);
+  quest.warehouse.feedSubscriptionDel({feed, branch, parents: labId});
 });
 
 Goblin.registerQuest(goblinName, 'delete', function*(quest) {
