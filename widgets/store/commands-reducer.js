@@ -1,6 +1,10 @@
 import {fromJS} from 'immutable';
 
-export default (state = fromJS({}), action = {}) => {
+const initialState = fromJS({
+  registry: {},
+});
+
+export default (state = initialState, action = {}) => {
   if (action.type === 'COMMANDS_REGISTRY') {
     return state.set('registry', action.commands);
   }

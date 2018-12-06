@@ -95,6 +95,35 @@ const formMiddleware = send => store => next => action => {
   return next(action);
 };
 
+const transitMiddleware = store => next => action => {
+  if (
+    action.type === 'NEW_BACKEND_STATE' &&
+    action.data &&
+    action.data._xcraftMessage
+  ) {
+    action.data = helpers.fromXcraftJSON(action.data)[0].data;
+
+    const generation = action.data.get('generation');
+    if (action.data.get('_xcraftPath')) {
+      nextGeneration++;
+
+      if (generation !== nextGeneration) {
+        /* Resend the whole state because in this case, we lose some generations. */
+        console.log(
+          `${generation - nextGeneration - 1} generation(s) lost, resend`
+        );
+        action.renderer.send('RESEND');
+      }
+    } else {
+      nextGeneration = generation;
+    }
+    action.nextGeneration = nextGeneration;
+
+    insertCompensators(store, action);
+  }
+  return next(action);
+};
+
 module.exports = send => {
   const _send = (type, action) => {
     let data = action;
@@ -108,33 +137,6 @@ module.exports = send => {
   return {
     formMiddleware: formMiddleware(_send),
     questMiddleware: questMiddleware(_send),
-    transitMiddleware: store => next => action => {
-      if (
-        action.type === 'NEW_BACKEND_STATE' &&
-        action.data &&
-        action.data._xcraftMessage
-      ) {
-        action.data = helpers.fromXcraftJSON(action.data)[0].data;
-
-        const generation = action.data.get('generation');
-        if (action.data.get('_xcraftPath')) {
-          nextGeneration++;
-
-          if (generation !== nextGeneration) {
-            /* Resend the whole state because in this case, we lose some generations. */
-            console.log(
-              `${generation - nextGeneration - 1} generation(s) lost, resend`
-            );
-            action.renderer.send('RESEND');
-          }
-        } else {
-          nextGeneration = generation;
-        }
-        action.nextGeneration = nextGeneration;
-
-        insertCompensators(store, action);
-      }
-      return next(action);
-    },
+    transitMiddleware,
   };
 };

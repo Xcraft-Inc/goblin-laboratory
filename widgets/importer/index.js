@@ -8,7 +8,10 @@ const importAll = (kind, r) => {
   cache[kind] = {};
 
   files.forEach(file => {
-    const nameSpace = path.basename(path.dirname(file));
+    const nameSpace =
+      kind === 'theme-context'
+        ? file.replace(/.*[\\/.]goblin-([^\\/]+).*/, '$1')
+        : path.basename(path.dirname(file));
     cache[kind][nameSpace] = r(file);
   });
 };
@@ -75,6 +78,16 @@ export default kind => {
       importAll(
         kind,
         require.context('../../../', true, /\/widgets\/[^/]+\/compensator\.js$/)
+      );
+      break;
+    case 'theme-context':
+      importAll(
+        kind,
+        require.context(
+          '../../..',
+          true,
+          /\/widgets\/theme-context\/index\.js$/
+        )
       );
       break;
     default:
