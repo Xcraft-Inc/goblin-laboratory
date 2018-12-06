@@ -63,10 +63,12 @@ Goblin.registerQuest(goblinName, 'create', function*(quest, url, config) {
     },
   });
 
+  if (!config.feeds.includes(quest.goblin.id)) {
+    config.feeds.push(quest.goblin.id);
+  }
   yield win.feedSub({wid: winId, feeds: config.feeds});
-  quest.do({id: quest.goblin.id, feed, wid: winId, url, config});
 
-  quest.cmd('warehouse.feed.add', {feed, branch: winId});
+  quest.do({id: quest.goblin.id, feed, wid: winId, url, config});
 
   quest.goblin.defer(
     quest.sub(`goblin.${feed}.created`, (err, msg) => {
