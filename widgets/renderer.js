@@ -1,12 +1,9 @@
-import 'react-hot-loader/patch';
-
 if (process.env.NODE_ENV !== 'production') {
   require('./devtools.js');
 }
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {AppContainer} from 'react-hot-loader';
 import Root from 'laboratory/root';
 import createHistory from 'history/createHashHistory';
 import {push} from 'react-router-redux';
@@ -20,10 +17,6 @@ class Renderer {
     this.push = push;
     this._store = configureStore(window.__INITIAL_STATE__, history, this.send);
     this._rootMounted = false;
-
-    if (module.hot) {
-      module.hot.accept();
-    }
   }
 
   get store() {
@@ -72,9 +65,7 @@ class Renderer {
     }
 
     ReactDOM.render(
-      <AppContainer>
-        <Main store={this.store} history={history} labId={this._labId} />
-      </AppContainer>,
+      <Main store={this.store} history={history} labId={this._labId} />,
       document.getElementById('root')
     );
   }
