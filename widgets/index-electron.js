@@ -29,6 +29,8 @@ class ElectronRenderer extends Renderer {
       this.newBackendInfos(transitState)
     );
 
+    ipcRenderer.on('BEGIN_RENDER', (event, labId) => super.main(labId));
+
     if (module.hot) {
       const wid = remote.getCurrentWindow().id;
       this.send('RESEND', wid);
