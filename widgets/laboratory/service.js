@@ -19,7 +19,7 @@ const logicHandlers = {
       wid: action.get('wid'),
       feeds: conf.feeds,
       theme: null,
-      themeContext: conf.themeContext,
+      themeContext: conf.themeContext || null,
     });
   },
   'set-root': (state, action) => {
@@ -48,6 +48,32 @@ Goblin.registerQuest(goblinName, 'create', function*(quest, url, config) {
 
   quest.goblin.feed = {[feed]: true};
 
+  if (!config.feeds.includes(quest.goblin.id)) {
+    config.feeds.push(quest.goblin.id);
+  }
+
+  quest.do({id: quest.goblin.id, feed, wid: winId, url, config});
+
+  quest.goblin.defer(
+    quest.sub(`goblin.${feed}.created`, function*(err, msg) {
+      yield quest.cmd('laboratory.add', {
+        id: quest.goblin.id,
+        widgetId: msg.data.id,
+      });
+    })
+  );
+
+  quest.goblin.defer(
+    quest.sub('goblin.released', function*(err, msg) {
+      yield quest.cmd('laboratory.del', {
+        id: quest.goblin.id,
+        widgetId: msg.data.id,
+      });
+    })
+  );
+
+  quest.doSync({id: quest.goblin.id, feed, wid: winId, url, config});
+
   const win = yield quest.createFor('wm', labId, winId, {
     id: winId,
     url,
@@ -63,30 +89,8 @@ Goblin.registerQuest(goblinName, 'create', function*(quest, url, config) {
     },
   });
 
-  if (!config.feeds.includes(quest.goblin.id)) {
-    config.feeds.push(quest.goblin.id);
-  }
   yield win.feedSub({wid: winId, feeds: config.feeds});
-
-  quest.do({id: quest.goblin.id, feed, wid: winId, url, config});
-
-  quest.goblin.defer(
-    quest.sub(`goblin.${feed}.created`, (err, msg) => {
-      quest.cmd('laboratory.add', {
-        id: quest.goblin.id,
-        widgetId: msg.data.id,
-      });
-    })
-  );
-
-  quest.goblin.defer(
-    quest.sub('goblin.released', (err, msg) => {
-      quest.cmd('laboratory.del', {
-        id: quest.goblin.id,
-        widgetId: msg.data.id,
-      });
-    })
-  );
+  yield win.beginRender();
 
   quest.log.info(`Laboratory ${quest.goblin.id} created!`);
   return quest.goblin.id;
