@@ -69,8 +69,8 @@ Goblin.registerQuest(goblinName, 'create', function*(quest, url, config) {
   quest.cmd('warehouse.feed.add', {feed, branch: winId});
 
   quest.goblin.defer(
-    quest.sub(`goblin.${feed}.created`, (err, msg) => {
-      quest.cmd('laboratory.add', {
+    quest.sub(`goblin.${feed}.created`, function*(err, msg) {
+      yield quest.cmd('laboratory.add', {
         id: quest.goblin.id,
         widgetId: msg.data.id,
       });
@@ -78,8 +78,8 @@ Goblin.registerQuest(goblinName, 'create', function*(quest, url, config) {
   );
 
   quest.goblin.defer(
-    quest.sub('goblin.released', (err, msg) => {
-      quest.cmd('laboratory.del', {
+    quest.sub('goblin.released', function*(err, msg) {
+      yield quest.cmd('laboratory.del', {
         id: quest.goblin.id,
         widgetId: msg.data.id,
       });
