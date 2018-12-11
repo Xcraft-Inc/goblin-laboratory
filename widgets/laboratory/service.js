@@ -52,8 +52,6 @@ Goblin.registerQuest(goblinName, 'create', function*(quest, url, config) {
     config.feeds.push(quest.goblin.id);
   }
 
-  quest.do({id: quest.goblin.id, feed, wid: winId, url, config});
-
   quest.goblin.defer(
     quest.sub(`goblin.${feed}.created`, function*(err, msg) {
       yield quest.cmd('laboratory.add', {
