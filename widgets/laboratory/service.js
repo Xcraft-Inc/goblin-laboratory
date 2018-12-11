@@ -52,8 +52,6 @@ Goblin.registerQuest(goblinName, 'create', function*(quest, url, config) {
     config.feeds.push(quest.goblin.id);
   }
 
-  quest.cmd('warehouse.feed.add', {feed, branch: winId});
-
   quest.goblin.defer(
     quest.sub(`goblin.${feed}.created`, function*(err, msg) {
       yield quest.cmd('laboratory.add', {
@@ -90,6 +88,7 @@ Goblin.registerQuest(goblinName, 'create', function*(quest, url, config) {
   });
 
   yield win.feedSub({wid: winId, feeds: config.feeds});
+  yield quest.cmd('warehouse.feed.add', {feed, branch: winId}); // FIXME: must be removed
   yield win.beginRender();
 
   quest.log.info(`Laboratory ${quest.goblin.id} created!`);
