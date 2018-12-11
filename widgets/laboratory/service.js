@@ -19,7 +19,7 @@ const logicHandlers = {
       wid: action.get('wid'),
       feeds: conf.feeds,
       theme: null,
-      themeContext: conf.themeContext,
+      themeContext: conf.themeContext || null,
     });
   },
   'set-root': (state, action) => {
