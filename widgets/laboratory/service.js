@@ -88,6 +88,7 @@ Goblin.registerQuest(goblinName, 'create', function*(quest, url, config) {
   });
 
   yield win.feedSub({wid: winId, feeds: config.feeds});
+  yield quest.cmd('warehouse.feed.add', {feed, branch: winId}); // FIXME: must be removed
   yield win.beginRender();
 
   quest.log.info(`Laboratory ${quest.goblin.id} created!`);
@@ -194,14 +195,14 @@ Goblin.registerQuest(goblinName, 'open', function(quest, route) {
   quest.log.info(route);
 });
 
-Goblin.registerQuest(goblinName, 'add', function(quest, widgetId) {
+Goblin.registerQuest(goblinName, 'add', function*(quest, widgetId) {
   const state = quest.goblin.getState();
   const wid = state.get('wid');
   const branch = widgetId;
 
   quest.log.info(`Laboratory adding widget ${widgetId} to window ${wid}`);
 
-  quest.cmd('warehouse.feed.add', {feed: wid, branch});
+  yield quest.cmd('warehouse.feed.add', {feed: wid, branch});
 });
 
 Goblin.registerQuest(goblinName, 'del', function*(quest, widgetId) {
@@ -209,7 +210,9 @@ Goblin.registerQuest(goblinName, 'del', function*(quest, widgetId) {
   const feed = state.get('wid');
   const branch = widgetId;
   const labId = quest.goblin.id;
+
   quest.log.info(`Laboratory deleting widget ${widgetId} from window ${feed}`);
+
   yield quest.warehouse.feedSubscriptionDel({feed, branch, parents: labId});
 });
 
