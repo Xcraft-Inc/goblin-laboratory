@@ -48,23 +48,9 @@ Goblin.registerQuest(goblinName, 'create', function*(quest, url, config) {
 
   quest.goblin.feed = {[feed]: true};
 
-  const win = yield quest.createFor('wm', labId, winId, {
-    id: winId,
-    url,
-    labId: quest.goblin.id,
-    feeds: config.feeds,
-    options: {
-      openDevTools:
-        process.env.XCRAFT_APPENV !== 'release' ||
-        process.env.WESTEROS_DEVTOOLS === '1',
-      useWS: config.useWS,
-      target: config.target,
-      //enableTestAutomationLogguer: true,
-    },
-  });
-
-  yield win.feedSub({wid: winId, feeds: config.feeds});
-  quest.do({id: quest.goblin.id, feed, wid: winId, url, config});
+  if (!config.feeds.includes(quest.goblin.id)) {
+    config.feeds.push(quest.goblin.id);
+  }
 
   quest.cmd('warehouse.feed.add', {feed, branch: winId});
 
@@ -85,6 +71,26 @@ Goblin.registerQuest(goblinName, 'create', function*(quest, url, config) {
       });
     })
   );
+
+  quest.doSync({id: quest.goblin.id, feed, wid: winId, url, config});
+
+  const win = yield quest.createFor('wm', labId, winId, {
+    id: winId,
+    url,
+    labId: quest.goblin.id,
+    feeds: config.feeds,
+    options: {
+      openDevTools:
+        process.env.XCRAFT_APPENV !== 'release' ||
+        process.env.WESTEROS_DEVTOOLS === '1',
+      useWS: config.useWS,
+      target: config.target,
+      //enableTestAutomationLogguer: true,
+    },
+  });
+
+  yield win.feedSub({wid: winId, feeds: config.feeds});
+  yield win.beginRender();
 
   quest.log.info(`Laboratory ${quest.goblin.id} created!`);
   return quest.goblin.id;
