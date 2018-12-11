@@ -35,8 +35,6 @@ class ElectronRenderer extends Renderer {
       const wid = remote.getCurrentWindow().id;
       this.send('RESEND', wid);
     }
-
-    super.main();
   }
 }
 
