@@ -196,23 +196,29 @@ Goblin.registerQuest(goblinName, 'open', function(quest, route) {
   quest.log.info(route);
 });
 
-Goblin.registerQuest(goblinName, 'add', function(quest, widgetId) {
+Goblin.registerQuest(goblinName, 'add', function*(quest, widgetId) {
   const state = quest.goblin.getState();
   const wid = state.get('wid');
   const branch = widgetId;
 
   quest.log.info(`Laboratory adding widget ${widgetId} to window ${wid}`);
 
-  quest.cmd('warehouse.feed.add', {feed: wid, branch});
+  yield quest.cmd('warehouse.feed.add', {feed: wid, branch});
 });
 
-Goblin.registerQuest(goblinName, 'del', function(quest, widgetId) {
+Goblin.registerQuest(goblinName, 'del', function*(quest, widgetId) {
   const state = quest.goblin.getState();
   const wid = state.get('wid');
   const branch = widgetId;
   const labId = quest.goblin.id;
+
   quest.log.info(`Laboratory deleting widget ${widgetId} from window ${wid}`);
-  quest.cmd('warehouse.feed.del', {feed: wid, owners: [labId, branch], branch});
+
+  yield quest.cmd('warehouse.feed.del', {
+    feed: wid,
+    owners: [labId, branch],
+    branch,
+  });
 });
 
 Goblin.registerQuest(goblinName, 'delete', function*(quest) {
