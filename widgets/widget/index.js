@@ -16,7 +16,7 @@ import _connect from './utils/connect';
 import connectWidget from './utils/connectWidget';
 import connectBackend from './utils/connectBackend';
 import * as widgetsActions from './utils/widgets-actions';
-import {ToNabuObject} from 'goblin-nabu/widgets/helpers/helpers.js';
+import {T as ToNabuObject} from 'goblin-nabu/widgets/helpers/t.js';
 
 const stylesImporter = importer ('styles');
 const reducerImporter = importer ('reducer');
