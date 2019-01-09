@@ -19,7 +19,7 @@ const logicHandlers = {
       wid: action.get('wid'),
       feeds: conf.feeds,
       theme: null,
-      themeContext: conf.themeContext,
+      themeContext: conf.themeContext || null,
     });
   },
   'set-root': (state, action) => {
@@ -48,6 +48,21 @@ Goblin.registerQuest(goblinName, 'create', function*(quest, url, config) {
 
   quest.goblin.feed = {[feed]: true};
 
+  if (!config.feeds.includes(quest.goblin.id)) {
+    config.feeds.push(quest.goblin.id);
+  }
+
+  quest.goblin.defer(
+    quest.sub('goblin.released', function*(err, msg) {
+      yield quest.cmd('laboratory.del', {
+        id: quest.goblin.id,
+        widgetId: msg.data.id,
+      });
+    })
+  );
+
+  quest.doSync({id: quest.goblin.id, feed, wid: winId, url, config});
+
   const win = yield quest.createFor('wm', labId, winId, {
     id: winId,
     url,
@@ -64,27 +79,11 @@ Goblin.registerQuest(goblinName, 'create', function*(quest, url, config) {
   });
 
   yield win.feedSub({wid: winId, feeds: config.feeds});
-  quest.do({id: quest.goblin.id, feed, wid: winId, url, config});
-
-  quest.cmd('warehouse.feed.add', {feed, branch: winId});
-
-  quest.goblin.defer(
-    quest.sub(`goblin.${feed}.created`, (err, msg) => {
-      quest.cmd('laboratory.add', {
-        id: quest.goblin.id,
-        widgetId: msg.data.id,
-      });
-    })
-  );
-
-  quest.goblin.defer(
-    quest.sub('goblin.released', (err, msg) => {
-      quest.cmd('laboratory.del', {
-        id: quest.goblin.id,
-        widgetId: msg.data.id,
-      });
-    })
-  );
+  yield quest.cmd('warehouse.feed-subscription-add', {
+    feeds: feed,
+    branch: winId,
+  }); // FIXME: must be removed
+  yield win.beginRender();
 
   quest.log.info(`Laboratory ${quest.goblin.id} created!`);
   return quest.goblin.id;
@@ -190,23 +189,15 @@ Goblin.registerQuest(goblinName, 'open', function(quest, route) {
   quest.log.info(route);
 });
 
-Goblin.registerQuest(goblinName, 'add', function(quest, widgetId) {
+Goblin.registerQuest(goblinName, 'del', function*(quest, widgetId) {
   const state = quest.goblin.getState();
-  const wid = state.get('wid');
-  const branch = widgetId;
-
-  quest.log.info(`Laboratory adding widget ${widgetId} to window ${wid}`);
-
-  quest.cmd('warehouse.feed.add', {feed: wid, branch});
-});
-
-Goblin.registerQuest(goblinName, 'del', function(quest, widgetId) {
-  const state = quest.goblin.getState();
-  const wid = state.get('wid');
+  const feed = state.get('wid');
   const branch = widgetId;
   const labId = quest.goblin.id;
-  quest.log.info(`Laboratory deleting widget ${widgetId} from window ${wid}`);
-  quest.cmd('warehouse.feed.del', {feed: wid, owners: [labId, branch], branch});
+
+  quest.log.info(`Laboratory deleting widget ${widgetId} from window ${feed}`);
+
+  yield quest.warehouse.feedSubscriptionDel({feed, branch, parents: labId});
 });
 
 Goblin.registerQuest(goblinName, 'delete', function*(quest) {

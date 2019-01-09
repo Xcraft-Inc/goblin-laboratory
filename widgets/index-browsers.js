@@ -55,6 +55,9 @@ class BrowsersRenderer extends Renderer {
         case 'NEW_BACKEND_INFOS':
           this.newBackendInfos(data.transitState);
           break;
+        case 'BEGIN_RENDER':
+          super.main(data.labId);
+          break;
       }
     };
 
@@ -66,10 +69,6 @@ class BrowsersRenderer extends Renderer {
 
     socket.onmessage = event => {
       webWorkerJSONParse(worker, event.data, callback);
-    };
-
-    socket.onopen = () => {
-      super.main();
     };
   }
 }
