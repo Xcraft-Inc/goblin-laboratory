@@ -1,7 +1,8 @@
+//T:2019-02-27
+
 import React from 'react';
 
 import Widget from 'laboratory/widget';
-import Container from 'gadgets/container/widget';
 import Label from 'gadgets/label/widget';
 import Gauge from 'gadgets/gauge/widget';
 
