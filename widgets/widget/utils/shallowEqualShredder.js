@@ -1,3 +1,5 @@
+//T:2019-02-27
+
 import {isImmutable, isShredder} from 'xcraft-core-shredder';
 
 // See 'react-redux/src/utils/shallowEqual.js'
