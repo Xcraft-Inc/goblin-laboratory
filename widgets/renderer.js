@@ -5,10 +5,10 @@ if (process.env.NODE_ENV !== 'production') {
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Root from 'laboratory/root';
-import createHistory from 'history/createHashHistory';
+import {createHashHistory} from 'history';
 import {push} from 'react-router-redux';
 
-const history = createHistory();
+const history = createHashHistory();
 import configureStore from 'laboratory/store/store';
 
 class Renderer {
