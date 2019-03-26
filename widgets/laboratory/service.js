@@ -53,7 +53,7 @@ Goblin.registerQuest(goblinName, 'create', function*(quest, url, config) {
   }
 
   quest.goblin.defer(
-    quest.sub('goblin.released', function*(err, msg) {
+    quest.sub('goblin.released', function*(err, {msg}) {
       yield quest.cmd('laboratory.del', {
         id: quest.goblin.id,
         widgetId: msg.data.id,
@@ -143,19 +143,19 @@ Goblin.registerQuest(goblinName, 'set-root', function(quest, widget, widgetId) {
 Goblin.registerQuest(goblinName, 'listen', function(quest, desktopId) {
   quest.goblin.setX(
     `${desktopId}.nav-unsub`,
-    quest.sub(`${desktopId}.nav.requested`, function*(err, msg) {
+    quest.sub(`${desktopId}.nav.requested`, function*(err, {msg}) {
       yield quest.me.nav(msg.data);
     })
   );
   quest.goblin.setX(
     `${desktopId}.change-theme-unsub`,
-    quest.sub(`${desktopId}.change-theme.requested`, function*(err, msg) {
+    quest.sub(`${desktopId}.change-theme.requested`, function*(err, {msg}) {
       yield quest.me.changeTheme(msg.data);
     })
   );
   quest.goblin.setX(
     `${desktopId}.dispatch-unsub`,
-    quest.sub(`${desktopId}.dispatch.requested`, function*(err, msg) {
+    quest.sub(`${desktopId}.dispatch.requested`, function*(err, {msg}) {
       yield quest.me.dispatch(msg.data);
     })
   );
