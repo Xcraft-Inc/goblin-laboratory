@@ -48,7 +48,7 @@ export function routerReducer(state = initialState, {type, payload} = {}) {
         }
       }
     }
-    return state.merge(payload);
+    return state.merge({location: payload.location, action: payload.action});
   }
 
   return state;
