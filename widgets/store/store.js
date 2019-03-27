@@ -1,5 +1,5 @@
 import {applyMiddleware, compose, createStore} from 'redux';
-import {routerMiddleware} from 'react-router-redux';
+import {routerMiddleware} from 'connected-react-router/immutable';
 import thunk from 'redux-thunk';
 import middlewares from './middlewares';
 
