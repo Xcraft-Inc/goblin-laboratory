@@ -31,11 +31,12 @@ class ElectronRenderer extends Renderer {
 
     ipcRenderer.on('BEGIN_RENDER', (event, labId) => super.main(labId));
 
-    const zoom = webFrame.getZoomFactor();
+    let zoom = webFrame.getZoomFactor();
     this.store.subscribe(() => {
       const state = this.store.getState();
-      const zoomState = state.backend.get('client.zoom');
+      const zoomState = state.backend.get('client').get('zoom');
       if (zoomState && zoomState !== zoom) {
+        zoom = zoomState;
         webFrame.setZoomFactor(zoom);
       }
     });
