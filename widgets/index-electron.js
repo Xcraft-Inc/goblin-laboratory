@@ -10,7 +10,14 @@ class ElectronRenderer extends Renderer {
     let zoom = webFrame.getZoomFactor();
     this.store.subscribe(() => {
       const state = this.store.getState();
-      const zoomState = state.backend.get('client').get('zoom');
+      if (!state || !state.backend) {
+        return;
+      }
+      const client = state.backend.get('client');
+      if (!client) {
+        return;
+      }
+      const zoomState = client.get('zoom');
       if (zoomState && zoomState !== zoom) {
         zoom = zoomState;
         webFrame.setZoomFactor(zoom);
