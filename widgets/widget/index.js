@@ -6,7 +6,7 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import Shredder from 'xcraft-core-shredder';
 import LinkedList from 'linked-list';
-import {push, replace, goBack} from 'react-router-redux';
+import {push, replace, goBack} from 'connected-react-router/immutable';
 import {actions} from 'react-redux-form/immutable';
 import {matchPath} from 'react-router';
 import fasterStringify from 'faster-stable-stringify';
@@ -289,9 +289,14 @@ class Widget extends React.Component {
   static withRoute(path, watchedParams, watchedSearchs, watchHash) {
     return connect(
       state => {
-        const routing = new Shredder(state.routing);
-        const pathName = routing.get('location.pathname');
-        const search = routing.get('location.search');
+        const router = new Shredder(state.router);
+        const location = router.get('location');
+        if (!location) {
+          return {};
+        }
+
+        const pathName = router.get('location.pathname');
+        const search = router.get('location.search');
 
         const match = matchPath(pathName, {
           path,
@@ -316,7 +321,7 @@ class Widget extends React.Component {
 
         let withHash = null;
         if (watchHash) {
-          withHash = {hash: routing.get('location.hash')};
+          withHash = {hash: router.get('location.hash')};
         }
 
         if (Array.isArray(watchedParams)) {
@@ -930,7 +935,7 @@ class Widget extends React.Component {
   }
 
   getRouting() {
-    return new Shredder(this.context.store.getState().routing);
+    return new Shredder(this.context.store.getState().router);
   }
 
   getSelectionState(target) {

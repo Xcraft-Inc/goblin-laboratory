@@ -6,12 +6,25 @@ class ElectronRenderer extends Renderer {
     const {ipcRenderer, webFrame, remote} = electron;
 
     super(ipcRenderer.send);
-    webFrame.setZoomFactor(webFrame.getZoomFactor() - 0.3);
+
+    let zoom = webFrame.getZoomFactor();
+    this.store.subscribe(() => {
+      const state = this.store.getState();
+      if (!state || !state.backend) {
+        return;
+      }
+      const client = state.backend.get('client');
+      if (!client) {
+        return;
+      }
+      const zoomState = client.get('zoom');
+      if (zoomState && zoomState !== zoom) {
+        zoom = zoomState;
+        webFrame.setZoomFactor(zoom);
+      }
+    });
 
     window.zoomable = true;
-    window.zoom = () => webFrame.setZoomFactor(webFrame.getZoomFactor() + 0.1);
-    window.unZoom = () =>
-      webFrame.setZoomFactor(webFrame.getZoomFactor() - 0.1);
 
     ipcRenderer.on('PUSH_PATH', (event, path) =>
       this.store.dispatch(this.push(path))

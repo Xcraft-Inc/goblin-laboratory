@@ -24,31 +24,31 @@ export function routerReducer(state = initialState, {type, payload} = {}) {
       const currentLoc = location.get('pathname');
       const currentSearch = location.get('search');
       if (
-        currentLoc.startsWith(payload.pathname) &&
-        (payload.search.startsWith(currentSearch) ||
-          currentSearch.startsWith(payload.search))
+        currentLoc.startsWith(payload.location.pathname) &&
+        (payload.location.search.startsWith(currentSearch) ||
+          currentSearch.startsWith(payload.location.search))
       ) {
         // pathname looks similar, we can investigate
         const currentPath = currentLoc.split('/');
-        const newPath = payload.pathname.split('/');
+        const newPath = payload.location.pathname.split('/');
         const cPl = currentPath.length - 1;
         const nPl = newPath.length - 1;
         if (cPl > nPl) {
           //Current path contains more info (for ex. hinter) in this case, we must skip the nav
           return state.set(
             'location',
-            state.get('location').set('search', payload.search)
+            state.get('location').set('search', payload.location.search)
           );
         } else if (cPl === nPl && currentPath[cPl] === newPath[nPl]) {
           //Same path, but same value?
           return state.set(
             'location',
-            state.get('location').set('search', payload.search)
+            state.get('location').set('search', payload.location.search)
           );
         }
       }
     }
-    return state.merge({location: payload});
+    return state.merge({location: payload.location, action: payload.action});
   }
 
   return state;
@@ -126,7 +126,7 @@ const resetPlugin = (state, action) => {
 };
 
 export default combineReducers({
-  routing: routerReducer,
+  router: routerReducer,
   commands: commandsReducer,
   infos: infosReducer,
   backend: backendReducer,

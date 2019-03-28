@@ -6,7 +6,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Root from 'laboratory/root';
 import {createHashHistory} from 'history';
-import {push} from 'react-router-redux';
+import {push} from 'connected-react-router/immutable';
 
 const history = createHashHistory();
 import configureStore from 'laboratory/store/store';
