@@ -6,12 +6,18 @@ class ElectronRenderer extends Renderer {
     const {ipcRenderer, webFrame, remote} = electron;
 
     super(ipcRenderer.send);
-    // webFrame.setZoomFactor(webFrame.getZoomFactor() - 0.3);
+
+    let zoom = webFrame.getZoomFactor();
+    this.store.subscribe(() => {
+      const state = this.store.getState();
+      const zoomState = state.backend.get('client').get('zoom');
+      if (zoomState && zoomState !== zoom) {
+        zoom = zoomState;
+        webFrame.setZoomFactor(zoom);
+      }
+    });
 
     window.zoomable = true;
-    window.zoom = () => webFrame.setZoomFactor(webFrame.getZoomFactor() + 0.1);
-    window.unZoom = () =>
-      webFrame.setZoomFactor(webFrame.getZoomFactor() - 0.1);
 
     ipcRenderer.on('PUSH_PATH', (event, path) =>
       this.store.dispatch(this.push(path))
@@ -30,16 +36,6 @@ class ElectronRenderer extends Renderer {
     );
 
     ipcRenderer.on('BEGIN_RENDER', (event, labId) => super.main(labId));
-
-    let zoom = webFrame.getZoomFactor();
-    this.store.subscribe(() => {
-      const state = this.store.getState();
-      const zoomState = state.backend.get('client').get('zoom');
-      if (zoomState && zoomState !== zoom) {
-        zoom = zoomState;
-        webFrame.setZoomFactor(zoom);
-      }
-    });
 
     if (module.hot) {
       const wid = remote.getCurrentWindow().id;
