@@ -123,7 +123,7 @@ Goblin.registerQuest(goblinName, 'when-ui-crash', function(
   info
 ) {
   quest.log.err('UI generate errors !');
-  quest.log.err(info);
+  quest.log.err(info.componentStack.replace(/\\n/g, '\n'));
   /*quest.fail(
     'Erreur UI',
     'Un composant graphique à crashé :(',
