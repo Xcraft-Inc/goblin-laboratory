@@ -970,9 +970,12 @@ class Widget extends React.Component {
     const search = this.getRouting().get('location.search');
     const hash = this.getRouting().get('location.hash');
     if (path.split('/').length === 4) {
-      const hinterType = path.substr(path.lastIndexOf('/'), path.length);
+      let hinterType = path.substr(path.lastIndexOf('/'), path.length);
       path = path.substr(0, path.lastIndexOf('/'));
-      this.nav(`${path}${hinterType}-hidden${search}${hash}`);
+      if (!hinterType.endsWith('-hidden')) {
+        hinterType += '-hidden';
+      }
+      this.nav(`${path}${hinterType}${search}${hash}`);
     }
   }
 
