@@ -77,9 +77,9 @@ Goblin.registerQuest(goblinName, 'create', function*(quest, url, config) {
 
   quest.doSync({id: quest.goblin.id, feed, wid: winId, url, config});
 
-  const clientConfig = require('xcraft-core-etc')().load('goblin-client');
+  const labConfig = require('xcraft-core-etc')().load('goblin-laboratory');
 
-  const zoom = clientConfig.defaultZoom;
+  const zoom = labConfig.defaultZoom;
   if (zoom) {
     yield quest.me.setZoom({
       zoom,
