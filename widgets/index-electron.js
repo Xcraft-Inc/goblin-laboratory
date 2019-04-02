@@ -8,16 +8,20 @@ class ElectronRenderer extends Renderer {
     super(ipcRenderer.send);
 
     let zoom = webFrame.getZoomFactor();
+    let laboratoryId;
     this.store.subscribe(() => {
+      if (!laboratoryId) {
+        return;
+      }
       const state = this.store.getState();
       if (!state || !state.backend) {
         return;
       }
-      const client = state.backend.get('client');
-      if (!client) {
+      const lab = state.backend.get(laboratoryId);
+      if (!lab) {
         return;
       }
-      const zoomState = client.get('zoom');
+      const zoomState = lab.get('zoom');
       if (zoomState && zoomState !== zoom) {
         zoom = zoomState;
         webFrame.setZoomFactor(zoom);
@@ -42,7 +46,10 @@ class ElectronRenderer extends Renderer {
       this.newBackendInfos(transitState)
     );
 
-    ipcRenderer.on('BEGIN_RENDER', (event, labId) => super.main(labId));
+    ipcRenderer.on('BEGIN_RENDER', (event, labId) => {
+      laboratoryId = labId;
+      return super.main(labId);
+    });
 
     if (module.hot) {
       const wid = remote.getCurrentWindow().id;

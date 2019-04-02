@@ -36,6 +36,20 @@ const logicHandlers = {
   'update-feeds': (state, action) => {
     return state.set('feeds', action.get('feeds'));
   },
+  'set-zoom': (state, action) => {
+    return state.set('zoom', action.get('zoom'));
+  },
+  zoom: state => {
+    const zoom = Math.round((state.get('zoom') + 0.1) * 10) / 10;
+    return state.set('zoom', zoom);
+  },
+  'un-zoom': state => {
+    let zoom = Math.round((state.get('zoom') - 0.1) * 10) / 10;
+    if (zoom <= 0) {
+      zoom = 0.1;
+    }
+    return state.set('zoom', zoom);
+  },
 };
 
 // Register quest's according rc.json
@@ -62,6 +76,15 @@ Goblin.registerQuest(goblinName, 'create', function*(quest, url, config) {
   );
 
   quest.doSync({id: quest.goblin.id, feed, wid: winId, url, config});
+
+  const clientConfig = require('xcraft-core-etc')().load('goblin-client');
+
+  const zoom = clientConfig.defaultZoom;
+  if (zoom) {
+    yield quest.me.setZoom({
+      zoom,
+    });
+  }
 
   const win = yield quest.createFor('wm', labId, winId, {
     id: winId,
@@ -178,6 +201,18 @@ Goblin.registerQuest(goblinName, 'nav', function(quest, route) {
 
 Goblin.registerQuest(goblinName, 'change-theme', function(quest, name) {
   quest.do({name});
+});
+
+Goblin.registerQuest(goblinName, 'set-zoom', function(quest) {
+  quest.do();
+});
+
+Goblin.registerQuest(goblinName, 'zoom', function(quest) {
+  quest.do();
+});
+
+Goblin.registerQuest(goblinName, 'un-zoom', function(quest) {
+  quest.do();
 });
 
 Goblin.registerQuest(goblinName, 'dispatch', function(quest, action) {
