@@ -105,6 +105,7 @@ class Form extends Widget {
   }
 
   componentWillUnmount() {
+    super.componentWillUnmount();
     //Garbage form model
     const dispatch = this.props.dispatch
       ? this.props.dispatch
