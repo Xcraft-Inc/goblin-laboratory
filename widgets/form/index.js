@@ -91,6 +91,15 @@ class Form extends Widget {
     };
   }
 
+  get formConfigWithoutStyle() {
+    const id = this.props.id ? this.props.id : this.context.id;
+    return {
+      component: 'div',
+      validateOn: 'submit',
+      model: `backend.${id}`,
+    };
+  }
+
   formConfigWithComponent(component) {
     const style = {
       display: 'flex',
