@@ -1048,7 +1048,7 @@ class Widget extends React.Component {
     return this.props.id || this.context.nearestParentId;
   }
 
-  copyTextToClipboard(text) {
+  static copyTextToClipboard(text) {
     const textField = document.createElement('textarea');
     textField.innerText = text;
     document.body.appendChild(textField);
