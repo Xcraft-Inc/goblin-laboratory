@@ -79,6 +79,7 @@ class Form extends Widget {
   }
 
   get entityConfig() {
+    // FIXME: use aphrodite
     const style = {
       display: 'flex',
       flexDirection: 'column',
@@ -101,6 +102,7 @@ class Form extends Widget {
   }
 
   formConfigWithComponent(component) {
+    // FIXME: use aphrodite
     const style = {
       display: 'flex',
       flexDirection: 'column',
