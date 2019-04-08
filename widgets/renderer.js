@@ -16,6 +16,26 @@ class Renderer {
     this.send = send;
     this.push = push;
     this._store = configureStore(window.__INITIAL_STATE__, history, this.send);
+
+    document.addEventListener('drop', e => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const filePaths = [];
+      for (const file of e.dataTransfer.files) {
+        filePaths.push(file.path);
+      }
+
+      if (filePaths.length) {
+        send('DATA_TRANSFER', {filePaths});
+      }
+    });
+
+    document.addEventListener('dragover', e => {
+      e.preventDefault();
+      e.stopPropagation();
+      e.dataTransfer.dropEffect = 'copy';
+    });
   }
 
   get store() {
