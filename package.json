@@ -15,8 +15,8 @@
   },
   "dependencies": {
     "xcraft-core-goblin": "^2.0.0",
-    "xcraft-core-probe": "^0.0.1",
-    "xcraft-core-transport": "^0.0.1"
+    "xcraft-core-probe": "^1.0.0",
+    "xcraft-core-transport": "^2.0.0"
   },
   "devDependencies": {
     "xcraft-dev-rules": "^0.4.0",
