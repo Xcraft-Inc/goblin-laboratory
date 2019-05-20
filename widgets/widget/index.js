@@ -907,7 +907,7 @@ class Widget extends React.Component {
     return entity => {
       const item = entity
         .get(collectionPath)
-        .shrinq.single(pack => pack.get('id') === id);
+        .find(pack => pack.get('id') === id);
 
       return entityPath
         ? `.${collectionPath}[${item.key}].${entityPath}`
