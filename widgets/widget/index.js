@@ -740,8 +740,9 @@ class Widget extends React.Component {
   /**
    * Dispatch an action in the frontend reducer for a specified widget.
    *
-   * A `reducer.js` file must be present in a widget folder that matches the `name`
-   * parameter or the name specified in the `id` parameter, after the `$`.
+   * A `reducer.js` file must be present in a widget folder that matches
+   * the `name` parameter or the name specified in the `id` parameter,
+   * after the `$`.
    *
    * Possible values for `id`:
    * `backendId` (example: desktop@111)
