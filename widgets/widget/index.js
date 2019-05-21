@@ -773,6 +773,35 @@ class Widget extends React.Component {
     this.rawDispatch(action);
   }
 
+  /**
+   * Dispatch a payload to the desktop cache reducer.
+   *
+   * This cache is useful for storing provisory values in the session (desktop)
+   * in order to restore a specific state when a widget is re-mount again.
+   * It's very useful in the case of the ScrollableContainer for example, where
+   * the last scroll position is dispatched in the cache, and restored with the
+   * next mount of this component. It's not possible to use the widget reducer
+   * associated to the ScrollableContainer because in this case, after the
+   * unmount, the reducer is collected.
+   *
+   * The cache has a limit, you must always consider that the values stored
+   * can be lost at any time.
+   *
+   * @param {string} id - Widget's id.
+   * @param {Object} payload - Payload to store.
+   */
+  dispatchToCache(id, payload) {
+    this.dispatchTo(
+      this.context.desktopId,
+      {
+        type: 'WIDGET_CACHE',
+        widgetId: id,
+        value: payload,
+      },
+      'desktop'
+    );
+  }
+
   rawDispatch(action) {
     this.context.store.dispatch(action);
   }
@@ -926,6 +955,17 @@ class Widget extends React.Component {
       throw new Error('Cannot resolve widget state without a valid id');
     }
     return this.getState().widgets.get(widgetId);
+  }
+
+  getWidgetCacheState(widgetId) {
+    if (!widgetId) {
+      throw new Error('Cannot resolve widget cache state without a valid id');
+    }
+    return this.getState().widgets.getIn([
+      this.context.desktopId,
+      'widgetsCache',
+      widgetId,
+    ]);
   }
 
   getBackendState() {
