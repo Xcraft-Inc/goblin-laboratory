@@ -12,6 +12,7 @@ function withShredder(mapStateToProps) {
     const s = new Shredder({
       backend: state.backend,
       widgets: state.widgets,
+      newForms: state.newForms,
     });
     return mapStateToProps(s, ownProps);
   };
