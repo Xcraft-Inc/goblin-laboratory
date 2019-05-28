@@ -24,7 +24,11 @@ export default Widget.connect(
         path = `${model}${path}`;
       }
 
-      properties[key] = state.get(`newForms.${path}.value`);
+      if (path.startsWith('backend.') || path.startsWith('widgets.')) {
+        properties[key] = state.get(path);
+      } else {
+        properties[key] = state.get(`newForms.${path}.value`);
+      }
       return properties;
     }, {});
   },

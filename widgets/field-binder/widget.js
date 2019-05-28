@@ -36,6 +36,9 @@ export default Component => {
         if (edit) {
           return {value: fieldState.get('raw'), _useFormat: false};
         }
+        if (model.startsWith('backend.') || model.startsWith('widgets.')) {
+          return {value: state.get(model), _useFormat: true};
+        }
         return {value: fieldState.get('value'), _useFormat: true};
       }
 
@@ -47,12 +50,18 @@ export default Component => {
       return {
         onFocus: () => {
           dispatch((d, getState) => {
-            const state = new Shredder(getState().newForms);
-            const fieldState = state.get(model);
+            const {backend, newForms, widgets} = getState();
+            const state = new Shredder({backend, newForms, widgets});
             let value = '';
-            if (fieldState) {
-              value = fieldState.get('value');
+            if (model.startsWith('backend.') || model.startsWith('widgets.')) {
+              value = state.get(model);
+            } else {
+              const fieldState = state.get(`newForms.${model}`);
+              if (fieldState) {
+                value = fieldState.get('value');
+              }
             }
+
             d({
               type: 'FIELD-FOCUS',
               path: model,
