@@ -21,6 +21,12 @@ export default wrapReducer((state = new Shredder({}), action = {}) => {
     return state.set(`${action.path}.edit`, false);
   }
   if (action.type === 'FIELD-CHANGED') {
+    if (
+      action.path.startsWith('backend.') ||
+      action.path.startsWith('widgets.')
+    ) {
+      return state;
+    }
     return state.set(`${action.path}.value`, action.value);
   }
   if (action.type === 'FIELD-RAW-CHANGED') {
