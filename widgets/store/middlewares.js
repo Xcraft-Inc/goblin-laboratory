@@ -70,6 +70,17 @@ const handleChangeWithThrottle = _.debounce(handleChange, 200);
 
 const formMiddleware = send => store => next => action => {
   switch (action.type) {
+    case 'FIELD-CHANGED':
+      {
+        if (action.path.startsWith('backend')) {
+          handleChange(
+            send,
+            {model: action.path, value: action.value},
+            store.getState().commands.get('registry')
+          );
+        }
+      }
+      break;
     case 'rrf/batch': {
       for (const a of action.actions) {
         if (a.type === 'rrf/change' && !a.load) {
