@@ -8,29 +8,40 @@ export default class TextInput extends Widget {
 
   render() {
     const {onChange, parse, format, model, kind, ...other} = this.props;
+    let {value} = this.props;
+    if (value === null) {
+      value = ''; // Ensure <input/> is always "controlled"
+    }
     const className = this.styles.classNames.base;
     switch (kind) {
       case 'password':
         return (
           <input
-            className={className}
             {...other}
+            className={className}
             type="password"
             onChange={onChange}
+            value={value}
           />
         );
       case 'multiline':
         return (
-          <textarea {...other} className={className} onChange={onChange} />
+          <textarea
+            {...other}
+            className={className}
+            onChange={onChange}
+            value={value}
+          />
         );
       case 'text':
       default:
         return (
           <input
             {...other}
+            type="text"
             className={className}
             onChange={onChange}
-            type="text"
+            value={value}
           />
         );
     }
