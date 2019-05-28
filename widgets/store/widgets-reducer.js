@@ -64,7 +64,7 @@ function getReducerForAction(action) {
 }
 
 export default (state = fromJS({}), action = {}) => {
-  if (action.type === 'FIELD-CHANGED' && action.path.startsWith('widgets')) {
+  if (action.type === 'FIELD-CHANGED' && action.path.startsWith('widgets.')) {
     const path = action.path
       .split('.')
       .slice(1)

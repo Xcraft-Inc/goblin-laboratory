@@ -52,7 +52,7 @@ function applyCompensators(state, action) {
 }
 
 export default (state = fromJS({}), action = {}) => {
-  if (action.type === 'FIELD-CHANGED' && action.path.startsWith('backend')) {
+  if (action.type === 'FIELD-CHANGED' && action.path.startsWith('backend.')) {
     const path = action.path
       .split('.')
       .slice(1)
