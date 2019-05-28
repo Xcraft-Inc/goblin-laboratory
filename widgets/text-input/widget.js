@@ -14,6 +14,16 @@ export default class TextInput extends Widget {
     }
     const className = this.styles.classNames.base;
     switch (kind) {
+      case 'checkbox':
+        return (
+          <input
+            {...other}
+            className={className}
+            type="checkbox"
+            onChange={onChange}
+            value={value}
+          />
+        );
       case 'password':
         return (
           <input
