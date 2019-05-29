@@ -36,13 +36,15 @@ export default Component => {
         if (edit) {
           return {value: fieldState.get('raw'), _useFormat: false};
         }
-        if (model.startsWith('backend.') || model.startsWith('widgets.')) {
-          return {value: state.get(model), _useFormat: true};
+        if (!model.startsWith('backend.') && !model.startsWith('widgets.')) {
+          return {value: fieldState.get('value'), _useFormat: true};
         }
-        return {value: fieldState.get('value'), _useFormat: true};
+      }
+      if (!model.startsWith('backend.') && !model.startsWith('widgets.')) {
+        return {value: undefined, _useFormat: false};
       }
 
-      return {value: '', _useFormat: false}; // FIXME: handle 'model' which starts with 'backend' or 'widgets'
+      return {value: state.get(model), _useFormat: true};
     },
     (dispatch, props) => {
       const {parse, format, model} = props;
