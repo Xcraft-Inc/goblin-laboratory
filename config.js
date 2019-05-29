@@ -8,6 +8,6 @@ module.exports = [
     type: 'input',
     name: 'defaultZoom',
     message: 'Set default zoom for Electron frontend',
-    default: false,
+    default: 1.0,
   },
 ];
