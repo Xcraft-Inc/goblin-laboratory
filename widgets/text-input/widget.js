@@ -9,7 +9,7 @@ export default class TextInput extends Widget {
   render() {
     const {onChange, parse, format, model, kind, ...other} = this.props;
     let {value} = this.props;
-    if (value === null) {
+    if (value === null || value === undefined) {
       value = ''; // Ensure <input/> is always "controlled"
     }
     const className = this.styles.classNames.base;
