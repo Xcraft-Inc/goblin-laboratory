@@ -86,13 +86,13 @@ class Widget extends React.Component {
     }
   }
 
-  static get propTypes() {
-    return {
-      id: PropTypes.string,
-      entityId: PropTypes.string,
-      hinter: PropTypes.string,
-    };
-  }
+  //? static get propTypes() {
+  //?   return {
+  //?     id: PropTypes.string,
+  //?     entityId: PropTypes.string,
+  //?     hinter: PropTypes.string,
+  //?   };
+  //? }
 
   static get childContextTypes() {
     return this.contextTypes;
@@ -1098,5 +1098,11 @@ class Widget extends React.Component {
     textField.remove();
   }
 }
+
+Widget.propTypes = {
+  id: PropTypes.string,
+  entityId: PropTypes.string,
+  hinter: PropTypes.string,
+};
 
 export default Widget;
