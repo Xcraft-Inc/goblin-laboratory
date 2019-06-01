@@ -1,11 +1,13 @@
 import React from 'react';
 import Widget from 'laboratory/widget';
 import TextInput from 'laboratory/text-input/widget';
-import fieldBinder from '../field-binder/widget.js';
 import propsBinder from '../props-binder/widget.js';
+import bindInput from '../input-binder/widget.js';
+import wrapRawInput from '../input-wrapper/widget.js';
 import converters from 'xcraft-core-converters';
 
-const Field = fieldBinder(TextInput);
+const TextField = bindInput(wrapRawInput(TextInput));
+
 class TypedTextField extends Widget {
   constructor() {
     super(...arguments);
@@ -58,27 +60,14 @@ class TypedTextField extends Widget {
 
   render() {
     return (
-      <Field
-        model={this.context.model}
+      <TextField
         parse={this.parse}
         format={this.format}
-        kind="$text"
+        kind="text"
         value={this.props.value}
       />
     );
   }
 }
-const BindableTypedTextField = propsBinder(TypedTextField);
-class ModelProvider extends Widget {
-  constructor() {
-    super(...arguments);
-  }
 
-  render() {
-    return (
-      <BindableTypedTextField model={this.context.model} {...this.props} />
-    );
-  }
-}
-
-export default ModelProvider;
+export default propsBinder(TypedTextField);
