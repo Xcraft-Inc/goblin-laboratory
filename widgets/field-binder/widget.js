@@ -71,13 +71,12 @@ export default Component => {
             });
           });
         },
-        onBlur: e => {
+        onBlur: value => {
           dispatch({
             type: 'FIELD-BLUR',
             path: model,
           });
 
-          let value = e.target.value;
           if (parse) {
             value = parse(value);
           }
@@ -88,11 +87,11 @@ export default Component => {
             value,
           });
         },
-        onChange: e =>
+        onChange: value =>
           dispatch({
             type: 'FIELD-RAW-CHANGED',
             path: model,
-            value: e.target.value,
+            value,
           }),
       };
     }

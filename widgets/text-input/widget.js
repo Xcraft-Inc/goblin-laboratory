@@ -4,6 +4,13 @@ import Widget from 'laboratory/widget';
 export default class TextInput extends Widget {
   constructor() {
     super(...arguments);
+    this.onChange = this.onChange.bind(this);
+  }
+
+  onChange(e) {
+    if (this.props.onChange) {
+      this.props.onChange(e.target.value);
+    }
   }
 
   render() {
@@ -20,7 +27,7 @@ export default class TextInput extends Widget {
             {...other}
             className={className}
             type="checkbox"
-            onChange={onChange}
+            onChange={this.onChange}
             value={value}
           />
         );
@@ -30,7 +37,7 @@ export default class TextInput extends Widget {
             {...other}
             className={className}
             type="password"
-            onChange={onChange}
+            onChange={this.onChange}
             value={value}
           />
         );
@@ -39,7 +46,7 @@ export default class TextInput extends Widget {
           <textarea
             {...other}
             className={className}
-            onChange={onChange}
+            onChange={this.onChange}
             value={value}
           />
         );
@@ -50,7 +57,7 @@ export default class TextInput extends Widget {
             {...other}
             type="text"
             className={className}
-            onChange={onChange}
+            onChange={this.onChange}
             value={value}
           />
         );
