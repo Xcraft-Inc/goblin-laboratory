@@ -29,7 +29,15 @@ export default function bindInput(Component) {
         value: state.get(props.value),
       };
     },
-    () => ({}) // Do not add "dispatch" to the props
+    () => ({}), // Do not add "dispatch" to the props
+    (stateProps, dispatchProps, ownProps) => {
+      const {_rootId, ...otherProps} = ownProps;
+      return {
+        ...otherProps,
+        ...stateProps,
+        ...dispatchProps,
+      };
+    }
   )(Component);
 
   return class InputBinder extends Widget {
