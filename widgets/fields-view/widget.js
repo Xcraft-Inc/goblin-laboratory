@@ -7,15 +7,25 @@ export default class FieldsView extends Widget {
     super(...arguments);
   }
 
+  componentDidMount() {
+    console.log(`View ${this.props.model} mounted`);
+  }
+
+  register(fieldPath) {
+    console.log(`View ${this.props.model}, ${fieldPath}`);
+  }
+
   getChildContext() {
     return {
       model: this.props.model,
+      register: this.register,
     };
   }
 
   static get childContextTypes() {
     return {
       model: PropTypes.string,
+      register: PropTypes.func,
     };
   }
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import Widget from 'laboratory/widget';
+import Widget from 'goblin-laboratory/widgets/widget';
 
 /**
  * Binds an input component to the backend or frontend
@@ -18,6 +18,12 @@ import Widget from 'laboratory/widget';
 export default function bindInput(Component) {
   const ConnectedComponent = Widget.connect(
     (state, props) => {
+      if (!state.has(props._rootId)) {
+        return {
+          loading: true,
+          value: undefined,
+        };
+      }
       // Replace 'value' which is a path in the state by the real value at this path.
       return {
         value: state.get(props.value),
@@ -30,6 +36,10 @@ export default function bindInput(Component) {
     constructor() {
       super(...arguments);
       this.handleChange = this.handleChange.bind(this);
+
+      if (this.context.register) {
+        this.context.register(`NEW ${this.props.value}`);
+      }
     }
 
     handleChange(value) {
@@ -71,11 +81,15 @@ export default function bindInput(Component) {
         const model = this.props.model || this.context.model;
         this.valuePath = `${model}${this.valuePath}`;
       }
+
+      const [root, id] = this.valuePath.split('.');
+
       return (
         <ConnectedComponent
           {...this.props}
           onChange={this.handleChange}
           value={this.valuePath}
+          _rootId={`${root}.${id}`}
         />
       );
     }
