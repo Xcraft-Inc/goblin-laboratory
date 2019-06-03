@@ -7,30 +7,20 @@ export default Component => {
       const {model, ...otherProps} = props;
       return Object.entries(otherProps).reduce((properties, [key, path]) => {
         if (key === 'value') {
-          properties[key] = path;
-          return properties;
-        }
-
-        if (typeof path !== 'string') {
-          properties[key] = path;
-          return properties;
-        }
-
-        if (path.startsWith('$')) {
-          properties[key] = path.substring(1);
           return properties;
         }
 
         //do binding
         if (path.startsWith('.')) {
           path = `${model}${path}`;
+          properties[key] = state.get(path);
+          return properties;
+        } else if (path.startsWith('state.')) {
+          path = `${path.substring(2)}`;
+          properties[key] = state.get(path);
+          return properties;
         }
 
-        if (path.startsWith('backend.') || path.startsWith('widgets.')) {
-          properties[key] = state.get(path);
-        } else {
-          properties[key] = state.get(`newForms.${path}.value`);
-        }
         return properties;
       }, {});
     },
@@ -38,6 +28,14 @@ export default Component => {
   )(Component);
 
   return class PropsBinder extends Widget {
+    constructor() {
+      super(...arguments);
+
+      if (this.context.register) {
+        this.context.register(this.props);
+      }
+    }
+
     render() {
       return (
         <ConnectedComponent

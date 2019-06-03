@@ -5,14 +5,13 @@ import Widget from 'laboratory/widget';
 export default class FieldsView extends Widget {
   constructor() {
     super(...arguments);
-  }
-
-  componentDidMount() {
-    console.log(`View ${this.props.model} mounted`);
+    this.view = {};
+    this.register = this.register.bind(this);
   }
 
   register(fieldPath) {
-    console.log(`View ${this.props.model}, ${fieldPath}`);
+    this.view[fieldPath] = true;
+    console.table(this.view);
   }
 
   getChildContext() {

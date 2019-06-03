@@ -113,6 +113,7 @@ class Widget extends React.Component {
       store: PropTypes.object,
       theme: PropTypes.object,
       model: PropTypes.any,
+      register: PropTypes.func,
       id: PropTypes.string,
       desktopId: PropTypes.string,
       contextId: PropTypes.string,

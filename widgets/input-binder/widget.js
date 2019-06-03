@@ -38,7 +38,7 @@ export default function bindInput(Component) {
       this.handleChange = this.handleChange.bind(this);
 
       if (this.context.register) {
-        this.context.register(`NEW ${this.props.value}`);
+        this.context.register(this.props.value);
       }
     }
 
@@ -80,6 +80,8 @@ export default function bindInput(Component) {
       if (this.valuePath.startsWith('.')) {
         const model = this.props.model || this.context.model;
         this.valuePath = `${model}${this.valuePath}`;
+      } else if (this.valuePath.startsWith('state.')) {
+        this.valuePath = this.valuePath.substring(6);
       }
 
       const [root, id] = this.valuePath.split('.');
