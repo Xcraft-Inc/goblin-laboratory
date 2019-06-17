@@ -5,7 +5,7 @@ import fieldBinder from '../field-binder/widget.js';
 import propsBinder from '../props-binder/widget.js';
 
 const Field = propsBinder(fieldBinder(TextInput));
-class CheckboxField extends Widget {
+export default class Checkbox extends Widget {
   constructor() {
     super(...arguments);
     this.parse = this.parse.bind(this);
@@ -36,4 +36,3 @@ class CheckboxField extends Widget {
     );
   }
 }
-export default CheckboxField;
