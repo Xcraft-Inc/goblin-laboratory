@@ -24,6 +24,10 @@ const logicHandlers = {
   },
   'set-root': (state, action) => {
     const widgetId = action.get('widgetId');
+    let themeContext = action.get('themeContext');
+    if (themeContext) {
+      state = state.set('themeContext', themeContext);
+    }
     let widget = action.get('widget');
     if (!widget) {
       widget = widgetId;
@@ -160,7 +164,12 @@ Goblin.registerQuest(goblinName, 'when-ui-crash', function(
   //quest.me.setRoot ({widgetId: existingRoot});
 });
 
-Goblin.registerQuest(goblinName, 'set-root', function(quest, widget, widgetId) {
+Goblin.registerQuest(goblinName, 'set-root', function(
+  quest,
+  widget,
+  widgetId,
+  themeContext
+) {
   quest.do();
 });
 

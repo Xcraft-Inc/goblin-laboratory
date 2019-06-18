@@ -17,6 +17,7 @@ class Laboratory extends Widget {
       root: 'root',
       rootId: 'rootId',
       theme: 'theme',
+      themeContext: 'themeContext',
     };
   }
 
@@ -59,7 +60,11 @@ class Laboratory extends Widget {
     }
 
     return (
-      <ThemeContext labId={id} frameThemeContext={this.props.frameThemeContext}>
+      <ThemeContext
+        labId={id}
+        themeContext={this.props.themeContext}
+        frameThemeContext={this.props.frameThemeContext}
+      >
         {this.props.children}
       </ThemeContext>
     );
