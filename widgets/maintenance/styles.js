@@ -1,10 +1,14 @@
 //T:2019-02-27
 
+export const propNames = ['zIndex'];
+
 export default function styles(theme, props) {
+  const {zIndex} = props;
+
   const fullScreenStyle = {
     visibility: 'visible',
     position: 'fixed',
-    zIndex: props.zIndex || 10,
+    zIndex: zIndex || 10,
     top: '0px',
     left: '0px',
     width: '100%',
