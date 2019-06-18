@@ -215,14 +215,7 @@ class Widget extends React.Component {
     }
     let propNamesUsed = myStyle.propNamesUsed;
     if (!propNamesUsed) {
-      propNamesUsed = Object.keys(this.props).filter(
-        k =>
-          this.props[k] !== undefined &&
-          this.props[k] !== null &&
-          k !== 'children' &&
-          k !== 'id' &&
-          typeof this.props[k] !== 'function'
-      );
+      throw new Error(`propNames is not defined in styles.js of ${this.name}`);
     }
 
     let styleProps = {};
