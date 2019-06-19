@@ -2,7 +2,7 @@ import React from 'react';
 import Widget from 'goblin-laboratory/widgets/widget';
 import Shredder from 'xcraft-core-shredder';
 
-export default function withC(Component, dispatchProps) {
+export default function withC(Component, dispatchProps = {}) {
   const Mapper = props => {
     const {_connectedProps, ...otherProps} = props;
     const newProps = {};
@@ -58,12 +58,16 @@ export default function withC(Component, dispatchProps) {
       if (connectedProps.length > 0) {
         this.connectedProps = connectedProps;
         this.onChangeProps = onChangeProps;
+        this.render = this.renderConnected;
+      } else {
+        this.render = this.renderNotConnected;
       }
     }
 
     addContextToPath(path) {
       if (path.startsWith('.')) {
         const model = this.props.model || this.context.model;
+        // TODO: check model is not empty
         path = `${model}${path}`;
       }
       return path;
@@ -99,19 +103,21 @@ export default function withC(Component, dispatchProps) {
       }
     }
 
-    render() {
-      if (this.connectedProps) {
-        return (
-          <ConnectedComponent
-            {...this.onChangeProps}
-            {...this.props}
-            _connectedProps={this.connectedProps}
-          />
-        );
-      } else {
-        return <Component {...this.props} />;
-      }
+    renderConnected() {
+      return (
+        <ConnectedComponent
+          {...this.onChangeProps}
+          {...this.props}
+          _connectedProps={this.connectedProps}
+        />
+      );
     }
+
+    renderNotConnected() {
+      return <Component {...this.props} />;
+    }
+
+    // "render" function is selected in constructor
   }
 
   return WithC;
