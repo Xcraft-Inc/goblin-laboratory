@@ -67,6 +67,7 @@ export default function withC(Component, dispatchProps = {}) {
     addContextToPath(path) {
       if (path.startsWith('.')) {
         const model = this.props.model || this.context.model;
+        // TODO: check model is not empty
         path = `${model}${path}`;
       }
       return path;
