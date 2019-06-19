@@ -2,7 +2,7 @@ import React from 'react';
 import Widget from 'goblin-laboratory/widgets/widget';
 import Shredder from 'xcraft-core-shredder';
 
-export default function withC(Component, dispatchProps) {
+export default function withC(Component, dispatchProps = {}) {
   const Mapper = props => {
     const {_connectedProps, ...otherProps} = props;
     const newProps = {};
