@@ -58,6 +58,9 @@ export default function withC(Component, dispatchProps = {}) {
       if (connectedProps.length > 0) {
         this.connectedProps = connectedProps;
         this.onChangeProps = onChangeProps;
+        this.render = this.renderConnected;
+      } else {
+        this.render = this.renderNotConnected;
       }
     }
 
@@ -99,19 +102,21 @@ export default function withC(Component, dispatchProps = {}) {
       }
     }
 
-    render() {
-      if (this.connectedProps) {
-        return (
-          <ConnectedComponent
-            {...this.onChangeProps}
-            {...this.props}
-            _connectedProps={this.connectedProps}
-          />
-        );
-      } else {
-        return <Component {...this.props} />;
-      }
+    renderConnected() {
+      return (
+        <ConnectedComponent
+          {...this.onChangeProps}
+          {...this.props}
+          _connectedProps={this.connectedProps}
+        />
+      );
     }
+
+    renderNotConnected() {
+      return <Component {...this.props} />;
+    }
+
+    // "render" function is selected in constructor
   }
 
   return WithC;
