@@ -62,9 +62,8 @@ class Laboratory extends Widget {
     return (
       <ThemeContext
         labId={id}
-        frameThemeContext={
-          this.props.themeContext || this.props.frameThemeContext
-        }
+        themeContext={this.props.themeContext}
+        frameThemeContext={this.props.frameThemeContext}
       >
         {this.props.children}
       </ThemeContext>

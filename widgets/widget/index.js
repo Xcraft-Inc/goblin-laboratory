@@ -70,12 +70,15 @@ const injectCSS = classes => {
   return sheet;
 };
 
+function getWidgetName(constructorName) {
+  return constructorName.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+}
+
 class Widget extends React.Component {
   constructor() {
     super(...arguments);
-    this._name = this.constructor.name
-      .replace(/([a-z])([A-Z])/g, '$1-$2')
-      .toLowerCase();
+    this._names = this._getInheritedNames();
+    this._name = this._names[0];
 
     const reducer = reducerImporter(this._name);
     if (reducer) {
@@ -84,6 +87,20 @@ class Widget extends React.Component {
         this.dispatch({type: 'WIDGETS_CREATE'});
       }
     }
+  }
+
+  _getInheritedNames() {
+    let p = this;
+    const names = [];
+    while ((p = Object.getPrototypeOf(p))) {
+      const constructorName = p.constructor.name;
+      if (name === 'Widget') {
+        break;
+      }
+      const widgetName = getWidgetName(constructorName);
+      names.push(widgetName);
+    }
+    return names;
   }
 
   //? static get propTypes() {
@@ -198,14 +215,7 @@ class Widget extends React.Component {
     }
     let propNamesUsed = myStyle.propNamesUsed;
     if (!propNamesUsed) {
-      propNamesUsed = Object.keys(this.props).filter(
-        k =>
-          this.props[k] !== undefined &&
-          this.props[k] !== null &&
-          k !== 'children' &&
-          k !== 'id' &&
-          typeof this.props[k] !== 'function'
-      );
+      throw new Error(`propNames is not defined in styles.js of ${this.name}`);
     }
 
     let styleProps = {};
@@ -232,25 +242,72 @@ class Widget extends React.Component {
     return `${this.name}${hashTheme}${hashProps}`;
   }
 
+  importStyleDefinition(widgetName) {
+    let myStyleFunc = stylesImporter(widgetName);
+    if (!myStyleFunc) {
+      return null;
+    }
+
+    return {
+      hasThemeParam: myStyleFunc.length > 0,
+      hasPropsParam: myStyleFunc.length > 1,
+      propNamesUsed: stylesImporter(widgetName, 'propNames'),
+      mapProps: stylesImporter(widgetName, 'mapProps'),
+      func: myStyleFunc,
+    };
+  }
+
+  // Get style definition for this widget and merge it with the style definition of inherited widget
+  getMergedStyleDefinition() {
+    let styleDefs = this._names.map(this.importStyleDefinition);
+    if (styleDefs.every(styleDef => !styleDef)) {
+      throw new Error(`No styles.js file for component '${this.name}'`);
+    }
+    styleDefs = styleDefs.filter(styleDef => styleDef);
+
+    if (styleDefs.length === 1) {
+      return styleDefs[0];
+    }
+
+    styleDefs.reverse();
+
+    const propNamesUsedList = styleDefs
+      .map(styleDef => styleDef.propNamesUsed)
+      .filter(propNamesUsed => propNamesUsed)
+      .flat();
+
+    let propNamesUsed;
+    if (propNamesUsedList.length > 0) {
+      propNamesUsed = new Set(propNamesUsedList);
+    }
+
+    const mapPropsList = styleDefs
+      .map(styleDef => styleDef.mapProps)
+      .filter(mapProps => mapProps);
+    const funcList = styleDefs.map(styleDef => styleDef.func);
+
+    return {
+      hasThemeParam: styleDefs.some(styleDef => styleDef.hasThemeParam),
+      hasPropsParam: styleDefs.some(styleDef => styleDef.hasPropsParam),
+      propNamesUsed,
+      mapProps: props =>
+        mapPropsList.reduce((p, mapProps) => mapProps(p), props),
+      func: (theme, props) =>
+        funcList.reduce(
+          (styles, func) => func.bind({styles})(theme, props),
+          {}
+        ),
+    };
+  }
+
+  // Get style definition for this widget from cache or import it
   getMyStyle() {
     let myStyle = myStyleCache[this.name];
     if (myStyle) {
       return myStyle;
     }
 
-    let myStyleFunc = stylesImporter(this.name);
-    if (!myStyleFunc) {
-      throw new Error(`No styles.js file for component '${this.name}'`);
-    }
-
-    myStyle = {
-      hasThemeParam: myStyleFunc.length > 0,
-      hasPropsParam: myStyleFunc.length > 1,
-      propNamesUsed: stylesImporter(this.name, 'propNames'),
-      mapProps: stylesImporter(this.name, 'mapProps'),
-      func: myStyleFunc,
-    };
-
+    myStyle = this.getMergedStyleDefinition();
     myStyleCache[this.name] = myStyle;
 
     return myStyle;
