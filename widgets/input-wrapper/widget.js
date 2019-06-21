@@ -1,5 +1,6 @@
 import React from 'react';
 import Widget from 'laboratory/widget';
+import throttle from 'lodash/throttle';
 
 /**
  * Wraps a raw input.
@@ -17,12 +18,15 @@ export default function wrapRawInput(Component) {
    * `value`: the canonical value.
    * `onChange`: function called by the component to change the canonical value.
    * `format`: (optional) function to transform the canonical value to the raw value to display in the input.
-   * `parse`: (optionnel) function to transform the raw value to the canonical value.
+   * `parse`: (optional) function to transform the raw value to the canonical value.
+   * `changeMode`: (optional) "blur" (default), "throttled" or "immediate".
+   * `throttleDelay`: (optional).
    * other props are given to the underlying input.
    */
   return class InputWrapper extends Widget {
     constructor() {
       super(...arguments);
+      this.changeValue = this.changeValue.bind(this);
       this.handleChange = this.handleChange.bind(this);
       this.enterEditing = this.enterEditing.bind(this);
       this.leaveEditing = this.leaveEditing.bind(this);
@@ -31,13 +35,30 @@ export default function wrapRawInput(Component) {
         edit: false,
         raw: undefined,
       };
+
+      this.changeValueThrottled = throttle(
+        this.changeValue,
+        this.props.throttleDelay || 200
+      );
+    }
+
+    changeValue() {
+      let value = this.state.raw;
+      if (this.props.parse) {
+        value = this.props.parse(value);
+      }
+      this.props.onChange(value);
     }
 
     handleChange(value) {
       this.setState({
         raw: value,
       });
-      // TODO (configurable) apply props.parse and call props.onChange with debounce
+      if (this.props.changeMode === 'throttled') {
+        this.changeValueThrottled();
+      } else if (this.props.changeMode === 'immediate') {
+        this.changeValue();
+      }
     }
 
     enterEditing() {
@@ -52,11 +73,7 @@ export default function wrapRawInput(Component) {
     }
 
     leaveEditing() {
-      let value = this.state.raw;
-      if (this.props.parse) {
-        value = this.props.parse(value);
-      }
-      this.props.onChange(value);
+      this.changeValue();
       this.setState({
         edit: false,
         raw: undefined,
