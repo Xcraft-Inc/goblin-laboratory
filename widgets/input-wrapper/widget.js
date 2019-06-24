@@ -30,6 +30,7 @@ export default function wrapRawInput(Component) {
       this.handleChange = this.handleChange.bind(this);
       this.enterEditing = this.enterEditing.bind(this);
       this.leaveEditing = this.leaveEditing.bind(this);
+      this.validate = this.validate.bind(this);
 
       this.state = {
         edit: false,
@@ -48,6 +49,7 @@ export default function wrapRawInput(Component) {
         value = this.props.parse(value);
       }
       this.props.onChange(value);
+      return value;
     }
 
     handleChange(value) {
@@ -80,6 +82,16 @@ export default function wrapRawInput(Component) {
       });
     }
 
+    validate() {
+      let newValue = this.changeValue();
+      if (this.props.format) {
+        newValue = this.props.format(newValue);
+      }
+      this.setState({
+        raw: newValue,
+      });
+    }
+
     render() {
       let value;
       if (this.state.edit) {
@@ -96,6 +108,7 @@ export default function wrapRawInput(Component) {
           onChange={this.handleChange}
           onFocus={this.enterEditing}
           onBlur={this.leaveEditing}
+          onValidate={this.validate}
           value={value}
         />
       );
