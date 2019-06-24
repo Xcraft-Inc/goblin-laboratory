@@ -9,7 +9,7 @@ const logicState = {};
 
 // Define logic handlers according rc.json
 const logicHandlers = {
-  create: (state, action) => {
+  'create': (state, action) => {
     const conf = action.get('config');
     const id = action.get('id');
     return state.set('', {
@@ -43,7 +43,7 @@ const logicHandlers = {
   'set-zoom': (state, action) => {
     return state.set('zoom', action.get('zoom'));
   },
-  zoom: state => {
+  'zoom': state => {
     const zoom = Math.round((state.get('zoom') + 0.1) * 10) / 10;
     return state.set('zoom', zoom);
   },
@@ -53,6 +53,9 @@ const logicHandlers = {
       zoom = 0.1;
     }
     return state.set('zoom', zoom);
+  },
+  'default-zoom': state => {
+    return state.set('zoom', 1.0);
   },
 };
 
@@ -221,6 +224,10 @@ Goblin.registerQuest(goblinName, 'zoom', function(quest) {
 });
 
 Goblin.registerQuest(goblinName, 'un-zoom', function(quest) {
+  quest.do();
+});
+
+Goblin.registerQuest(goblinName, 'default-zoom', function(quest) {
   quest.do();
 });
 
