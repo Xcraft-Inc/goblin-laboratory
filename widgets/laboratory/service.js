@@ -19,7 +19,7 @@ const logicHandlers = {
       wid: action.get('wid'),
       feeds: conf.feeds,
       theme: null,
-      themeContext: conf.themeContext || null,
+      themeContext: conf.themeContext || 'polypheme',
     });
   },
   'set-root': (state, action) => {
