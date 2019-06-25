@@ -20,7 +20,12 @@ export default function withC(Component, dispatchProps = {}) {
     (state, props) => {
       const newProps = {};
       for (const prop of props._connectedProps) {
-        newProps[prop.get('name')] = state.get(prop.get('path'));
+        const path = prop.get('path');
+        let value;
+        if (path !== null && path !== undefined) {
+          value = state.get(path);
+        }
+        newProps[prop.get('name')] = value;
       }
       return newProps;
     },
@@ -31,33 +36,17 @@ export default function withC(Component, dispatchProps = {}) {
     constructor() {
       super(...arguments);
 
-      const connectedProps = [];
-      const onChangeProps = {};
+      const connectedPropNames = [];
       for (const [name, value] of Object.entries(this.props)) {
         if (
           Shredder.isShredder(value) &&
           value.get('_type') === 'connectedProp'
         ) {
-          //TODO handle array of path (for extra arguments to inFunc)
-          let path = this.addContextToPath(value.get('path'));
-          const newValue = value.set('name', name).set('path', path);
-          connectedProps.push(newValue);
-
-          const dispatchPropName = dispatchProps[name];
-          if (dispatchPropName) {
-            let outFunc = value.get('outFunc');
-            if (!outFunc) {
-              outFunc = value => value;
-            }
-            onChangeProps[dispatchPropName] = value => {
-              return this.handlePropChange(name, outFunc(value));
-            };
-          }
+          connectedPropNames.push(name);
         }
       }
-      if (connectedProps.length > 0) {
-        this.connectedProps = connectedProps;
-        this.onChangeProps = onChangeProps;
+      if (connectedPropNames.length > 0) {
+        this.connectedPropNames = connectedPropNames;
         this.render = this.renderConnected;
       } else {
         this.render = this.renderNotConnected;
@@ -65,7 +54,7 @@ export default function withC(Component, dispatchProps = {}) {
     }
 
     addContextToPath(path) {
-      if (path.startsWith('.')) {
+      if (path && path.startsWith('.')) {
         const model = this.props.model || this.context.model;
         // TODO: check model is not empty
         path = `${model}${path}`;
@@ -75,6 +64,9 @@ export default function withC(Component, dispatchProps = {}) {
 
     handlePropChange(propName, value) {
       const path = this.addContextToPath(this.props[propName].get('path'));
+      if (!path) {
+        throw new Error(`Path is not defined`);
+      }
       // Dispatch backend quest or frontend action
       const [root, id, ...pathArray] = path.split('.');
       const valuePath = pathArray.join('.');
@@ -104,11 +96,31 @@ export default function withC(Component, dispatchProps = {}) {
     }
 
     renderConnected() {
+      const onChangeProps = {};
+      const connectedProps = this.connectedPropNames.map(name => {
+        const prop = this.props[name];
+        //TODO handle array of path (for extra arguments to inFunc)
+        const path = this.addContextToPath(prop.get('path'));
+
+        const dispatchPropName = dispatchProps[name];
+        if (dispatchPropName) {
+          const outFunc = prop.get('outFunc');
+          if (outFunc) {
+            onChangeProps[dispatchPropName] = value =>
+              this.handlePropChange(name, outFunc(value));
+          } else {
+            onChangeProps[dispatchPropName] = value =>
+              this.handlePropChange(name, value);
+          }
+        }
+
+        return prop.set('name', name).set('path', path);
+      });
       return (
         <ConnectedComponent
-          {...this.onChangeProps}
+          {...onChangeProps}
           {...this.props}
-          _connectedProps={this.connectedProps}
+          _connectedProps={connectedProps}
         />
       );
     }
