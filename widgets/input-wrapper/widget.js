@@ -27,10 +27,12 @@ export default function wrapRawInput(Component) {
     constructor() {
       super(...arguments);
       this.changeValue = this.changeValue.bind(this);
-      this.handleChange = this.handleChange.bind(this);
       this.enterEditing = this.enterEditing.bind(this);
       this.leaveEditing = this.leaveEditing.bind(this);
       this.validate = this.validate.bind(this);
+      this.handleChange = this.handleChange.bind(this);
+      this.handleFocus = this.handleFocus.bind(this);
+      this.handleBlur = this.handleBlur.bind(this);
 
       this.state = {
         edit: false,
@@ -50,17 +52,6 @@ export default function wrapRawInput(Component) {
       }
       this.props.onChange(value);
       return value;
-    }
-
-    handleChange(value) {
-      this.setState({
-        raw: value,
-      });
-      if (this.props.changeMode === 'throttled') {
-        this.changeValueThrottled();
-      } else if (this.props.changeMode === 'immediate') {
-        this.changeValue();
-      }
     }
 
     enterEditing() {
@@ -92,6 +83,31 @@ export default function wrapRawInput(Component) {
       });
     }
 
+    handleChange(value) {
+      this.setState({
+        raw: value,
+      });
+      if (this.props.changeMode === 'throttled') {
+        this.changeValueThrottled();
+      } else if (this.props.changeMode === 'immediate') {
+        this.changeValue();
+      }
+    }
+
+    handleFocus(...args) {
+      this.enterEditing();
+      if (this.props.onFocus) {
+        this.props.onFocus(...args);
+      }
+    }
+
+    handleBlur(...args) {
+      this.leaveEditing();
+      if (this.props.onBlur) {
+        this.props.onBlur(...args);
+      }
+    }
+
     render() {
       let value;
       if (this.state.edit) {
@@ -106,8 +122,8 @@ export default function wrapRawInput(Component) {
         <Component
           {...this.props}
           onChange={this.handleChange}
-          onFocus={this.enterEditing}
-          onBlur={this.leaveEditing}
+          onFocus={this.handleFocus}
+          onBlur={this.handleBlur}
           onValidate={this.validate}
           value={value}
         />
