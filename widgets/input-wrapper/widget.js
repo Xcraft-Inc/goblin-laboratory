@@ -45,8 +45,7 @@ export default function wrapRawInput(Component) {
       );
     }
 
-    changeValue() {
-      let value = this.state.raw;
+    changeValue(value) {
       if (this.props.parse) {
         value = this.props.parse(value);
       }
@@ -65,16 +64,16 @@ export default function wrapRawInput(Component) {
       });
     }
 
-    leaveEditing() {
-      this.changeValue();
+    leaveEditing(value) {
+      this.changeValue(value);
       this.setState({
         edit: false,
         raw: undefined,
       });
     }
 
-    validate() {
-      let newValue = this.changeValue();
+    validate(value) {
+      let newValue = this.changeValue(value);
       if (this.props.format) {
         newValue = this.props.format(newValue);
       }
@@ -88,9 +87,9 @@ export default function wrapRawInput(Component) {
         raw: value,
       });
       if (this.props.changeMode === 'throttled') {
-        this.changeValueThrottled();
+        this.changeValueThrottled(value);
       } else if (this.props.changeMode === 'immediate') {
-        this.changeValue();
+        this.changeValue(value);
       }
     }
 
@@ -102,7 +101,7 @@ export default function wrapRawInput(Component) {
     }
 
     handleBlur(...args) {
-      this.leaveEditing();
+      this.leaveEditing(...args);
       if (this.props.onBlur) {
         this.props.onBlur(...args);
       }
