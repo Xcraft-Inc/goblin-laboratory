@@ -1,31 +1,50 @@
 import React from 'react';
 import Widget from 'goblin-laboratory/widgets/widget';
+import {ConnectedProp, ConnectedPropData} from './c.js';
 import Shredder from 'xcraft-core-shredder';
 
+function isShredderOrImmutable(obj) {
+  return obj && (Shredder.isShredder(obj) || Shredder.isImmutable(obj));
+}
+
+/**
+ * Wrap a component that does not support connected props to support them.
+ *
+ * @param {Component} Component - Any React component.
+ * @param {Object} dispatchProps -
+ * @return {Widget} A widget supporting connected props.
+ */
 export default function withC(Component, dispatchProps = {}) {
   const Mapper = props => {
-    const {_connectedProps, ...otherProps} = props;
+    let {_connectedProps, _connectedProp, ...otherProps} = props;
     const newProps = {};
     for (const prop of _connectedProps) {
-      const inFunc = prop.get('inFunc');
+      const inFunc = prop.inFunc;
       if (inFunc) {
-        const name = prop.get('name');
-        newProps[name] = inFunc(props[name]);
+        const name = prop.name;
+        if (name === '_connectedProp') {
+          _connectedProp = inFunc(_connectedProp);
+        } else {
+          newProps[name] = inFunc(props[name]);
+        }
       }
     }
-    return <Component {...otherProps} {...newProps} />;
+    if (isShredderOrImmutable(_connectedProp)) {
+      _connectedProp = _connectedProp.toObject();
+    }
+    return <Component {...otherProps} {..._connectedProp} {...newProps} />;
   };
 
   const ConnectedComponent = Widget.connect(
     (state, props) => {
       const newProps = {};
       for (const prop of props._connectedProps) {
-        const path = prop.get('path');
+        const fullPath = prop.fullPath;
         let value;
-        if (path !== null && path !== undefined) {
-          value = state.get(path);
+        if (fullPath !== null && fullPath !== undefined) {
+          value = state.get(fullPath);
         }
-        newProps[prop.get('name')] = value;
+        newProps[prop.name] = value;
       }
       return newProps;
     },
@@ -38,12 +57,12 @@ export default function withC(Component, dispatchProps = {}) {
 
       const connectedPropNames = [];
       for (const [name, value] of Object.entries(this.props)) {
-        if (
-          Shredder.isShredder(value) &&
-          value.get('_type') === 'connectedProp'
-        ) {
+        if (value instanceof ConnectedProp) {
           connectedPropNames.push(name);
         }
+      }
+      if (this.props._connectedProp instanceof ConnectedPropData) {
+        connectedPropNames.push('_connectedProp');
       }
       if (connectedPropNames.length > 0) {
         this.connectedPropNames = connectedPropNames;
@@ -59,14 +78,16 @@ export default function withC(Component, dispatchProps = {}) {
         if (path === '.') {
           return model;
         }
-        // TODO: check model is not empty
+        if (!model) {
+          return path.substring(1); // Remove '.'
+        }
         return `${model}${path}`;
       }
       return path;
     }
 
     handlePropChange(propName, value) {
-      const path = this.addContextToPath(this.props[propName].get('path'));
+      const path = this.addContextToPath(this.props[propName].path);
       if (!path) {
         throw new Error(`Path is not defined`);
       }
@@ -103,11 +124,12 @@ export default function withC(Component, dispatchProps = {}) {
       const connectedProps = this.connectedPropNames.map(name => {
         const prop = this.props[name];
         //TODO handle array of path (for extra arguments to inFunc)
-        const path = this.addContextToPath(prop.get('path'));
+        prop.name = name;
+        prop.fullPath = this.addContextToPath(prop.path);
 
-        const dispatchPropName = dispatchProps[name];
-        if (dispatchPropName) {
-          const outFunc = prop.get('outFunc');
+        if (name in dispatchProps) {
+          const dispatchPropName = dispatchProps[name];
+          const outFunc = prop.outFunc;
           if (outFunc) {
             onChangeProps[dispatchPropName] = value =>
               this.handlePropChange(name, outFunc(value));
@@ -117,7 +139,7 @@ export default function withC(Component, dispatchProps = {}) {
           }
         }
 
-        return prop.set('name', name).set('path', path);
+        return prop;
       });
       return (
         <ConnectedComponent
