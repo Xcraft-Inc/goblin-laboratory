@@ -1,3 +1,4 @@
+// Store info for a connected prop
 export class ConnectedPropData {
   constructor(path, inFunc, outFunc) {
     this.path = path;
@@ -74,6 +75,17 @@ export class ConnectedProp {
   }
 }
 
+/**
+ * Create a connected prop.
+ *
+ * See "withC" function for more information.
+ *
+ * @param {*} path - A relative or absolute path in the state.
+ * @param {*} inFunc - Function to modify the value when it is read from the state.
+ * @param {*} outFunc - Function to modify the value before writing it to the state.
+ *
+ * @returns {ConnectedProp} - A connected prop
+ */
 export default function C(path, inFunc, outFunc) {
   return new ConnectedProp(path, inFunc, outFunc);
 }

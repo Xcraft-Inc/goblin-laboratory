@@ -10,12 +10,69 @@ function isShredderOrImmutable(obj) {
 /**
  * Wrap a component that does not support connected props to support them.
  *
+ * For example with a simple text field:
+ * ```javascript
+ * <TextFieldNC
+ *   value="42"
+ *   onChange={this.handleChange}
+ * />
+ * ```
+ * It can be wrapped with:
+ * ```javascript
+ * const TextField = withC(TextFieldNC, {value: 'onChange'})
+ * ```
+ * And then the prop "value" can be connected to the state using:
+ * ```javascript
+ * <TextFieldNC
+ *   value={C('.age')}
+ * />
+ * ```
+ * Two functions can be applied, when reading and writing to the state:
+ * ```javascript
+ * <TextFieldNC
+ *   value={C('.age', age => age + '', age => Number(age))}
+ * />
+ * ```
+ *
+ * The spread syntax can be used to connect multiple props at once:
+ * ```javascript
+ * function mapAge(age){
+ *   return {
+ *     text: age + '',
+ *     backgroundColor: age >= 18 ? 'green' : 'red',
+ *   }
+ * }
+ * <Label
+ *   {...C('.age', mapName}
+ * />
+ * ```
+ *
+ * Note: a prop must be always or never connected.
+ * It is not possible to change between connected and not connected for optimization.
+ * Thus, if a wrapped component does not receive any connected prop, most of the logic for connected
+ * props is skipped.
+ * ```javascript
+ * // This is ok. When the path is "null" or "undefined", the prop "text" will receive "undefined"
+ * const path = id ? `backend.${id}.value` : null;
+ * <Label
+ *   text={C(path)}
+ * />
+ * // But this is not ok. "value" is sometimes "C(...)" or "null", which is not a "C(...)"
+ * const value = id ? C(`backend.${id}.value`) : null;
+ * <Label
+ *   text={value}
+ * />
+ * ```
+ *
  * @param {Component} Component - Any React component.
- * @param {Object} dispatchProps -
+ * @param {Object} dispatchProps - (optional) Mapping between value props and dispatch props.
  * @return {Widget} A widget supporting connected props.
  */
 export default function withC(Component, dispatchProps = {}) {
-  const Mapper = props => {
+  // Component used after connect
+  // It applies "inFunc" to the connected props and
+  // prevents giving internal props (starting with "_") to the underlying component
+  const ConnectedPropsMapper = props => {
     let {_connectedProps, _connectedProp, ...otherProps} = props;
     const newProps = {};
     for (const prop of _connectedProps) {
@@ -29,18 +86,23 @@ export default function withC(Component, dispatchProps = {}) {
         }
       }
     }
+    // Do not spread an immutable to the props but spread it's content
     if (isShredderOrImmutable(_connectedProp)) {
       _connectedProp = _connectedProp.toObject();
     }
     return <Component {...otherProps} {..._connectedProp} {...newProps} />;
   };
 
+  // Map state to props
+  // Replace connected props by their corresponding value in the state
   const ConnectedComponent = Widget.connect(
     (state, props) => {
       const newProps = {};
       for (const prop of props._connectedProps) {
         const fullPath = prop.fullPath;
         let value;
+        // Do not get state if the path is not defined
+        // TODO: this logic could be moved to render
         if (fullPath !== null && fullPath !== undefined) {
           value = state.get(fullPath);
         }
@@ -49,21 +111,28 @@ export default function withC(Component, dispatchProps = {}) {
       return newProps;
     },
     () => ({}) // Do not add "dispatch" to the props
-  )(Mapper);
+  )(ConnectedPropsMapper);
 
+  // Component used before connect
+  // It determines if there are connected props, handles actions
+  // to change the value of the props and transforms relative to absolute paths
   class WithC extends Widget {
     constructor() {
       super(...arguments);
 
+      // Find connected props
       const connectedPropNames = [];
       for (const [name, value] of Object.entries(this.props)) {
         if (value instanceof ConnectedProp) {
           connectedPropNames.push(name);
         }
       }
+      // Find special prop made by ...C() syntax
       if (this.props._connectedProp instanceof ConnectedPropData) {
         connectedPropNames.push('_connectedProp');
       }
+
+      // Optimize render if there is no connected prop
       if (connectedPropNames.length > 0) {
         this.connectedPropNames = connectedPropNames;
         this.render = this.renderConnected;
@@ -73,6 +142,7 @@ export default function withC(Component, dispatchProps = {}) {
     }
 
     addContextToPath(path) {
+      // Add context.model before path if it is relative
       if (path && path.startsWith('.')) {
         const model = this.props.model || this.context.model;
         if (path === '.') {
@@ -119,6 +189,7 @@ export default function withC(Component, dispatchProps = {}) {
       }
     }
 
+    // Render function used with connected props
     renderConnected() {
       const onChangeProps = {};
       const connectedProps = this.connectedPropNames.map(name => {
@@ -150,6 +221,7 @@ export default function withC(Component, dispatchProps = {}) {
       );
     }
 
+    // Render function used when there is no connected prop
     renderNotConnected() {
       return <Component {...this.props} />;
     }
