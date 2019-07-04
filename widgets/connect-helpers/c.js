@@ -1,3 +1,5 @@
+import arraysEquals from './arraysEquals.js';
+
 // Store info for a connected prop
 export class ConnectedPropData {
   constructor(path, inFunc, outFunc) {
@@ -15,11 +17,17 @@ export class ConnectedPropData {
       return false;
     }
 
-    if (
-      o.path !== this.path ||
-      o.inFunc !== this.inFunc ||
-      o.outFunc !== this.outFunc
-    ) {
+    if (Array.isArray(o.path)) {
+      if (!arraysEquals(o.path, this.path)) {
+        return false;
+      }
+    } else {
+      if (o.path !== this.path) {
+        return false;
+      }
+    }
+
+    if (o.inFunc !== this.inFunc || o.outFunc !== this.outFunc) {
       return false;
     }
 

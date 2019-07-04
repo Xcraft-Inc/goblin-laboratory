@@ -2,6 +2,7 @@ import React from 'react';
 import Widget from 'goblin-laboratory/widgets/widget';
 import {ConnectedProp, ConnectedPropData} from './c.js';
 import Shredder from 'xcraft-core-shredder';
+import arrayEquals from './arrayEquals.js';
 
 function isShredderOrImmutable(obj) {
   return obj && (Shredder.isShredder(obj) || Shredder.isImmutable(obj));
@@ -47,6 +48,13 @@ function isShredderOrImmutable(obj) {
  * />
  * ```
  *
+ * It is possible to connect a prop to multiple values in the state:
+ * ```javascript
+ * <TextFieldNC
+ *   value={C(['.age', '.limit'], (age, limit) => age > limit ? age : limit)}
+ * />
+ * ```
+ *
  * Note: a prop must be always or never connected.
  * It is not possible to change between connected and not connected for optimization.
  * Thus, if a wrapped component does not receive any connected prop, most of the logic for connected
@@ -80,9 +88,17 @@ export default function withC(Component, dispatchProps = {}) {
       if (inFunc) {
         const name = prop.name;
         if (name === '_connectedProp') {
-          _connectedProp = inFunc(_connectedProp);
+          if (Array.isArray(prop.fullPath)) {
+            _connectedProp = inFunc(..._connectedProp);
+          } else {
+            _connectedProp = inFunc(_connectedProp);
+          }
         } else {
-          newProps[name] = inFunc(props[name]);
+          if (Array.isArray(prop.fullPath)) {
+            newProps[name] = inFunc(...props[name]);
+          } else {
+            newProps[name] = inFunc(props[name]);
+          }
         }
       }
     }
@@ -101,9 +117,11 @@ export default function withC(Component, dispatchProps = {}) {
       for (const prop of props._connectedProps) {
         const fullPath = prop.fullPath;
         let value;
-        // Do not get state if the path is not defined
-        // TODO: this logic could be moved to render
-        if (fullPath !== null && fullPath !== undefined) {
+        if (Array.isArray(fullPath)) {
+          value = fullPath.map(p => state.get(p));
+          // As 'value' is always a new array, define equals to prevent rerenders
+          value.equals = arrayEquals;
+        } else {
           value = state.get(fullPath);
         }
         newProps[prop.name] = value;
@@ -119,6 +137,7 @@ export default function withC(Component, dispatchProps = {}) {
   class WithC extends Widget {
     constructor() {
       super(...arguments);
+      this.addContextToPath = this.addContextToPath.bind(this);
 
       // Find connected props
       const connectedPropNames = [];
@@ -192,30 +211,47 @@ export default function withC(Component, dispatchProps = {}) {
     // Render function used with connected props
     renderConnected() {
       const onChangeProps = {};
-      const connectedProps = this.connectedPropNames.map(name => {
-        const prop = this.props[name];
-        //TODO handle array of path (for extra arguments to inFunc)
-        prop.name = name;
-        prop.fullPath = this.addContextToPath(prop.path);
+      const connectedProps = [];
+      const undefinedProps = {};
 
-        if (name in dispatchProps) {
-          const dispatchPropName = dispatchProps[name];
-          const outFunc = prop.outFunc;
-          if (outFunc) {
-            onChangeProps[dispatchPropName] = value =>
-              this.handlePropChange(name, outFunc(value));
-          } else {
-            onChangeProps[dispatchPropName] = value =>
-              this.handlePropChange(name, value);
-          }
+      for (const name of this.connectedPropNames) {
+        const prop = this.props[name];
+        prop.name = name;
+
+        // Add context to path
+        if (Array.isArray(prop.path)) {
+          // Handle array of paths (for extra arguments to inFunc)
+          prop.fullPath = prop.path.map(this.addContextToPath);
+        } else {
+          prop.fullPath = this.addContextToPath(prop.path);
         }
 
-        return prop;
-      });
+        if (prop.fullPath === null || prop.fullPath === undefined) {
+          // No path, the prop will receive 'undefined'
+          undefinedProps[name] = undefined;
+        } else {
+          // There is a path, add the prop to the list of connected props
+          connectedProps.push(prop);
+
+          // Setup a dispatch prop to change the prop value
+          if (name in dispatchProps) {
+            const dispatchPropName = dispatchProps[name];
+            const outFunc = prop.outFunc;
+            if (outFunc) {
+              onChangeProps[dispatchPropName] = value =>
+                this.handlePropChange(name, outFunc(value));
+            } else {
+              onChangeProps[dispatchPropName] = value =>
+                this.handlePropChange(name, value);
+            }
+          }
+        }
+      }
       return (
         <ConnectedComponent
           {...onChangeProps}
           {...this.props}
+          {...undefinedProps}
           _connectedProps={connectedProps}
         />
       );
