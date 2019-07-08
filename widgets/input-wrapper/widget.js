@@ -6,9 +6,10 @@ import throttle from 'lodash/throttle';
  * Wraps a raw input.
  *
  * @param {Component} Component - The raw input to wrap
+ * @param {string} valueName - (optional) Can be used to rename the 'value' prop
  * @returns {Component} A new component
  */
-export default function wrapRawInput(Component) {
+export default function wrapRawInput(Component, valueName = 'value') {
   /**
    * InputWrapper memorises the raw (text) value displayed in the input and
    * only exposes the canonical value, that can be any JS value.
@@ -54,7 +55,7 @@ export default function wrapRawInput(Component) {
     }
 
     enterEditing() {
-      let raw = this.props.value;
+      let raw = this.props[valueName];
       if (this.props.format) {
         raw = this.props.format(raw);
       }
@@ -122,11 +123,14 @@ export default function wrapRawInput(Component) {
       if (this.state.edit) {
         value = this.state.raw;
       } else {
-        value = this.props.value;
+        value = this.props[valueName];
         if (format) {
           value = format(value);
         }
       }
+      const valueProp = {
+        [valueName]: value,
+      };
       return (
         <Component
           {...otherProps}
@@ -134,7 +138,7 @@ export default function wrapRawInput(Component) {
           onFocus={this.handleFocus}
           onBlur={this.handleBlur}
           onValidate={this.validate}
-          value={value}
+          {...valueProp}
         />
       );
     }
