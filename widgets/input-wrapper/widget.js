@@ -108,18 +108,28 @@ export default function wrapRawInput(Component) {
     }
 
     render() {
+      const {
+        format,
+        parse,
+        changeMode,
+        throttleDelay,
+        ...otherProps
+      } = this.props;
+      if (changeMode === 'passthrough') {
+        return <Component {...otherProps} />;
+      }
       let value;
       if (this.state.edit) {
         value = this.state.raw;
       } else {
         value = this.props.value;
-        if (this.props.format) {
-          value = this.props.format(value);
+        if (format) {
+          value = format(value);
         }
       }
       return (
         <Component
-          {...this.props}
+          {...otherProps}
           onChange={this.handleChange}
           onFocus={this.handleFocus}
           onBlur={this.handleBlur}
