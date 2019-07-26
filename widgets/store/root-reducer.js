@@ -25,6 +25,15 @@ export function routerReducer(state = initialState, {type, payload} = {}) {
       //Prevent loosing hash when a nav is initiated in front-end and erased by a backend nav
       const currentLoc = location.get('pathname');
       const currentSearch = location.get('search');
+      const currentHash = location.get('hash');
+
+      if (currentHash !== '' && payload.location.hash !== currentHash) {
+        return state.merge({
+          location: payload.location,
+          action: payload.action,
+        });
+      }
+
       if (
         currentLoc.startsWith(payload.location.pathname) &&
         (payload.location.search.startsWith(currentSearch) ||
