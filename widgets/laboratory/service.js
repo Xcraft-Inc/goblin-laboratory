@@ -22,6 +22,9 @@ const logicHandlers = {
       themeContext: conf.themeContext || 'polypheme',
     });
   },
+  'set-feed': (state, action) => {
+    return state.set('feed', action.get('desktopId'));
+  },
   'set-root': (state, action) => {
     const widgetId = action.get('widgetId');
     let themeContext = action.get('themeContext');
@@ -60,14 +63,17 @@ const logicHandlers = {
 };
 
 // Register quest's according rc.json
-Goblin.registerQuest(goblinName, 'create', function*(quest, url, config) {
+Goblin.registerQuest(goblinName, 'create', function*(
+  quest,
+  desktopId,
+  url,
+  config
+) {
   quest.goblin.setX('url', url);
-
+  quest.goblin.setX('desktopId', desktopId);
   const labId = quest.goblin.id;
-  const feed = `wm@${labId}`;
-  const winId = feed;
-
-  quest.goblin.feed = {[feed]: true};
+  const feed = desktopId;
+  const winId = `wm@${labId}`;
 
   if (!config.feeds.includes(quest.goblin.id)) {
     config.feeds.push(quest.goblin.id);
@@ -95,6 +101,7 @@ Goblin.registerQuest(goblinName, 'create', function*(quest, url, config) {
 
   const win = yield quest.createFor('wm', labId, winId, {
     id: winId,
+    desktopId: desktopId,
     url,
     labId: quest.goblin.id,
     feeds: config.feeds,
@@ -108,7 +115,7 @@ Goblin.registerQuest(goblinName, 'create', function*(quest, url, config) {
     },
   });
 
-  yield win.feedSub({wid: winId, feeds: config.feeds});
+  yield win.feedSub({wid: desktopId, feeds: config.feeds});
   yield quest.cmd('warehouse.feed-subscription-add', {
     feeds: feed,
     branch: winId,
@@ -127,8 +134,16 @@ Goblin.registerQuest(goblinName, 'get-win-feed', function(quest) {
   };
 });
 
+Goblin.registerQuest(goblinName, 'set-feed', function*(quest, desktopId) {
+  quest.goblin.setX('desktopId', desktopId);
+  const feeds = quest.goblin.getState().get('feeds');
+  const wm = quest.getAPI(`wm@${quest.goblin.id}`);
+  yield wm.feedSub({wid: desktopId, feeds: feeds.toArray()});
+  quest.do();
+});
+
 Goblin.registerQuest(goblinName, 'get-feed', function(quest) {
-  return quest.goblin.feed;
+  return quest.goblin.getX('desktopId');
 });
 
 Goblin.registerQuest(goblinName, 'get-url', function(quest) {
