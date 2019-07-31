@@ -786,6 +786,27 @@ class Widget extends React.Component {
   }
 
   /**
+   * Do backend quest or dispatch frontend action given the model
+   *
+   * @param {String} model - A path in the state.
+   * @param {String} name - The quest or action name.
+   * @param {Object} args - The arguments.
+   */
+  doDispatch(model, name, args) {
+    const [root, id] = model.split('.');
+    if (root === 'backend') {
+      this.doFor(id, name, args);
+    } else if (root === 'widgets') {
+      this.dispatchTo(id, {
+        ...args,
+        type: name,
+      });
+    } else {
+      throw new Error(`Model path starting with '${root}' is not supported.`);
+    }
+  }
+
+  /**
    * Dispatch an action in the frontend reducer for this widget.
    *
    * @param {Object} action - Redux action.
