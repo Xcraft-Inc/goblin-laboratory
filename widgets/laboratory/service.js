@@ -258,7 +258,7 @@ Goblin.registerQuest(goblinName, 'open', function(quest, route) {
 
 Goblin.registerQuest(goblinName, 'del', function*(quest, widgetId) {
   const state = quest.goblin.getState();
-  const feed = state.get('wid');
+  const feed = state.get('feed');
   const branch = widgetId;
   const labId = quest.goblin.id;
 
