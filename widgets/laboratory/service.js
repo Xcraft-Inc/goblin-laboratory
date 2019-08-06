@@ -99,7 +99,7 @@ Goblin.registerQuest(goblinName, 'create', function*(
     });
   }
 
-  const win = yield quest.createFor('wm', labId, winId, {
+  const win = yield quest.create('wm', {
     id: winId,
     desktopId: desktopId,
     url,
@@ -116,10 +116,6 @@ Goblin.registerQuest(goblinName, 'create', function*(
   });
 
   yield win.feedSub({wid: desktopId, feeds: config.feeds});
-  yield quest.cmd('warehouse.feed-subscription-add', {
-    feeds: feed,
-    branch: winId,
-  }); // FIXME: must be removed
   yield win.beginRender();
 
   quest.log.info(`Laboratory ${quest.goblin.id} created!`);
