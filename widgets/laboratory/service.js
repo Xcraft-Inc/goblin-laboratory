@@ -135,6 +135,7 @@ Goblin.registerQuest(goblinName, 'set-feed', function*(quest, desktopId) {
   const feeds = quest.goblin.getState().get('feeds');
   const wm = quest.getAPI(`wm@${quest.goblin.id}`);
   yield wm.feedSub({wid: desktopId, feeds: feeds.toArray()});
+  yield quest.warehouse.resend({feed: desktopId});
   quest.do();
 });
 
