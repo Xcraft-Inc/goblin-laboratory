@@ -99,6 +99,15 @@ Goblin.registerQuest(goblinName, 'create', function*(
     });
   }
 
+  quest.goblin.defer(
+    quest.sub(`*::${winId}.${labId}.window-closed`, function*() {
+      yield quest.cmd('laboratory.close-window', {
+        id: quest.goblin.id,
+        winId: winId,
+      });
+    })
+  );
+
   const win = yield quest.create('wm', {
     id: winId,
     desktopId: desktopId,
@@ -262,6 +271,17 @@ Goblin.registerQuest(goblinName, 'del', function*(quest, widgetId) {
   quest.log.info(`Laboratory deleting widget ${widgetId} from window ${feed}`);
 
   yield quest.warehouse.feedSubscriptionDel({feed, branch, parents: labId});
+});
+
+Goblin.registerQuest(goblinName, 'close-window', function*(quest, winId) {
+  //TODO:multi-window mgmt
+  yield quest.kill([winId]);
+
+  //cleaning
+  const labId = quest.goblin.id;
+  yield quest.warehouse.unsubscribe({feed: labId});
+  //self-kill
+  yield quest.kill([labId], labId);
 });
 
 Goblin.registerQuest(goblinName, 'delete', function*(quest) {
