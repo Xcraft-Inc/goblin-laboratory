@@ -744,10 +744,8 @@ class Widget extends React.Component {
     }
     const labId = this.context.labId;
     args.labId = labId;
-    const feed = this.getState()
-      .backend.get(labId)
-      .get('feed');
-    args._goblinFeed = {[feed]: true};
+    args.desktopId = this.context.desktopId;
+
     const action = {
       type: 'QUEST', // FIXME: it seems not used
       cmd,

@@ -22,6 +22,9 @@ const logicHandlers = {
       themeContext: conf.themeContext || 'polypheme',
     });
   },
+  'set-feed': (state, action) => {
+    return state.set('feed', action.get('desktopId'));
+  },
   'set-root': (state, action) => {
     const widgetId = action.get('widgetId');
     let themeContext = action.get('themeContext');
@@ -60,14 +63,17 @@ const logicHandlers = {
 };
 
 // Register quest's according rc.json
-Goblin.registerQuest(goblinName, 'create', function*(quest, url, config) {
+Goblin.registerQuest(goblinName, 'create', function*(
+  quest,
+  desktopId,
+  url,
+  config
+) {
   quest.goblin.setX('url', url);
-
+  quest.goblin.setX('desktopId', desktopId);
   const labId = quest.goblin.id;
-  const feed = `wm@${labId}`;
-  const winId = feed;
-
-  quest.goblin.feed = {[feed]: true};
+  const feed = desktopId;
+  const winId = `wm@${labId}`;
 
   if (!config.feeds.includes(quest.goblin.id)) {
     config.feeds.push(quest.goblin.id);
@@ -93,8 +99,18 @@ Goblin.registerQuest(goblinName, 'create', function*(quest, url, config) {
     });
   }
 
-  const win = yield quest.createFor('wm', labId, winId, {
+  quest.goblin.defer(
+    quest.sub(`*::${winId}.${labId}.window-closed`, function*() {
+      yield quest.cmd('laboratory.close-window', {
+        id: quest.goblin.id,
+        winId: winId,
+      });
+    })
+  );
+
+  const win = yield quest.create('wm', {
     id: winId,
+    desktopId: desktopId,
     url,
     labId: quest.goblin.id,
     feeds: config.feeds,
@@ -108,11 +124,7 @@ Goblin.registerQuest(goblinName, 'create', function*(quest, url, config) {
     },
   });
 
-  yield win.feedSub({wid: winId, feeds: config.feeds});
-  yield quest.cmd('warehouse.feed-subscription-add', {
-    feeds: feed,
-    branch: winId,
-  }); // FIXME: must be removed
+  yield win.feedSub({wid: desktopId, feeds: config.feeds});
   yield win.beginRender();
 
   quest.log.info(`Laboratory ${quest.goblin.id} created!`);
@@ -127,8 +139,17 @@ Goblin.registerQuest(goblinName, 'get-win-feed', function(quest) {
   };
 });
 
+Goblin.registerQuest(goblinName, 'set-feed', function*(quest, desktopId) {
+  quest.goblin.setX('desktopId', desktopId);
+  const feeds = quest.goblin.getState().get('feeds');
+  const wm = quest.getAPI(`wm@${quest.goblin.id}`);
+  yield wm.feedSub({wid: desktopId, feeds: feeds.toArray()});
+  yield quest.warehouse.resend({feed: desktopId});
+  quest.do();
+});
+
 Goblin.registerQuest(goblinName, 'get-feed', function(quest) {
-  return quest.goblin.feed;
+  return quest.goblin.getX('desktopId');
 });
 
 Goblin.registerQuest(goblinName, 'get-url', function(quest) {
@@ -243,13 +264,24 @@ Goblin.registerQuest(goblinName, 'open', function(quest, route) {
 
 Goblin.registerQuest(goblinName, 'del', function*(quest, widgetId) {
   const state = quest.goblin.getState();
-  const feed = state.get('wid');
+  const feed = state.get('feed');
   const branch = widgetId;
   const labId = quest.goblin.id;
 
   quest.log.info(`Laboratory deleting widget ${widgetId} from window ${feed}`);
 
   yield quest.warehouse.feedSubscriptionDel({feed, branch, parents: labId});
+});
+
+Goblin.registerQuest(goblinName, 'close-window', function*(quest, winId) {
+  //TODO:multi-window mgmt
+  yield quest.kill([winId]);
+
+  //cleaning
+  const labId = quest.goblin.id;
+  yield quest.warehouse.unsubscribe({feed: labId});
+  //self-kill
+  yield quest.kill([labId], labId);
 });
 
 Goblin.registerQuest(goblinName, 'delete', function*(quest) {
