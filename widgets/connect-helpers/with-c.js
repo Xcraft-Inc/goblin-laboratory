@@ -3,6 +3,7 @@ import Widget from 'goblin-laboratory/widgets/widget';
 import {ConnectedProp, ConnectedPropData} from './c.js';
 import Shredder from 'xcraft-core-shredder';
 import arrayEquals from './arrayEquals.js';
+import WithModel from '../with-model/widget.js';
 
 function isShredderOrImmutable(obj) {
   return obj && (Shredder.isShredder(obj) || Shredder.isImmutable(obj));
@@ -74,9 +75,11 @@ function isShredderOrImmutable(obj) {
  *
  * @param {Component} Component - Any React component.
  * @param {Object} dispatchProps - (optional) Mapping between value props and dispatch props.
+ * @param {Object} [options] - Options.
+ * @param {String} [options.modelProp] - Set context.model given the path in the prop "modelProp".
  * @return {Widget} A widget supporting connected props.
  */
-export default function withC(Component, dispatchProps = {}) {
+export default function withC(Component, dispatchProps = {}, {modelProp} = {}) {
   // Component used after connect
   // It applies "inFunc" to the connected props and
   // prevents giving internal props (starting with "_") to the underlying component
@@ -105,6 +108,20 @@ export default function withC(Component, dispatchProps = {}) {
     // Do not spread an immutable to the props but spread it's content
     if (isShredderOrImmutable(_connectedProp)) {
       _connectedProp = _connectedProp.toObject();
+    }
+    if (modelProp) {
+      const connectedModelProp = _connectedProps.find(
+        prop => prop.name === modelProp
+      );
+      if (connectedModelProp) {
+        const path = connectedModelProp.path;
+        const model = Array.isArray(path) ? path[0] : path;
+        return (
+          <WithModel model={model}>
+            <Component {...otherProps} {..._connectedProp} {...newProps} />
+          </WithModel>
+        );
+      }
     }
     return <Component {...otherProps} {..._connectedProp} {...newProps} />;
   };
