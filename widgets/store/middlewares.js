@@ -45,12 +45,14 @@ const handleChange = (send, action, registry) => {
   if (goblin.indexOf('@') !== -1) {
     goblin = goblin.split('@')[0];
   }
+  const _xcraftIPC = action.value !== null && typeof action.value === 'object';
   const changeFieldCommand = `${goblin}.change-${fields.join('.')}`;
   if (registry[changeFieldCommand]) {
     const questAction = {
       type: 'QUEST',
       cmd: changeFieldCommand,
       data: {id: goblinId, newValue: action.value},
+      _xcraftIPC,
     };
     send('QUEST', questAction);
   }
@@ -61,6 +63,7 @@ const handleChange = (send, action, registry) => {
       type: 'QUEST',
       cmd: command,
       data: {id: goblinId, path: fields.join('.'), newValue: action.value},
+      _xcraftIPC,
     };
     send('QUEST', questAction);
   }

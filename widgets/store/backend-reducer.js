@@ -52,9 +52,10 @@ function applyCompensators(state, action) {
 }
 
 export default (state = fromJS({}), action = {}) => {
+  // Compensate field change
   if (action.type === 'FIELD-CHANGED' && action.path.startsWith('backend.')) {
     const path = action.path.split('.').slice(1);
-    return state.setIn(path, action.value);
+    return state.setIn(path, Shredder.toImmutable(action.value));
   }
 
   if (action.type === 'COMPENSATORS') {
