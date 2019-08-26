@@ -4,9 +4,12 @@ class ElectronRenderer extends Renderer {
   constructor() {
     const electron = require('electron');
     const {ipcRenderer, webFrame, remote} = electron;
+    const wid = remote.getCurrentWindow().id;
+    const send = (verb, ...args) => {
+      ipcRenderer.send(`${wid}-${verb}`, ...args);
+    };
 
-    super(ipcRenderer.send);
-
+    super(send);
     let zoom = webFrame.getZoomFactor();
     let laboratoryId;
     this.store.subscribe(() => {
@@ -52,8 +55,7 @@ class ElectronRenderer extends Renderer {
     });
 
     if (module.hot) {
-      const wid = remote.getCurrentWindow().id;
-      this.send('RESEND', wid);
+      this.send(`RESEND`, wid);
     }
   }
 }
