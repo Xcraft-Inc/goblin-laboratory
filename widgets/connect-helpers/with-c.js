@@ -56,20 +56,11 @@ function isShredderOrImmutable(obj) {
  * />
  * ```
  *
- * Note: a prop must be always or never connected.
- * It is not possible to change between connected and not connected for optimization.
- * Thus, if a wrapped component does not receive any connected prop, most of the logic for connected
- * props is skipped.
+ * Note: When the path is "null" or "undefined", the prop "text" will receive "undefined"
  * ```javascript
- * // This is ok. When the path is "null" or "undefined", the prop "text" will receive "undefined"
  * const path = id ? `backend.${id}.value` : null;
  * <Label
  *   text={C(path)}
- * />
- * // But this is not ok. "value" is sometimes "C(...)" or "null", which is not a "C(...)"
- * const value = id ? C(`backend.${id}.value`) : null;
- * <Label
- *   text={value}
  * />
  * ```
  *
@@ -155,26 +146,6 @@ export default function withC(Component, dispatchProps = {}, {modelProp} = {}) {
     constructor() {
       super(...arguments);
       this.addContextToPath = this.addContextToPath.bind(this);
-
-      // Find connected props
-      const connectedPropNames = [];
-      for (const [name, value] of Object.entries(this.props)) {
-        if (value instanceof ConnectedProp) {
-          connectedPropNames.push(name);
-        }
-      }
-      // Find special prop made by ...C() syntax
-      if (this.props._connectedProp instanceof ConnectedPropData) {
-        connectedPropNames.push('_connectedProp');
-      }
-
-      // Optimize render if there is no connected prop
-      if (connectedPropNames.length > 0) {
-        this.connectedPropNames = connectedPropNames;
-        this.render = this.renderConnected;
-      } else {
-        this.render = this.renderNotConnected;
-      }
     }
 
     addContextToPath(path) {
@@ -279,7 +250,27 @@ export default function withC(Component, dispatchProps = {}, {modelProp} = {}) {
       return <Component {...this.props} />;
     }
 
-    // "render" function is selected in constructor
+    render() {
+      // Find connected props
+      const connectedPropNames = [];
+      for (const [name, value] of Object.entries(this.props)) {
+        if (value instanceof ConnectedProp) {
+          connectedPropNames.push(name);
+        }
+      }
+      // Find special prop made by ...C() syntax
+      if (this.props._connectedProp instanceof ConnectedPropData) {
+        connectedPropNames.push('_connectedProp');
+      }
+
+      // Optimize render if there is no connected prop
+      if (connectedPropNames.length > 0) {
+        this.connectedPropNames = connectedPropNames;
+        return this.renderConnected();
+      } else {
+        return this.renderNotConnected();
+      }
+    }
   }
 
   return WithC;
