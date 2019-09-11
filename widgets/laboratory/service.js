@@ -131,6 +131,11 @@ Goblin.registerQuest(goblinName, 'create', function*(
   return quest.goblin.id;
 });
 
+Goblin.registerQuest(goblinName, 'close', function*(quest) {
+  const winId = quest.goblin.getState().get('wid');
+  yield quest.me.closeWindow({winId});
+});
+
 Goblin.registerQuest(goblinName, 'get-win-feed', function(quest) {
   const state = quest.goblin.getState();
   return {
