@@ -742,9 +742,13 @@ class Widget extends React.Component {
       );
       return;
     }
-    const labId = this.context.labId;
-    args.labId = labId;
-    args.desktopId = this.context.desktopId;
+
+    if (args && !args.labId) {
+      args.labId = this.context.labId;
+    }
+    if (args && !args.desktopId) {
+      args.desktopId = this.context.desktopId;
+    }
 
     const action = {
       type: 'QUEST', // FIXME: it seems not used
@@ -1121,9 +1125,7 @@ class Widget extends React.Component {
         }
 
         this.nav(
-          `${path}/${hinterType}${search}#${this.context.model}.${
-            this.props.hinter
-          }`
+          `${path}/${hinterType}${search}#${this.context.model}.${this.props.hinter}`
         );
       }
     } else {
