@@ -4,6 +4,7 @@ import {ConnectedProp, ConnectedPropData} from './c.js';
 import Shredder from 'xcraft-core-shredder';
 import arrayEquals from './arrayEquals.js';
 import WithModel from '../with-model/widget.js';
+import joinModels from './join-models.js';
 
 function isShredderOrImmutable(obj) {
   return obj && (Shredder.isShredder(obj) || Shredder.isImmutable(obj));
@@ -149,18 +150,8 @@ export default function withC(Component, dispatchProps = {}, {modelProp} = {}) {
     }
 
     addContextToPath(path) {
-      // Add context.model before path if it is relative
-      if (path && path.startsWith('.')) {
-        const model = this.props.model || this.context.model;
-        if (path === '.') {
-          return model;
-        }
-        if (!model) {
-          return path.substring(1); // Remove '.'
-        }
-        return `${model}${path}`;
-      }
-      return path;
+      const model = this.props.model || this.context.model;
+      return joinModels(model, path);
     }
 
     handlePropChange(propName, value) {

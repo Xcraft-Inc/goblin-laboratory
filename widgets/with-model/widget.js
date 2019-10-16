@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import Widget from 'laboratory/widget';
+import joinModels from '../connect-helpers/join-models';
 
 export default class WithModel extends Widget {
   constructor() {
@@ -7,11 +8,7 @@ export default class WithModel extends Widget {
   }
 
   getChildContext() {
-    let model = this.props.model;
-    if (model.startsWith('.')) {
-      const parentModel = this.context.model || '';
-      model = `${parentModel}${model}`;
-    }
+    const model = joinModels(this.context.model, this.props.model);
     return {
       model,
     };
