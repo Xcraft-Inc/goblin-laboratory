@@ -9,7 +9,7 @@ class ElectronRenderer extends Renderer {
       ipcRenderer.send(`${wid}-${verb}`, ...args);
     };
 
-    super(send);
+    super(send, wid);
     let zoom = webFrame.getZoomFactor();
     let laboratoryId;
     this.store.subscribe(() => {
