@@ -7,15 +7,20 @@ import ReactDOM from 'react-dom';
 import Root from 'laboratory/root';
 import {createHashHistory} from 'history';
 import {push} from 'connected-react-router/immutable';
-
 const history = createHashHistory();
 import configureStore from 'laboratory/store/store';
 
 class Renderer {
-  constructor(send) {
+  constructor(send, wid) {
+    this.wid = wid;
     this.send = send;
     this.push = push;
-    this._store = configureStore(window.__INITIAL_STATE__, history, this.send);
+    this._store = configureStore(
+      window.__INITIAL_STATE__,
+      history,
+      this.send,
+      this.wid
+    );
 
     document.addEventListener('drop', e => {
       e.preventDefault();
@@ -27,7 +32,7 @@ class Renderer {
       }
 
       if (filePaths.length) {
-        send('DATA_TRANSFER', {filePaths});
+        send(`${wid}-DATA_TRANSFER`, {filePaths});
       }
     });
 
