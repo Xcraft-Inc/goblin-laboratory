@@ -32,7 +32,7 @@ class Renderer {
       }
 
       if (filePaths.length) {
-        send(`${wid}-DATA_TRANSFER`, {filePaths});
+        send('DATA_TRANSFER', {filePaths});
       }
     });
 
