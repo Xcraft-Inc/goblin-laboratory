@@ -150,6 +150,9 @@ export default function withC(Component, dispatchProps = {}, {modelProp} = {}) {
     }
 
     addContextToPath(path) {
+      if (path === null || path === undefined) {
+        return null;
+      }
       const model = this.props.model || this.context.model;
       return joinModels(model, path);
     }
