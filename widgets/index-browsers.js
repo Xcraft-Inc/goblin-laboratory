@@ -39,6 +39,9 @@ class BrowsersRenderer extends Renderer {
       socket.send.bind(socket)(JSON.stringify({type, data}));
     });
 
+    //FIXME:better lang detection
+    this.send('SET_LANG', {lang: window.language});
+
     const worker = Worker ? new Worker(parser) : null;
 
     const callback = data => {
