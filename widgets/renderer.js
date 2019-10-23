@@ -63,6 +63,9 @@ class Renderer {
   }
 
   main(labId) {
+    //PUT LABID IN WINDOW STATE
+    //USEFULL IN SOME CONNECT()
+    window.labId = labId;
     ReactDOM.render(
       <Root store={this.store} history={history} labId={labId} />,
       document.getElementById('root')

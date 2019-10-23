@@ -17,6 +17,7 @@ const logicHandlers = {
       url: action.get('url'),
       feed: action.get('feed'),
       wid: action.get('wid'),
+      clientSessionId: action.get('clientSessionId'),
       feeds: conf.feeds,
       theme: null,
       themeContext: conf.themeContext || 'polypheme',
@@ -66,6 +67,7 @@ const logicHandlers = {
 Goblin.registerQuest(goblinName, 'create', function*(
   quest,
   desktopId,
+  clientSessionId,
   url,
   config
 ) {
@@ -77,6 +79,10 @@ Goblin.registerQuest(goblinName, 'create', function*(
 
   if (!config.feeds.includes(quest.goblin.id)) {
     config.feeds.push(quest.goblin.id);
+  }
+
+  if (!config.feeds.includes(clientSessionId)) {
+    config.feeds.push(clientSessionId);
   }
 
   quest.goblin.defer(
