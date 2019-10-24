@@ -1176,6 +1176,12 @@ class Widget extends React.Component {
     document.execCommand('copy');
     textField.remove();
   }
+
+  static getUserSession(state) {
+    return state.get(
+      `backend.${state.get(`backend.${window.labId}.clientSessionId`)}`
+    );
+  }
 }
 
 Widget.propTypes = {
