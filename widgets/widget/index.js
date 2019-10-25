@@ -554,6 +554,7 @@ class Widget extends React.Component {
         areOwnPropsEqual: shallowEqualShredder,
         areStatePropsEqual: shallowEqualShredder,
         areMergedPropsEqual: shallowEqualShredder,
+        forwardRef: true,
       }
     );
   }
