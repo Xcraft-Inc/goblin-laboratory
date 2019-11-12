@@ -40,7 +40,9 @@ class BrowsersRenderer extends Renderer {
     });
 
     //FIXME:better lang detection
-    this.send('SET_LANG', {lang: window.language});
+    socket.onopen = () => {
+      this.send('SET_LANG', {lang: window.language});
+    };
 
     const worker = Worker ? new Worker(parser) : null;
 
