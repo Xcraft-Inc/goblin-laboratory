@@ -94,7 +94,7 @@ class Widget extends React.Component {
     const names = [];
     while ((p = Object.getPrototypeOf(p))) {
       const constructorName = p.constructor.name;
-      if (name === 'Widget') {
+      if (constructorName === 'Widget') {
         break;
       }
       const widgetName = getWidgetName(constructorName);
