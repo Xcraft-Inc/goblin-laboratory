@@ -3,6 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Laboratory from '../laboratory/widget';
+import {Provider} from 'react-redux';
 
 class Frame extends React.PureComponent {
   getChildContext() {
@@ -25,11 +26,13 @@ class Frame extends React.PureComponent {
     const {labId, themeContext} = this.props;
 
     return (
-      <div className={`root-${labId.replace(/@/g, '-')}`}>
-        <Laboratory id={labId} frameThemeContext={themeContext}>
-          {this.props.children}
-        </Laboratory>
-      </div>
+      <Provider store={this.props.store}>
+        <div className={`root-${labId.replace(/@/g, '-')}`}>
+          <Laboratory id={labId} frameThemeContext={themeContext}>
+            {this.props.children}
+          </Laboratory>
+        </div>
+      </Provider>
     );
   }
 }
