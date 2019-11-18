@@ -42,7 +42,7 @@ class BrowsersRenderer extends Renderer {
     //FIXME:better lang detection
     window.isBrowser = true;
     /*socket.onopen = () => {
-      this.send('SET_LANG', {lang: window.language});
+      this.send('SET_LANG', {lang: navigator.language});
     };*/
 
     const worker = Worker ? new Worker(parser) : null;
