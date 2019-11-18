@@ -65,8 +65,15 @@ class ThemeContext extends Widget {
     return (
       <React.Fragment>
         <style type="text/css" data-aphrodite />
-        {globalStyles && <style type="text/css">{jsToCSS(globalStyles)}</style>}
-        {fonts && <style type="text/css">{fonts}</style>}
+        {globalStyles && (
+          <style
+            type="text/css"
+            dangerouslySetInnerHTML={{__html: jsToCSS(globalStyles)}}
+          />
+        )}
+        {fonts && (
+          <style type="text/css" dangerouslySetInnerHTML={{__html: fonts}} />
+        )}
         {this.props.children}
       </React.Fragment>
     );
