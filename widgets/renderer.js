@@ -67,7 +67,12 @@ class Renderer {
     //USEFULL IN SOME CONNECT()
     window.labId = labId;
     ReactDOM.render(
-      <Root store={this.store} history={history} labId={labId} />,
+      <Root
+        store={this.store}
+        labId={labId}
+        useRouter={true}
+        history={history}
+      />,
       document.getElementById('root')
     );
   }

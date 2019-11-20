@@ -7,7 +7,7 @@ import {Provider} from 'react-redux';
 import {ConnectedRouter} from 'connected-react-router/immutable';
 import Widget from 'laboratory/widget/index';
 import Laboratory from '../laboratory/widget';
-const Wired = Widget.Wired(Laboratory);
+const WiredLab = Widget.Wired(Laboratory)();
 
 class Root extends React.PureComponent {
   getChildContext() {
@@ -26,16 +26,29 @@ class Root extends React.PureComponent {
     };
   }
 
-  render() {
-    const {store, history, labId} = this.props;
-    const WiredLaboratory = Widget.withRoute('/')(Wired(labId));
+  renderLabWithRouter() {
+    const {history, labId} = this.props;
+    const WiredLabWithRoute = Widget.withRoute('/')(WiredLab);
     return (
-      <Provider store={store}>
-        <ConnectedRouter history={history}>
-          <WiredLaboratory />
-        </ConnectedRouter>
-      </Provider>
+      <ConnectedRouter history={history}>
+        <WiredLabWithRoute id={labId} />
+      </ConnectedRouter>
     );
+  }
+
+  renderLab() {
+    return <WiredLab id={this.props.labId} />;
+  }
+
+  renderContent() {
+    if (this.props.useRouter) {
+      return this.renderLabWithRouter();
+    }
+    return this.renderLab();
+  }
+
+  render() {
+    return <Provider store={this.props.store}>{this.renderContent()}</Provider>;
   }
 }
 
