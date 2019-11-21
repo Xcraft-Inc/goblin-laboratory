@@ -2,9 +2,9 @@
 
 import React from 'react';
 
-import Widget from 'laboratory/widget';
-import Label from 'gadgets/label/widget';
-import Gauge from 'gadgets/gauge/widget';
+import Widget from 'goblin-laboratory/widgets/widget';
+import Label from 'goblin-gadgets/widgets/label/widget';
+import Gauge from 'goblin-gadgets/widgets/gauge/widget';
 
 class Maintenance extends Widget {
   constructor() {

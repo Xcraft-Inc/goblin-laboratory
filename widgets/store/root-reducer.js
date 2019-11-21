@@ -1,9 +1,9 @@
 import {combineReducers} from 'redux';
-import backendReducer from 'laboratory/store/backend-reducer';
-import infosReducer from 'laboratory/store/infos-reducer';
-import commandsReducer from 'laboratory/store/commands-reducer';
-import widgetsReducer from 'laboratory/store/widgets-reducer';
-import newFormsReducer from 'laboratory/store/newForms-reducer';
+import backendReducer from 'goblin-laboratory/widgets/store/backend-reducer';
+import infosReducer from 'goblin-laboratory/widgets/store/infos-reducer';
+import commandsReducer from 'goblin-laboratory/widgets/store/commands-reducer';
+import widgetsReducer from 'goblin-laboratory/widgets/store/widgets-reducer';
+import newFormsReducer from 'goblin-laboratory/widgets/store/newForms-reducer';
 
 import Shredder from 'xcraft-core-shredder';
 import {createForms} from 'react-redux-form/immutable';

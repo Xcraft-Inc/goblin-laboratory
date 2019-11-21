@@ -1,11 +1,11 @@
 //T:2019-02-27
 import React from 'react';
-import Widget from 'laboratory/widget';
+import Widget from 'goblin-laboratory/widgets/widget';
 import {Theme} from 'electrum-theme';
 import toCss from 'obj-to-css';
 import cssKey from 'css-key';
 import PropTypes from 'prop-types';
-import importer from 'laboratory/importer/';
+import importer from 'goblin-laboratory/widgets/importer/';
 
 const themeContextImporter = importer('theme-context');
 

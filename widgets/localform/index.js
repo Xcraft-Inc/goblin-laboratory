@@ -1,6 +1,6 @@
 //T:2019-02-27
 'use strict';
-import Form from 'laboratory/form';
+import Form from 'goblin-laboratory/widgets/form';
 import React from 'react';
 
 class LocalForm extends Form {

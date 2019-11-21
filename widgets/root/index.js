@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import {Provider} from 'react-redux';
 import {ConnectedRouter} from 'connected-react-router/immutable';
-import Widget from 'laboratory/widget/index';
+import Widget from 'goblin-laboratory/widgets/widget';
 import Laboratory from '../laboratory/widget';
 const WiredLab = Widget.Wired(Laboratory)();
 

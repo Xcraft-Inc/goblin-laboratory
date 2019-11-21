@@ -1,7 +1,7 @@
 import React from 'react';
-import Widget from 'laboratory/widget';
-import Maintenance from 'laboratory/maintenance/widget';
-import ThemeContext from 'laboratory/theme-context/widget';
+import Widget from 'goblin-laboratory/widgets/widget';
+import Maintenance from 'goblin-laboratory/widgets/maintenance/widget';
+import ThemeContext from 'goblin-laboratory/widgets/theme-context/widget';
 
 import importer from '../importer/';
 const widgetImporter = importer('widget');

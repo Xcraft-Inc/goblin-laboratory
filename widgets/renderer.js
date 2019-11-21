@@ -4,11 +4,11 @@ if (process.env.NODE_ENV !== 'production') {
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Root from 'laboratory/root';
+import Root from 'goblin-laboratory/widgets/root';
 import {createHashHistory} from 'history';
 import {push} from 'connected-react-router/immutable';
 const history = createHashHistory();
-import configureStore from 'laboratory/store/store';
+import configureStore from 'goblin-laboratory/widgets/store/store';
 
 class Renderer {
   constructor(send, wid) {

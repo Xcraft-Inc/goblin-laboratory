@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import Widget from 'laboratory/widget';
+import Widget from 'goblin-laboratory/widgets/widget';
 import joinModels from '../connect-helpers/join-models';
 
 export default class WithModel extends Widget {
