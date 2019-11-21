@@ -66,14 +66,21 @@ class Renderer {
     //PUT LABID IN WINDOW STATE
     //USEFULL IN SOME CONNECT()
     window.labId = labId;
-    ReactDOM.render(
+
+    const rootElement = document.getElementById('root');
+    const isHydratable = rootElement.hasAttribute('data-hydratable');
+    let render = ReactDOM.render;
+    if (isHydratable) {
+      render = ReactDOM.hydrate;
+    }
+    render(
       <Root
         store={this.store}
         labId={labId}
         useRouter={true}
         history={history}
       />,
-      document.getElementById('root')
+      rootElement
     );
   }
 }
