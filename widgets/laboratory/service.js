@@ -247,9 +247,9 @@ Goblin.registerQuest(goblinName, 'unlisten', function(quest, desktopId) {
   }
 });
 
-Goblin.registerQuest(goblinName, 'nav', function(quest, route) {
+Goblin.registerQuest(goblinName, 'nav', function*(quest, route) {
   const win = quest.getAPI(`wm@${quest.goblin.id}`);
-  win.nav({route});
+  yield win.nav({route});
 });
 
 Goblin.registerQuest(goblinName, 'change-theme', function(quest, name) {
@@ -272,9 +272,9 @@ Goblin.registerQuest(goblinName, 'default-zoom', function(quest) {
   quest.do();
 });
 
-Goblin.registerQuest(goblinName, 'dispatch', function(quest, action) {
+Goblin.registerQuest(goblinName, 'dispatch', function*(quest, action) {
   const win = quest.getAPI(`wm@${quest.goblin.id}`);
-  win.dispatch({action});
+  yield win.dispatch({action});
 });
 
 Goblin.registerQuest(goblinName, 'open', function(quest, route) {
