@@ -73,6 +73,7 @@ Goblin.registerQuest(goblinName, 'create', function*(
 ) {
   quest.goblin.setX('url', url);
   quest.goblin.setX('desktopId', desktopId);
+  quest.goblin.setX('clientSessionId', clientSessionId);
   const labId = quest.goblin.id;
   const feed = desktopId;
   const winId = `wm@${labId}`;
@@ -140,6 +141,10 @@ Goblin.registerQuest(goblinName, 'create', function*(
 Goblin.registerQuest(goblinName, 'close', function*(quest) {
   const winId = quest.goblin.getState().get('wid');
   yield quest.me.closeWindow({winId});
+});
+
+Goblin.registerQuest(goblinName, 'get-client-session-id', function(quest) {
+  return quest.goblin.getX('clientSessionId');
 });
 
 Goblin.registerQuest(goblinName, 'get-win-feed', function(quest) {
