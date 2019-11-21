@@ -76,6 +76,14 @@ class BrowsersRenderer extends Renderer {
     socket.onmessage = event => {
       webWorkerJSONParse(worker, event.data, callback);
     };
+
+    socket.onclose = event => {
+      console.log('Websocket closed:', event);
+    };
+
+    socket.onerror = event => {
+      console.error('WebSocket error observed:', event);
+    };
   }
 }
 
