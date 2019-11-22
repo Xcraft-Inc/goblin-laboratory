@@ -91,16 +91,16 @@ class Widget extends React.Component {
 
   _getInheritedNames() {
     let p = this;
-    const names = [];
+    const names = new Set();
     while ((p = Object.getPrototypeOf(p))) {
       const constructorName = p.constructor.name;
       if (constructorName === 'Widget') {
         break;
       }
       const widgetName = getWidgetName(constructorName);
-      names.push(widgetName);
+      names.add(widgetName);
     }
-    return names;
+    return [...names];
   }
 
   //? static get propTypes() {
