@@ -90,7 +90,7 @@ class Widget extends React.Component {
   }
 
   _getInheritedNames() {
-    let p = Object.getPrototypeOf(this);
+    let p = this;
     const names = [];
     while ((p = Object.getPrototypeOf(p))) {
       const constructorName = p.constructor.name;
