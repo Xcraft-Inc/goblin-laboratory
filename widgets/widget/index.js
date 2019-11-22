@@ -223,7 +223,7 @@ class Widget extends React.Component {
       styleProps[p] = this.props[p];
     });
     if (myStyle.mapProps) {
-      styleProps = myStyle.mapProps(styleProps);
+      styleProps = myStyle.mapProps(styleProps, this.context.theme);
     }
     return styleProps;
   }
@@ -290,8 +290,8 @@ class Widget extends React.Component {
       hasThemeParam: styleDefs.some(styleDef => styleDef.hasThemeParam),
       hasPropsParam: styleDefs.some(styleDef => styleDef.hasPropsParam),
       propNamesUsed,
-      mapProps: props =>
-        mapPropsList.reduce((p, mapProps) => mapProps(p), props),
+      mapProps: (props, theme) =>
+        mapPropsList.reduce((p, mapProps) => mapProps(p, theme), props),
       func: (theme, props) =>
         funcList.reduce(
           (styles, func) => func.bind({styles})(theme, props),
