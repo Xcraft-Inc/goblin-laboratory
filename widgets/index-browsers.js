@@ -43,21 +43,21 @@ function getZeppelinDestination() {
 
 class BrowsersRenderer extends Renderer {
   constructor() {
-    //TODO: getlocal storage session tocken
+    //TODO: getlocal storage session token
+    const zeppelinToken = window.localStorage.getItem('epsitec/zeppelinToken');
+
     const destination = getZeppelinDestination();
     const socket = new WebSocket(
-      `ws://localhost:8000/${uuidV4()}/${destination}/`
+      `ws://localhost:8000/${
+        zeppelinToken ? zeppelinToken : 'no-idea'
+      }/${destination}/`
     );
 
     super((type, data) => {
       socket.send.bind(socket)(JSON.stringify({type, data}));
     });
 
-    //FIXME:better lang detection
     window.isBrowser = true;
-    /*socket.onopen = () => {
-      this.send('SET_LANG', {lang: navigator.language});
-    };*/
 
     const worker = Worker ? new Worker(parser) : null;
 
@@ -77,6 +77,8 @@ class BrowsersRenderer extends Renderer {
           break;
         case 'BEGIN_RENDER':
           super.main(data.labId);
+          //persist for future handshaking
+          window.localStorage.setItem('epsitec/zeppelinToken', data.token);
           break;
       }
     };
