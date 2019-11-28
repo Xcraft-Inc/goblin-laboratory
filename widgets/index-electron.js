@@ -60,4 +60,4 @@ class ElectronRenderer extends Renderer {
   }
 }
 
-new ElectronRenderer();
+window.Renderer = ElectronRenderer;

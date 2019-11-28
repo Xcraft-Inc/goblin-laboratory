@@ -94,4 +94,4 @@ class BrowsersRenderer extends Renderer {
   }
 }
 
-new BrowsersRenderer();
+window.Renderer = BrowsersRenderer;
