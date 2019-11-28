@@ -30,27 +30,18 @@ function webWorkerJSONParse(worker, data, callback) {
   worker.postMessage(data);
 }
 
-function getZeppelinDestination() {
-  // Get destination from <meta data-zeppelin-destination="my-destination">
-  const destinationElement = document.head.querySelectorAll(
-    '[data-zeppelin-destination]'
-  )[0];
-  if (destinationElement) {
-    return destinationElement.getAttribute('data-zeppelin-destination');
-  }
-  return '';
-}
-
 class BrowsersRenderer extends Renderer {
-  constructor() {
-    //TODO: getlocal storage session token
-    const zeppelinToken = window.localStorage.getItem('epsitec/zeppelinToken');
-
-    const destination = getZeppelinDestination();
+  constructor(options = {}) {
+    const zeppelinToken =
+      window.localStorage.getItem('epsitec/zeppelinToken') || 'no-idea';
+    const {
+      protocol = 'ws',
+      hostname = 'localhost',
+      port = '8000',
+      destination = '',
+    } = options;
     const socket = new WebSocket(
-      `ws://localhost:8000/${
-        zeppelinToken ? zeppelinToken : 'no-idea'
-      }/${destination}/`
+      `${protocol}://${hostname}:${port}/${zeppelinToken}/${destination}/`
     );
 
     super((type, data) => {

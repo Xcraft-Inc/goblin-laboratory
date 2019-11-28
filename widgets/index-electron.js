@@ -1,7 +1,7 @@
 import Renderer from './renderer.js';
 
 class ElectronRenderer extends Renderer {
-  constructor() {
+  constructor(options) {
     const electron = require('electron');
     const {ipcRenderer, webFrame, remote} = electron;
     const wid = remote.getCurrentWindow().id;
