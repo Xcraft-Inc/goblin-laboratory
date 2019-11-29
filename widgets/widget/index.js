@@ -12,7 +12,7 @@ import {matchPath} from 'react-router';
 import fasterStringify from 'faster-stable-stringify';
 import {StyleSheet as Aphrodite, flushToStyleTag} from 'aphrodite/no-important';
 import traverse from 'traverse';
-import importer from '../importer/';
+import importer from 'goblin/importer';
 import shallowEqualShredder from './utils/shallowEqualShredder';
 import _connect from './utils/connect';
 import connectWidget from './utils/connectWidget';

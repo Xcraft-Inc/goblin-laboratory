@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import {actions, Form as RFForm, Fieldset} from 'react-redux-form/immutable';
 import Widget from 'goblin-laboratory/widgets/widget';
-import importer from '../importer/';
+import importer from 'goblin/importer';
 import ReactList from 'react-list';
 const partialImporter = importer('partial');
 
