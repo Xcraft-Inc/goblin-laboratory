@@ -5,7 +5,7 @@ import {Theme} from 'electrum-theme';
 import toCss from 'obj-to-css';
 import cssKey from 'css-key';
 import PropTypes from 'prop-types';
-import importer from 'goblin/importer';
+import importer from 'goblin_importer';
 
 const themeContextImporter = importer('theme-context');
 

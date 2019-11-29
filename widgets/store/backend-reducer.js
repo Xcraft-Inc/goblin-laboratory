@@ -2,7 +2,7 @@
 import patch from 'immutablepatch';
 import {fromJS} from 'immutable';
 import Shredder from 'xcraft-core-shredder';
-import importer from 'goblin/importer';
+import importer from 'goblin_importer';
 
 const compensatorImporter = importer('compensator');
 

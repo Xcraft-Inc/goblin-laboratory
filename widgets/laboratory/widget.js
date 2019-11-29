@@ -3,7 +3,7 @@ import Widget from 'goblin-laboratory/widgets/widget';
 import Maintenance from 'goblin-laboratory/widgets/maintenance/widget';
 import ThemeContext from 'goblin-laboratory/widgets/theme-context/widget';
 
-import importer from 'goblin/importer';
+import importer from 'goblin_importer';
 const widgetImporter = importer('widget');
 
 class Laboratory extends Widget {

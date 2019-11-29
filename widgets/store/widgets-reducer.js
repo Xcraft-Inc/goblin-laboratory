@@ -1,5 +1,5 @@
 import {fromJS} from 'immutable';
-import importer from 'goblin/importer';
+import importer from 'goblin_importer';
 import Shredder from 'xcraft-core-shredder';
 
 const reducerImporter = importer('reducer');
