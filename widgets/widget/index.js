@@ -7,7 +7,6 @@ import PropTypes from 'prop-types';
 import Shredder from 'xcraft-core-shredder';
 import LinkedList from 'linked-list';
 import {push, replace, goBack} from 'connected-react-router/immutable';
-import {actions} from 'react-redux-form/immutable';
 import {matchPath} from 'react-router';
 import fasterStringify from 'faster-stable-stringify';
 import {StyleSheet as Aphrodite, flushToStyleTag} from 'aphrodite/no-important';
@@ -931,7 +930,11 @@ class Widget extends React.Component {
   }
 
   setBackendValue(path, value) {
-    this.context.dispatch(actions.change(path, value));
+    this.rawDispatch({
+      type: 'FIELD-CHANGED',
+      path,
+      value,
+    });
   }
 
   setModelValue(path, value, useEntity) {
@@ -939,7 +942,11 @@ class Widget extends React.Component {
     if (useEntity) {
       fullPath = 'backend.' + this.props.entityId + path;
     }
-    this.context.dispatch(actions.change(fullPath, value));
+    this.rawDispatch({
+      type: 'FIELD-CHANGED',
+      path: fullPath,
+      value,
+    });
   }
 
   setFormValue(path, value) {

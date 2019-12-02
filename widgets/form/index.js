@@ -1,67 +1,36 @@
 //T:2019-02-27
 import React from 'react';
-import PropTypes from 'prop-types';
 
-import {actions, Form as RFForm, Fieldset} from 'react-redux-form/immutable';
 import Widget from 'goblin-laboratory/widgets/widget';
-import importer from 'goblin_importer';
-import ReactList from 'react-list';
-const partialImporter = importer('partial');
+import WithModel from '../with-model/widget';
+
+/******************************************************************************/
+
+// TODO: Adapt code that use it and remove it
+const FormComponent = props => {
+  const {
+    component: Component,
+    model,
+    children,
+    validateOn,
+    ...otherProps
+  } = props;
+  return (
+    <WithModel model={model}>
+      <Component {...otherProps}>{children}</Component>
+    </WithModel>
+  );
+};
+
+/******************************************************************************/
 
 class Form extends Widget {
   constructor() {
     super(...arguments);
-    this.getFormFieldValue = this.getFormFieldValue.bind(this);
-  }
-
-  formFocus(model) {
-    this.props.dispatch(actions.focus(model));
-  }
-
-  getPartial(name, props) {
-    const Partial = partialImporter(name).bind(this);
-    return <Partial {...props} />;
-  }
-
-  submitAs(service) {
-    const value = this.formValue;
-    this.doAs(service, 'submit', {value});
-  }
-
-  submit() {
-    const value = this.formValue;
-    this.do('submit', {value});
-  }
-
-  getFormFieldValue(name) {
-    const form = this.formValue;
-    const modelValue = this.getBackendState().get(name);
-    if (form[name]) {
-      if (form[name].value) {
-        return form[name].value;
-      } else {
-        return modelValue;
-      }
-    }
-    return modelValue;
-  }
-
-  getList(item, type, length) {
-    return props => (
-      <ReactList length={length} type={type} itemRenderer={item} {...props} />
-    );
-  }
-
-  get formValue() {
-    return this.getState().forms.backend[this.props.id];
   }
 
   get Form() {
-    return RFForm;
-  }
-
-  get Fieldset() {
-    return Fieldset;
+    return FormComponent;
   }
 
   get formConfig() {
@@ -74,20 +43,6 @@ class Form extends Widget {
       component: 'div',
       validateOn: 'submit',
       model: `backend.${id}`,
-      style,
-    };
-  }
-
-  get entityConfig() {
-    // FIXME: use aphrodite
-    const style = {
-      display: 'flex',
-      flexDirection: 'column',
-    };
-    return {
-      component: 'div',
-      validateOn: 'submit',
-      model: `backend.${this.props.entityId}`,
       style,
     };
   }
@@ -112,43 +67,6 @@ class Form extends Widget {
       component: component,
       validateOn: 'submit',
       model: `backend.${id}`,
-      style,
-    };
-  }
-
-  componentWillUnmount() {
-    super.componentWillUnmount();
-    //Garbage form model
-    const dispatch = this.props.dispatch
-      ? this.props.dispatch
-      : this.context.dispatch;
-    const id = this.props.id ? this.props.id : this.context.id;
-    setTimeout(() => {
-      const state = this.getState();
-      const modelData = state.backend.get(id, 'removed');
-      if (modelData === 'removed') {
-        if (state.forms.backend[id]) {
-          console.log('Garbage ', id);
-          dispatch(
-            actions.reset({
-              getState: this.getState.bind(this),
-            })
-          );
-        }
-      }
-    }, 1000);
-  }
-
-  track(path, id) {
-    //TODO: better immutable tracking
-    //RRF track not working...
-    const style = {
-      display: 'flex',
-      flexDirection: 'column',
-    };
-    return {
-      component: 'div',
-      model: `${path}.${id}`,
       style,
     };
   }
