@@ -208,6 +208,22 @@ class Widget extends React.Component {
     return newStyle;
   }
 
+  set styles(stylesDef) {
+    const myStyleFunc = stylesDef.default;
+    const s = {
+      hasThemeParam: myStyleFunc.length > 0,
+      hasPropsParam: myStyleFunc.length > 1,
+      propNamesUsed: stylesDef.propNames,
+      mapProps: stylesDef.mapProps,
+      func: myStyleFunc,
+    };
+    if (!this._styleDefs) {
+      this._styleDefs = [s];
+    } else {
+      this._styleDefs.push(s);
+    }
+  }
+
   getStyleProps(myStyle) {
     if (!myStyle.hasPropsParam) {
       return null;
@@ -258,7 +274,10 @@ class Widget extends React.Component {
 
   // Get style definition for this widget and merge it with the style definition of inherited widget
   getMergedStyleDefinition() {
-    let styleDefs = this._names.map(this.importStyleDefinition);
+    let styleDefs = this._styleDefs;
+    if (!styleDefs) {
+      styleDefs = this._names.map(this.importStyleDefinition);
+    }
     if (styleDefs.every(styleDef => !styleDef)) {
       throw new Error(`No styles.js file for component '${this.name}'`);
     }
