@@ -1,6 +1,5 @@
 import 'babel-polyfill';
 import Renderer from './renderer.js';
-const uuidV4 = require('uuid/v4');
 
 const WT = `
 function () {
