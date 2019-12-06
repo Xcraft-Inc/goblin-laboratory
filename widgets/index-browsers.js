@@ -34,7 +34,7 @@ class BrowsersRenderer extends Renderer {
     const send = (type, data) => {
       const socket = this._socket;
       if (socket.readyState === WebSocket.OPEN) {
-        socket.send.bind(socket)(JSON.stringify({type, data}));
+        socket.send(JSON.stringify({type, data}));
       }
     };
 
