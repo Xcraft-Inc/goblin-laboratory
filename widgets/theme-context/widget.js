@@ -64,7 +64,8 @@ class ThemeContext extends Widget {
 
     return (
       <React.Fragment>
-        <style type="text/css" data-aphrodite />
+        {/* // This <style> is not necessary without shadow dom and causes errors in aphrodite after unmount and remount */}
+        {/* <style type="text/css" data-aphrodite /> */}
         {globalStyles && (
           <style
             type="text/css"
