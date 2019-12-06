@@ -11,16 +11,11 @@ const history = createHashHistory();
 import configureStore from 'goblin-laboratory/widgets/store/store';
 
 class Renderer {
-  constructor(send, wid) {
-    this.wid = wid;
+  constructor(send, options) {
     this.send = send;
     this.push = push;
-    this._store = configureStore(
-      window.__INITIAL_STATE__,
-      history,
-      this.send,
-      this.wid
-    );
+    this.options = options;
+    this._store = configureStore(window.__INITIAL_STATE__, history, this.send);
 
     document.addEventListener('drop', e => {
       e.preventDefault();
