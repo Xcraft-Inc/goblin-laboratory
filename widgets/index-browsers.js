@@ -31,25 +31,16 @@ function webWorkerJSONParse(worker, data, callback) {
 
 class BrowsersRenderer extends Renderer {
   constructor(options = {}) {
-    const zeppelinToken =
-      window.localStorage.getItem('epsitec/zeppelinToken') || 'no-idea';
-    const {
-      protocol = 'ws',
-      hostname = 'localhost',
-      port = '8000',
-      destination = '',
-    } = options;
-    const socket = new WebSocket(
-      `${protocol}://${hostname}:${port}/${zeppelinToken}/${destination}/`
-    );
+    const send = (type, data) => {
+      const socket = this._socket;
+      if (socket.readyState === WebSocket.OPEN) {
+        socket.send.bind(socket)(JSON.stringify({type, data}));
+      }
+    };
 
-    super((type, data) => {
-      socket.send.bind(socket)(JSON.stringify({type, data}));
-    });
+    super(send, options);
 
     window.isBrowser = true;
-
-    const worker = Worker ? new Worker(parser) : null;
 
     const callback = data => {
       switch (data.type) {
@@ -73,23 +64,60 @@ class BrowsersRenderer extends Renderer {
       }
     };
 
+    const worker = Worker ? new Worker(parser) : null;
     if (worker) {
       worker.onmessage = e => {
         callback(e.data);
       };
     }
 
+    this._handleWebSocketMessage = data => {
+      webWorkerJSONParse(worker, data, callback);
+    };
+
+    this.reconnectTimeout = 125; // 125ms / 250ms / 500ms / 1000ms / ...
+    this.connect = this.connect.bind(this);
+    this.connect();
+  }
+
+  connect() {
+    const {
+      protocol = 'ws',
+      hostname = 'localhost',
+      port = '8000',
+      destination = '',
+    } = this.options;
+
+    const zeppelinToken =
+      window.localStorage.getItem('epsitec/zeppelinToken') || 'no-idea';
+
+    const socket = new WebSocket(
+      `${protocol}://${hostname}:${port}/${zeppelinToken}/${destination}/`
+    );
+
     socket.onmessage = event => {
-      webWorkerJSONParse(worker, event.data, callback);
+      this._handleWebSocketMessage(event.data);
+    };
+
+    socket.onopen = event => {
+      console.log('Websocket is open:', event);
+      this.store.dispatch({type: 'SET_WEBSOCKET_STATUS', status: 'open'});
+      this.reconnectTimeout = 125;
     };
 
     socket.onclose = event => {
       console.log('Websocket closed:', event);
+      this.store.dispatch({type: 'SET_WEBSOCKET_STATUS', status: 'closed'});
+
+      setTimeout(this.connect, this.reconnectTimeout);
+      this.reconnectTimeout *= 2;
     };
 
     socket.onerror = event => {
       console.error('WebSocket error observed:', event);
     };
+
+    this._socket = socket;
   }
 }
 
