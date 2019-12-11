@@ -59,7 +59,7 @@ class BrowsersRenderer extends Renderer {
         case 'BEGIN_RENDER':
           super.main(data.labId);
           //persist for future handshaking
-          window.localStorage.setItem('epsitec/zeppelinToken', data.token);
+          window.sessionStorage.setItem('epsitec/zeppelinToken', data.token);
           break;
       }
     };
@@ -89,7 +89,7 @@ class BrowsersRenderer extends Renderer {
     } = this.options;
 
     const zeppelinToken =
-      window.localStorage.getItem('epsitec/zeppelinToken') || 'no-idea';
+      window.sessionStorage.getItem('epsitec/zeppelinToken') || 'no-idea';
 
     const socket = new WebSocket(
       `${protocol}://${hostname}:${port}/${zeppelinToken}/${destination}/`
