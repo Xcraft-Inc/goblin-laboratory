@@ -7,15 +7,24 @@ import ReactDOM from 'react-dom';
 import Root from 'goblin-laboratory/widgets/root';
 import {createHashHistory} from 'history';
 import {push} from 'connected-react-router/immutable';
-const history = createHashHistory();
 import configureStore from 'goblin-laboratory/widgets/store/store';
 
 class Renderer {
-  constructor(send, options) {
+  constructor(send, options = {}) {
     this.send = send;
     this.push = push;
     this.options = options;
-    this._store = configureStore(window.__INITIAL_STATE__, history, this.send);
+
+    this.history = undefined;
+    if (this.options.useRouter !== false) {
+      this.history = createHashHistory();
+    }
+
+    this._store = configureStore(
+      window.__INITIAL_STATE__,
+      this.history,
+      this.send
+    );
 
     document.addEventListener('drop', e => {
       e.preventDefault();
@@ -72,8 +81,8 @@ class Renderer {
       <Root
         store={this.store}
         labId={labId}
-        useRouter={true}
-        history={history}
+        useRouter={this.options.useRouter !== false}
+        history={this.history}
       />,
       rootElement
     );
