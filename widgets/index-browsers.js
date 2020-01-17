@@ -59,7 +59,7 @@ class BrowsersRenderer extends Renderer {
         case 'BEGIN_RENDER':
           super.main(data.labId);
           //persist for future handshaking
-          window.sessionStorage.setItem('epsitec/zeppelinToken', data.token);
+          this.storeTokens(data.tokens);
           break;
       }
     };
@@ -88,11 +88,15 @@ class BrowsersRenderer extends Renderer {
       destination = '',
     } = this.options;
 
-    const zeppelinToken =
-      window.sessionStorage.getItem('epsitec/zeppelinToken') || 'no-idea';
+    const clientToken =
+      window.localStorage.getItem('epsitec/zeppelin/clientToken') ||
+      'new-client';
+    const sessionToken =
+      window.sessionStorage.getItem('epsitec/zeppelin/sessionToken') ||
+      'new-session';
 
     const socket = new WebSocket(
-      `${protocol}://${hostname}:${port}/${zeppelinToken}/${destination}/`
+      `${protocol}://${hostname}:${port}/${clientToken}/${sessionToken}/${destination}/`
     );
 
     socket.onmessage = event => {
@@ -118,6 +122,24 @@ class BrowsersRenderer extends Renderer {
     };
 
     this._socket = socket;
+  }
+
+  storeTokens(tokens) {
+    if (!tokens) {
+      return;
+    }
+    if (tokens.clientToken) {
+      window.localStorage.setItem(
+        'epsitec/zeppelin/clientToken',
+        tokens.clientToken
+      );
+    }
+    if (tokens.sessionToken) {
+      window.sessionStorage.setItem(
+        'epsitec/zeppelin/sessionToken',
+        tokens.sessionToken
+      );
+    }
   }
 }
 
