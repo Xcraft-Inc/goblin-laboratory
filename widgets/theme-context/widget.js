@@ -2,30 +2,11 @@
 import React from 'react';
 import Widget from 'goblin-laboratory/widgets/widget';
 import {Theme} from 'electrum-theme';
-import toCss from 'obj-to-css';
-import cssKey from 'css-key';
 import PropTypes from 'prop-types';
 import importer from 'goblin_importer';
+import jsToCSS from './js-to-css.js';
 
 const themeContextImporter = importer('theme-context');
-
-function jsToCSS(jsStyles) {
-  return toCss(
-    Object.assign(
-      {},
-      ...Object.keys(jsStyles).map(className => {
-        return {
-          [cssKey(className)]: Object.assign(
-            {},
-            ...Object.keys(jsStyles[className]).map(key => {
-              return {[cssKey(key)]: jsStyles[className][key]};
-            })
-          ),
-        };
-      })
-    )
-  );
-}
 
 class ThemeContext extends Widget {
   constructor() {
