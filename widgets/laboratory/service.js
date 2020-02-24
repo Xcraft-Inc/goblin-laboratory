@@ -21,6 +21,7 @@ const logicHandlers = {
       feeds: conf.feeds,
       theme: null,
       themeContext: conf.themeContext || 'polypheme',
+      look: 'modern',
     });
   },
   'set-feed': (state, action) => {
@@ -40,6 +41,9 @@ const logicHandlers = {
   },
   'change-theme': (state, action) => {
     return state.set('theme', action.get('name'));
+  },
+  'change-look': (state, action) => {
+    return state.set('look', action.get('name'));
   },
   'update-feeds': (state, action) => {
     return state.set('feeds', action.get('feeds'));
@@ -228,6 +232,12 @@ Goblin.registerQuest(goblinName, 'listen', function(quest, desktopId) {
       })
     );
     quest.goblin.setX(
+      `${desktopId}.change-look-unsub`,
+      quest.sub(`${desktopId}.change-look.requested`, function*(err, {msg}) {
+        yield quest.me.changeLook(msg.data);
+      })
+    );
+    quest.goblin.setX(
       `${desktopId}.dispatch-unsub`,
       quest.sub(`${desktopId}.dispatch.requested`, function*(err, {msg}) {
         yield quest.me.dispatch(msg.data);
@@ -240,9 +250,11 @@ Goblin.registerQuest(goblinName, 'unlisten', function(quest, desktopId) {
   if (quest.goblin.getX(`${desktopId}.nav-unsub`)) {
     quest.goblin.getX(`${desktopId}.nav-unsub`)();
     quest.goblin.getX(`${desktopId}.change-theme-unsub`)();
+    quest.goblin.getX(`${desktopId}.change-look-unsub`)();
     quest.goblin.getX(`${desktopId}.dispatch-unsub`)();
     quest.goblin.delX(`${desktopId}.nav-unsub`);
     quest.goblin.delX(`${desktopId}.change-theme-unsub`);
+    quest.goblin.delX(`${desktopId}.change-look-unsub`);
     quest.goblin.delX(`${desktopId}.dispatch-unsub`);
   }
 });
@@ -253,6 +265,10 @@ Goblin.registerQuest(goblinName, 'nav', function*(quest, route) {
 });
 
 Goblin.registerQuest(goblinName, 'change-theme', function(quest, name) {
+  quest.do({name});
+});
+
+Goblin.registerQuest(goblinName, 'change-look', function(quest, name) {
   quest.do({name});
 });
 
