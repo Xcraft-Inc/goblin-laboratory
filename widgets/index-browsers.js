@@ -103,16 +103,21 @@ class BrowsersRenderer extends Renderer {
       this._handleWebSocketMessage(event.data);
     };
 
+    let resetTimeoutHandle;
+
     socket.onopen = event => {
       console.log('Websocket is open:', event);
       this.store.dispatch({type: 'SET_WEBSOCKET_STATUS', status: 'open'});
-      this.reconnectTimeout = 125;
+      resetTimeoutHandle = setTimeout(() => {
+        this.reconnectTimeout = 125;
+      }, 10000);
     };
 
     socket.onclose = event => {
       console.log('Websocket closed:', event);
       this.store.dispatch({type: 'SET_WEBSOCKET_STATUS', status: 'closed'});
 
+      clearTimeout(resetTimeoutHandle);
       setTimeout(this.connect, this.reconnectTimeout);
       this.reconnectTimeout *= 2;
     };
