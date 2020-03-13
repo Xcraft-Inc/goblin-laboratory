@@ -21,9 +21,15 @@ import * as widgetsActions from './utils/widgets-actions';
 const stylesImporter = importer('styles');
 const reducerImporter = importer('reducer');
 
-const stylesCache = new Map();
-const stylesCacheUses = new LinkedList();
-const myStyleCache = {};
+let stylesCache = new Map();
+let stylesCacheUses = new LinkedList();
+let myStyleCache = {};
+
+export function clearStylesCache() {
+  stylesCache = new Map();
+  stylesCacheUses = new LinkedList();
+  myStyleCache = {};
+}
 
 const debounceCollect = _.debounce(fct => {
   fct();
