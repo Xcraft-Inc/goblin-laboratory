@@ -1210,6 +1210,16 @@ class Widget extends React.Component {
     textField.remove();
   }
 
+  getUserSettings() {
+    return Widget.getUserSession(new Shredder(this.getState()));
+  }
+
+  setUserSettings(questName, payload) {
+    const state = this.getState().backend;
+    payload.id = state.get(window.labId).get('clientSessionId');
+    this.cmd(`client-session.${questName}`, payload);
+  }
+
   static getUserSession(state) {
     if (window.isBrowser) {
       //TODO: impl. browser session
