@@ -95,7 +95,7 @@ Goblin.registerQuest(goblinName, 'create', function*(
     })
   );
 
-  quest.doSync({id: quest.goblin.id, feed, wid: winId, url, config});
+  yield quest.doSync({id: quest.goblin.id, feed, wid: winId, url, config});
 
   const labConfig = require('xcraft-core-etc')().load('goblin-laboratory');
 
