@@ -88,12 +88,7 @@ class BrowsersRenderer extends Renderer {
       destination = '',
     } = this.options;
 
-    const clientToken =
-      window.localStorage.getItem('epsitec/zeppelin/clientToken') ||
-      'new-client';
-    const sessionToken =
-      window.sessionStorage.getItem('epsitec/zeppelin/sessionToken') ||
-      'new-session';
+    const {clientToken, sessionToken} = this.getTokens();
 
     const socket = new WebSocket(
       `${protocol}://${hostname}:${port}/${clientToken}/${sessionToken}/${destination}/`
@@ -129,21 +124,52 @@ class BrowsersRenderer extends Renderer {
     this._socket = socket;
   }
 
+  getTokens() {
+    let clientToken;
+    let sessionToken;
+
+    try {
+      clientToken = window.localStorage.getItem('epsitec/zeppelin/clientToken');
+      sessionToken = window.sessionStorage.getItem(
+        'epsitec/zeppelin/sessionToken'
+      );
+    } catch (e) {
+      if (e.name !== 'SecurityError') {
+        throw e;
+      }
+    }
+
+    if (!clientToken) {
+      clientToken = 'new-client';
+    }
+    if (!sessionToken) {
+      sessionToken = 'new-session';
+    }
+
+    return {clientToken, sessionToken};
+  }
+
   storeTokens(tokens) {
     if (!tokens) {
       return;
     }
-    if (tokens.clientToken) {
-      window.localStorage.setItem(
-        'epsitec/zeppelin/clientToken',
-        tokens.clientToken
-      );
-    }
-    if (tokens.sessionToken) {
-      window.sessionStorage.setItem(
-        'epsitec/zeppelin/sessionToken',
-        tokens.sessionToken
-      );
+    try {
+      if (tokens.clientToken) {
+        window.localStorage.setItem(
+          'epsitec/zeppelin/clientToken',
+          tokens.clientToken
+        );
+      }
+      if (tokens.sessionToken) {
+        window.sessionStorage.setItem(
+          'epsitec/zeppelin/sessionToken',
+          tokens.sessionToken
+        );
+      }
+    } catch (e) {
+      if (e.name !== 'SecurityError') {
+        throw e;
+      }
     }
   }
 }
