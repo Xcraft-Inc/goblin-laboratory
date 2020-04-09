@@ -75,7 +75,7 @@ export default function withC(Component, dispatchProps = {}, {modelProp} = {}) {
   // Component used after connect
   // It applies "inFunc" to the connected props and
   // prevents giving internal props (starting with "_") to the underlying component
-  const ConnectedPropsMapper = props => {
+  const ConnectedPropsMapper = (props) => {
     let {_connectedProps, _connectedProp, ...otherProps} = props;
     const newProps = {};
     for (const prop of _connectedProps) {
@@ -103,7 +103,7 @@ export default function withC(Component, dispatchProps = {}, {modelProp} = {}) {
     }
     if (modelProp) {
       const connectedModelProp = _connectedProps.find(
-        prop => prop.name === modelProp
+        (prop) => prop.name === modelProp
       );
       if (connectedModelProp) {
         const path = connectedModelProp.path;
@@ -127,7 +127,7 @@ export default function withC(Component, dispatchProps = {}, {modelProp} = {}) {
         const fullPath = prop.fullPath;
         let value;
         if (Array.isArray(fullPath)) {
-          value = fullPath.map(p => state.get(p));
+          value = fullPath.map((p) => state.get(p));
           // As 'value' is always a new array, define equals to prevent rerenders
           value.equals = arrayEquals;
         } else {
@@ -220,10 +220,10 @@ export default function withC(Component, dispatchProps = {}, {modelProp} = {}) {
             const dispatchPropName = dispatchProps[name];
             const outFunc = prop.outFunc;
             if (outFunc) {
-              onChangeProps[dispatchPropName] = value =>
+              onChangeProps[dispatchPropName] = (value) =>
                 this.handlePropChange(name, outFunc(value));
             } else {
-              onChangeProps[dispatchPropName] = value =>
+              onChangeProps[dispatchPropName] = (value) =>
                 this.handlePropChange(name, value);
             }
           }

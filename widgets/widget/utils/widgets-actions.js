@@ -6,7 +6,7 @@ export function collect() {
     const backendState = state.backend;
     const ids = state.widgets
       .keySeq()
-      .filter(id => {
+      .filter((id) => {
         if (typeof id === 'string') {
           id = id.split('$')[0];
         }

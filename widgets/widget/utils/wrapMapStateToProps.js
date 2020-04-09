@@ -5,7 +5,7 @@ export default function wrapMapStateToProps(mapStateToProps) {
     typeof mapStateToProps === 'string' ||
     mapStateToProps instanceof String
   ) {
-    return state => {
+    return (state) => {
       return {
         [mapStateToProps]: state.get(mapStateToProps),
       };
@@ -13,9 +13,9 @@ export default function wrapMapStateToProps(mapStateToProps) {
   }
 
   if (typeof mapStateToProps === 'object' && mapStateToProps !== null) {
-    return state => {
+    return (state) => {
       const props = {};
-      Object.keys(mapStateToProps).forEach(key => {
+      Object.keys(mapStateToProps).forEach((key) => {
         props[key] = state.get(mapStateToProps[key]);
       });
       return props;

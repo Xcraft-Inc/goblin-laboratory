@@ -8,7 +8,7 @@ const wrappedReducers = {};
 const actionTypePrefix = '@widgets_';
 const findReducerNameRegex = /\$([^@]*)/;
 
-const wrapReducer = reducer => (state, action) => {
+const wrapReducer = (reducer) => (state, action) => {
   if (state) {
     state = new Shredder(state);
   }
@@ -70,7 +70,7 @@ export default (state = fromJS({}), action = {}) => {
   }
 
   if (action.type === 'WIDGETS_COLLECT') {
-    action.ids.forEach(id => {
+    action.ids.forEach((id) => {
       state = state.delete(id);
     });
     return state;

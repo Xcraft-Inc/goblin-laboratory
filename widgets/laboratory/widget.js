@@ -24,7 +24,7 @@ class Laboratory extends Widget {
   renderRoot() {
     const {id, root, rootId, maintenanceMode} = this.props;
 
-    const Root = props => {
+    const Root = (props) => {
       if (props.status && props.status !== 'off') {
         return <Maintenance mode={maintenanceMode} />;
       } else {
@@ -37,7 +37,7 @@ class Laboratory extends Widget {
 
     const WithMaintenance = this.mapWidget(
       Root,
-      status => ({status}),
+      (status) => ({status}),
       'backend.workshop.maintenance.status'
     );
 

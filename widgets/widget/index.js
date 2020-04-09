@@ -31,7 +31,7 @@ export function clearStylesCache() {
   myStyleCache = {};
 }
 
-const debounceCollect = _.debounce(fct => {
+const debounceCollect = _.debounce((fct) => {
   fct();
 }, 500);
 
@@ -63,15 +63,15 @@ const {StyleSheet, css} = Aphrodite.extend([
   },
 ]);
 
-const injectCSS = classes => {
-  traverse(classes).forEach(function(style) {
+const injectCSS = (classes) => {
+  traverse(classes).forEach(function (style) {
     if (style === undefined || style === null) {
       this.delete();
     }
   });
 
   const sheet = StyleSheet.create(classes);
-  Object.keys(sheet).forEach(key => (sheet[key] = css(sheet[key])));
+  Object.keys(sheet).forEach((key) => (sheet[key] = css(sheet[key])));
   return sheet;
 };
 
@@ -240,7 +240,7 @@ class Widget extends React.Component {
     }
 
     let styleProps = {};
-    propNamesUsed.forEach(p => {
+    propNamesUsed.forEach((p) => {
       styleProps[p] = this.props[p];
     });
     if (myStyle.mapProps) {
@@ -284,10 +284,10 @@ class Widget extends React.Component {
     if (!styleDefs) {
       styleDefs = this._names.map(this.importStyleDefinition);
     }
-    if (styleDefs.every(styleDef => !styleDef)) {
+    if (styleDefs.every((styleDef) => !styleDef)) {
       throw new Error(`No styles.js file for component '${this.name}'`);
     }
-    styleDefs = styleDefs.filter(styleDef => styleDef);
+    styleDefs = styleDefs.filter((styleDef) => styleDef);
 
     if (styleDefs.length === 1) {
       return styleDefs[0];
@@ -296,8 +296,8 @@ class Widget extends React.Component {
     styleDefs.reverse();
 
     const propNamesUsedList = styleDefs
-      .map(styleDef => styleDef.propNamesUsed)
-      .filter(propNamesUsed => propNamesUsed)
+      .map((styleDef) => styleDef.propNamesUsed)
+      .filter((propNamesUsed) => propNamesUsed)
       .flat();
 
     let propNamesUsed;
@@ -306,13 +306,13 @@ class Widget extends React.Component {
     }
 
     const mapPropsList = styleDefs
-      .map(styleDef => styleDef.mapProps)
-      .filter(mapProps => mapProps);
-    const funcList = styleDefs.map(styleDef => styleDef.func);
+      .map((styleDef) => styleDef.mapProps)
+      .filter((mapProps) => mapProps);
+    const funcList = styleDefs.map((styleDef) => styleDef.func);
 
     return {
-      hasThemeParam: styleDefs.some(styleDef => styleDef.hasThemeParam),
-      hasPropsParam: styleDefs.some(styleDef => styleDef.hasPropsParam),
+      hasThemeParam: styleDefs.some((styleDef) => styleDef.hasThemeParam),
+      hasPropsParam: styleDefs.some((styleDef) => styleDef.hasPropsParam),
       propNamesUsed,
       mapProps: (props, theme) =>
         mapPropsList.reduce((p, mapProps) => mapProps(p, theme), props),
@@ -370,7 +370,7 @@ class Widget extends React.Component {
   ///////////STATE MGMT:
   static withRoute(path, watchedParams, watchedSearchs, watchHash) {
     return connect(
-      state => {
+      (state) => {
         const router = new Shredder(state.router);
         const location = router.get('location');
         if (!location) {
@@ -438,10 +438,13 @@ class Widget extends React.Component {
   }
 
   static WithRoute(component, watchedParams, watchedSearchs, watchHash) {
-    return path => {
-      return Widget.withRoute(path, watchedParams, watchedSearchs, watchHash)(
-        component
-      );
+    return (path) => {
+      return Widget.withRoute(
+        path,
+        watchedParams,
+        watchedSearchs,
+        watchHash
+      )(component);
     };
   }
 
@@ -459,7 +462,7 @@ class Widget extends React.Component {
             if (!shredded.has(connectId)) {
               return {_no_props_: true, id: null};
             }
-            Object.keys(wires).forEach(wire => {
+            Object.keys(wires).forEach((wire) => {
               const val = shredded.get(`${connectId}.${wires[wire]}`, null);
               if (val) {
                 if (val._isSuperReaper6000) {
@@ -493,7 +496,7 @@ class Widget extends React.Component {
     if (!component) {
       throw new Error('You must provide a component!');
     }
-    return id => Widget.wire(id, component.wiring)(component);
+    return (id) => Widget.wire(id, component.wiring)(component);
   }
 
   static shred(state) {
@@ -514,7 +517,7 @@ class Widget extends React.Component {
 
   withState(mapProps, path) {
     return connect(
-      state => {
+      (state) => {
         const s = new Shredder(state.backend);
         if (isFunction(mapProps)) {
           return Object.assign(mapProps(s.get(`${this.props.id}${path}`)));
@@ -536,14 +539,14 @@ class Widget extends React.Component {
   }
 
   WithState(component, mapProps) {
-    return path => {
+    return (path) => {
       return this.withState(mapProps, path)(component);
     };
   }
 
   withModel(model, mapProps, fullPath) {
     return connect(
-      state => {
+      (state) => {
         const s = new Shredder({
           backend: state.backend,
           widgets: state.widgets,
@@ -584,7 +587,7 @@ class Widget extends React.Component {
   }
 
   WithModel(component, mapProps, useEntityId) {
-    return model => {
+    return (model) => {
       if (isFunction(model)) {
         model = model();
       }
@@ -610,7 +613,7 @@ class Widget extends React.Component {
           if (itemId.length === 0) {
             const path = model.replace('[]', '');
             const coll = this.getModelValue(path, useEntityId);
-            return props => {
+            return (props) => {
               return (
                 <div>
                   {coll.map((v, k) => {
@@ -633,7 +636,10 @@ class Widget extends React.Component {
           ) {
             const i = model.indexOf('[');
             const prePath = model.substring(1, i);
-            const finalPath = this.getEntityPathInCollection(prePath, itemId)(
+            const finalPath = this.getEntityPathInCollection(
+              prePath,
+              itemId
+            )(
               useEntityId
                 ? this.getModelValue(this.props.entityId, useEntityId)
                 : this.getModelValue('')
@@ -698,7 +704,7 @@ class Widget extends React.Component {
   }
 
   buildCollectionLoader(ids, FinalComp, FallbackComp) {
-    let Loader = props => {
+    let Loader = (props) => {
       const loaded = ids.reduce((loaded, id) => {
         return props[id] === true;
       }, false);
@@ -709,10 +715,10 @@ class Widget extends React.Component {
       }
     };
 
-    ids.map(id => {
+    ids.map((id) => {
       Loader = this.mapWidget(
         Loader,
-        item => {
+        (item) => {
           return {
             [id]: item !== null && item !== undefined,
           };
@@ -725,13 +731,13 @@ class Widget extends React.Component {
   }
 
   getCollection(ids) {
-    return ids.map(id => {
+    return ids.map((id) => {
       return this.getEntityById(id);
     });
   }
 
   buildLoader(branch, Loaded, FallbackComp) {
-    const Loader = props => {
+    const Loader = (props) => {
       if (props.loaded) {
         return <Loaded />;
       } else {
@@ -741,7 +747,7 @@ class Widget extends React.Component {
 
     const Renderer = this.mapWidget(
       Loader,
-      entityId => {
+      (entityId) => {
         if (!entityId) {
           return {loaded: false};
         } else {
@@ -1048,10 +1054,10 @@ class Widget extends React.Component {
   }
 
   getEntityPathInCollection(collectionPath, id, entityPath) {
-    return entity => {
+    return (entity) => {
       const item = entity
         .get(collectionPath)
-        .find(pack => pack.get('id') === id);
+        .find((pack) => pack.get('id') === id);
 
       return entityPath
         ? `.${collectionPath}[${item.key}].${entityPath}`

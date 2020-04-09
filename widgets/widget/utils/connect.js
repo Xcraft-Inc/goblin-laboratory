@@ -16,7 +16,7 @@ function withShredder(mapStateToProps) {
     return mapStateToProps(s, ownProps);
   };
 
-  const mapStateToPropsWithoutOwnProps = state => {
+  const mapStateToPropsWithoutOwnProps = (state) => {
     return mapStateToPropsWithOwnProps(state);
   };
 
@@ -25,7 +25,7 @@ function withShredder(mapStateToProps) {
     : mapStateToPropsWithoutOwnProps;
 }
 
-export default function(
+export default function (
   mapStateToProps,
   mapDispatchToProps,
   mergeProps,

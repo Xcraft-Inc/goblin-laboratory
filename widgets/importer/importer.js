@@ -8,7 +8,7 @@ export default function importer(config) {
 
     if (r) {
       const files = r.keys();
-      files.forEach(file => {
+      files.forEach((file) => {
         const nameSpace =
           kind === 'theme-context'
             ? file.replace(/.*[\\/.]goblin-([^\\/]+).*/, '$1')
@@ -18,7 +18,7 @@ export default function importer(config) {
     }
   };
 
-  const getter = kind => (name, key) => {
+  const getter = (kind) => (name, key) => {
     if (!cache[kind][name]) {
       return null;
     }
@@ -28,7 +28,7 @@ export default function importer(config) {
     return cache[kind][name].default;
   };
 
-  return kind => {
+  return (kind) => {
     if (cache[kind]) {
       return getter(kind);
     }

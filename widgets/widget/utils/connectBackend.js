@@ -22,19 +22,19 @@ function withBackendPath(mapStateToProps) {
   };
 }
 
-export default function(
+export default function (
   mapStateToProps,
   mapDispatchToProps,
   mergeProps,
   options
 ) {
-  return Comp =>
+  return (Comp) =>
     connect(
       withBackendPath(mapStateToProps),
       mapDispatchToProps,
       mergeProps,
       options
-    )(props => {
+    )((props) => {
       if (props._loading) {
         if (Comp.LoadingComponent) {
           return <Comp.LoadingComponent />;

@@ -1,7 +1,7 @@
 import Widget from 'goblin-laboratory/widgets/widget';
 import React from 'react';
 
-export default Component => {
+export default (Component) => {
   const ConnectedComponent = Widget.connect(
     (state, props) => {
       const {model, ...otherProps} = props;

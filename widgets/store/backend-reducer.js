@@ -7,7 +7,7 @@ import importer from 'goblin_importer';
 const compensatorImporter = importer('compensator');
 
 function injectActionDataGetter(action) {
-  action.get = key => {
+  action.get = (key) => {
     if (action.data) {
       if (Shredder.isImmutable(action.data[key])) {
         return new Shredder(action.data[key]);
@@ -29,7 +29,7 @@ function applyCompensators(state, action) {
 
   const timestamp = new Date().getTime() - 500;
 
-  ids.forEach(id => {
+  ids.forEach((id) => {
     const comp = action.compensatorStates[id];
     if (timestamp > comp.timestamp) {
       delete action.compensatorStates[id];

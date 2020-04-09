@@ -42,7 +42,7 @@ class BrowsersRenderer extends Renderer {
 
     window.isBrowser = true;
 
-    const callback = data => {
+    const callback = (data) => {
       switch (data.type) {
         case 'PUSH_PATH':
           this.store.dispatch(this.push(data.path));
@@ -66,12 +66,12 @@ class BrowsersRenderer extends Renderer {
 
     const worker = Worker ? new Worker(parser) : null;
     if (worker) {
-      worker.onmessage = e => {
+      worker.onmessage = (e) => {
         callback(e.data);
       };
     }
 
-    this._handleWebSocketMessage = data => {
+    this._handleWebSocketMessage = (data) => {
       webWorkerJSONParse(worker, data, callback);
     };
 
@@ -94,13 +94,13 @@ class BrowsersRenderer extends Renderer {
       `${protocol}://${hostname}:${port}/${clientToken}/${sessionToken}/${destination}/`
     );
 
-    socket.onmessage = event => {
+    socket.onmessage = (event) => {
       this._handleWebSocketMessage(event.data);
     };
 
     let resetTimeoutHandle;
 
-    socket.onopen = event => {
+    socket.onopen = (event) => {
       console.log('Websocket is open:', event);
       this.store.dispatch({type: 'SET_WEBSOCKET_STATUS', status: 'open'});
       resetTimeoutHandle = setTimeout(() => {
@@ -108,7 +108,7 @@ class BrowsersRenderer extends Renderer {
       }, 10000);
     };
 
-    socket.onclose = event => {
+    socket.onclose = (event) => {
       console.log('Websocket closed:', event);
       this.store.dispatch({type: 'SET_WEBSOCKET_STATUS', status: 'closed'});
 
@@ -117,7 +117,7 @@ class BrowsersRenderer extends Renderer {
       this.reconnectTimeout *= 2;
     };
 
-    socket.onerror = event => {
+    socket.onerror = (event) => {
       console.error('WebSocket error observed:', event);
     };
 

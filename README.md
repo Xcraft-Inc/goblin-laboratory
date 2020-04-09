@@ -1,9 +1,10 @@
 # Laboratory
+
 > Bienvenue dans le labo des gobelins!
 
 Le labo offre un espace de travail facilitant la construction d'application UI.
 
-Il instancie pour vous une fenêtre electron et se connecte au contenu du laboratoire 
+Il instancie pour vous une fenêtre electron et se connecte au contenu du laboratoire
 en ouvrant le bundle webpack à une URL donnée.
 
 Il optimise la communication avec les gobelins en s'occupant de souscrire aux state des différents gobelins dans l'entrepôt de states (voir. gobelin-warehouse).
@@ -19,10 +20,9 @@ Cet espace est pré-découpé en zone de montages stratégiques:
 
 Par défaut, un laboratoire va monter un gestionnaire de travaux utilisateurs qui permet un routage des tâches utilisateurs dans la UI. Ce comportement par défaut peut-être remplacé en explicitant le mapping montage/vue à la création du laboratoire.
 
-
 ## Widget
 
-Un labo est automatiquement cablé pour écouter les changements d'états des widgets dans le state. 
+Un labo est automatiquement cablé pour écouter les changements d'états des widgets dans le state.
 
 Un composant react `Widget` de base permet d'écrire des composant connecté pour vos gobelins.
 
@@ -54,7 +54,6 @@ Tout widget peut-être accompagné d'un fichier de style permettant de calculer 
 ## List
 
 Un widget spécial permettant l'affichage de liste très longues de manière efficace.
-
 
 ## specs goblin-laboratory
 
@@ -89,7 +88,6 @@ dans la même fenetre:
 ouvrir la vue principale de passport et de syncui dans une nouvelle fenetres:
 
 `laboratory.open /passport /syncui`
-
 
 crée et ouvre nabu pour syncui dans une nouvelle fenetre:
 

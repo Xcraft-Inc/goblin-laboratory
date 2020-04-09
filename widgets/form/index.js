@@ -7,7 +7,7 @@ import WithModel from '../with-model/widget';
 /******************************************************************************/
 
 // TODO: Adapt code that use it and remove it
-const FormComponent = props => {
+const FormComponent = (props) => {
   const {
     component: Component,
     model,

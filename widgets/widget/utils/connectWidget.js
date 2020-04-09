@@ -16,7 +16,7 @@ function withWidgetPath(mapStateToProps) {
   };
 }
 
-export default function(
+export default function (
   mapStateToProps,
   mapDispatchToProps,
   mergeProps,

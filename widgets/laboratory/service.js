@@ -47,24 +47,24 @@ const logicHandlers = {
   'set-zoom': (state, action) => {
     return state.set('zoom', action.get('zoom'));
   },
-  'zoom': state => {
+  'zoom': (state) => {
     const zoom = Math.round((state.get('zoom') + 0.1) * 10) / 10;
     return state.set('zoom', zoom);
   },
-  'un-zoom': state => {
+  'un-zoom': (state) => {
     let zoom = Math.round((state.get('zoom') - 0.1) * 10) / 10;
     if (zoom <= 0) {
       zoom = 0.1;
     }
     return state.set('zoom', zoom);
   },
-  'default-zoom': state => {
+  'default-zoom': (state) => {
     return state.set('zoom', 1.0);
   },
 };
 
 // Register quest's according rc.json
-Goblin.registerQuest(goblinName, 'create', function*(
+Goblin.registerQuest(goblinName, 'create', function* (
   quest,
   desktopId,
   clientSessionId,
@@ -87,7 +87,7 @@ Goblin.registerQuest(goblinName, 'create', function*(
   }
 
   quest.goblin.defer(
-    quest.sub('goblin.released', function*(err, {msg}) {
+    quest.sub('goblin.released', function* (err, {msg}) {
       yield quest.cmd('laboratory.del', {
         id: quest.goblin.id,
         widgetId: msg.data.id,
@@ -107,7 +107,7 @@ Goblin.registerQuest(goblinName, 'create', function*(
   }
 
   quest.goblin.defer(
-    quest.sub(`*::${winId}.${labId}.window-closed`, function*() {
+    quest.sub(`*::${winId}.${labId}.window-closed`, function* () {
       yield quest.cmd('laboratory.close-window', {
         id: quest.goblin.id,
         winId: winId,
@@ -138,16 +138,16 @@ Goblin.registerQuest(goblinName, 'create', function*(
   return quest.goblin.id;
 });
 
-Goblin.registerQuest(goblinName, 'close', function*(quest) {
+Goblin.registerQuest(goblinName, 'close', function* (quest) {
   const winId = quest.goblin.getState().get('wid');
   yield quest.me.closeWindow({winId});
 });
 
-Goblin.registerQuest(goblinName, 'get-client-session-id', function(quest) {
+Goblin.registerQuest(goblinName, 'get-client-session-id', function (quest) {
   return quest.goblin.getX('clientSessionId');
 });
 
-Goblin.registerQuest(goblinName, 'get-win-feed', function(quest) {
+Goblin.registerQuest(goblinName, 'get-win-feed', function (quest) {
   const state = quest.goblin.getState();
   return {
     feed: state.get('feed'),
@@ -155,7 +155,7 @@ Goblin.registerQuest(goblinName, 'get-win-feed', function(quest) {
   };
 });
 
-Goblin.registerQuest(goblinName, 'set-feed', function*(quest, desktopId) {
+Goblin.registerQuest(goblinName, 'set-feed', function* (quest, desktopId) {
   quest.goblin.setX('desktopId', desktopId);
   const feeds = quest.goblin.getState().get('feeds');
   const wm = quest.getAPI(`wm@${quest.goblin.id}`);
@@ -164,15 +164,15 @@ Goblin.registerQuest(goblinName, 'set-feed', function*(quest, desktopId) {
   quest.do();
 });
 
-Goblin.registerQuest(goblinName, 'get-feed', function(quest) {
+Goblin.registerQuest(goblinName, 'get-feed', function (quest) {
   return quest.goblin.getX('desktopId');
 });
 
-Goblin.registerQuest(goblinName, 'get-url', function(quest) {
+Goblin.registerQuest(goblinName, 'get-url', function (quest) {
   return quest.goblin.getX('url');
 });
 
-Goblin.registerQuest(goblinName, 'duplicate', function*(quest, forId) {
+Goblin.registerQuest(goblinName, 'duplicate', function* (quest, forId) {
   const state = quest.goblin.getState();
   const url = state.get('url');
   const newLabId = `laboratory@${quest.uuidV4()}`;
@@ -183,7 +183,7 @@ Goblin.registerQuest(goblinName, 'duplicate', function*(quest, forId) {
   return lab.id;
 });
 
-Goblin.registerQuest(goblinName, 'when-ui-crash', function(
+Goblin.registerQuest(goblinName, 'when-ui-crash', function (
   quest,
   desktopId,
   error,
@@ -204,7 +204,7 @@ Goblin.registerQuest(goblinName, 'when-ui-crash', function(
   //quest.me.setRoot ({widgetId: existingRoot});
 });
 
-Goblin.registerQuest(goblinName, 'set-root', function(
+Goblin.registerQuest(goblinName, 'set-root', function (
   quest,
   widget,
   widgetId,
@@ -213,30 +213,30 @@ Goblin.registerQuest(goblinName, 'set-root', function(
   quest.do();
 });
 
-Goblin.registerQuest(goblinName, 'listen', function(quest, desktopId) {
+Goblin.registerQuest(goblinName, 'listen', function (quest, desktopId) {
   if (!quest.goblin.getX(`${desktopId}.nav-unsub`)) {
     quest.goblin.setX(
       `${desktopId}.nav-unsub`,
-      quest.sub(`${desktopId}.nav.requested`, function*(err, {msg}) {
+      quest.sub(`${desktopId}.nav.requested`, function* (err, {msg}) {
         yield quest.me.nav(msg.data);
       })
     );
     quest.goblin.setX(
       `${desktopId}.change-theme-unsub`,
-      quest.sub(`${desktopId}.change-theme.requested`, function*(err, {msg}) {
+      quest.sub(`${desktopId}.change-theme.requested`, function* (err, {msg}) {
         yield quest.me.changeTheme(msg.data);
       })
     );
     quest.goblin.setX(
       `${desktopId}.dispatch-unsub`,
-      quest.sub(`${desktopId}.dispatch.requested`, function*(err, {msg}) {
+      quest.sub(`${desktopId}.dispatch.requested`, function* (err, {msg}) {
         yield quest.me.dispatch(msg.data);
       })
     );
   }
 });
 
-Goblin.registerQuest(goblinName, 'unlisten', function(quest, desktopId) {
+Goblin.registerQuest(goblinName, 'unlisten', function (quest, desktopId) {
   if (quest.goblin.getX(`${desktopId}.nav-unsub`)) {
     quest.goblin.getX(`${desktopId}.nav-unsub`)();
     quest.goblin.getX(`${desktopId}.change-theme-unsub`)();
@@ -247,42 +247,42 @@ Goblin.registerQuest(goblinName, 'unlisten', function(quest, desktopId) {
   }
 });
 
-Goblin.registerQuest(goblinName, 'nav', function*(quest, route) {
+Goblin.registerQuest(goblinName, 'nav', function* (quest, route) {
   const win = quest.getAPI(`wm@${quest.goblin.id}`);
   yield win.nav({route});
 });
 
-Goblin.registerQuest(goblinName, 'change-theme', function(quest, name) {
+Goblin.registerQuest(goblinName, 'change-theme', function (quest, name) {
   quest.do({name});
 });
 
-Goblin.registerQuest(goblinName, 'set-zoom', function(quest) {
+Goblin.registerQuest(goblinName, 'set-zoom', function (quest) {
   quest.do();
 });
 
-Goblin.registerQuest(goblinName, 'zoom', function(quest) {
+Goblin.registerQuest(goblinName, 'zoom', function (quest) {
   quest.do();
 });
 
-Goblin.registerQuest(goblinName, 'un-zoom', function(quest) {
+Goblin.registerQuest(goblinName, 'un-zoom', function (quest) {
   quest.do();
 });
 
-Goblin.registerQuest(goblinName, 'default-zoom', function(quest) {
+Goblin.registerQuest(goblinName, 'default-zoom', function (quest) {
   quest.do();
 });
 
-Goblin.registerQuest(goblinName, 'dispatch', function*(quest, action) {
+Goblin.registerQuest(goblinName, 'dispatch', function* (quest, action) {
   const win = quest.getAPI(`wm@${quest.goblin.id}`);
   yield win.dispatch({action});
 });
 
-Goblin.registerQuest(goblinName, 'open', function(quest, route) {
+Goblin.registerQuest(goblinName, 'open', function (quest, route) {
   quest.log.info('Laboratory opening:');
   quest.log.info(route);
 });
 
-Goblin.registerQuest(goblinName, 'del', function*(quest, widgetId) {
+Goblin.registerQuest(goblinName, 'del', function* (quest, widgetId) {
   const state = quest.goblin.getState();
   const feed = state.get('feed');
   const branch = widgetId;
@@ -295,7 +295,7 @@ Goblin.registerQuest(goblinName, 'del', function*(quest, widgetId) {
   }
 });
 
-Goblin.registerQuest(goblinName, 'close-window', function*(quest, winId) {
+Goblin.registerQuest(goblinName, 'close-window', function* (quest, winId) {
   //TODO:multi-window mgmt
   yield quest.kill([winId]);
 
@@ -308,7 +308,7 @@ Goblin.registerQuest(goblinName, 'close-window', function*(quest, winId) {
   yield quest.kill([labId], labId);
 });
 
-Goblin.registerQuest(goblinName, 'delete', function*(quest) {
+Goblin.registerQuest(goblinName, 'delete', function* (quest) {
   quest.log.info(`Deleting laboratory`);
   const state = quest.goblin.getState();
   const wid = state.get('wid');

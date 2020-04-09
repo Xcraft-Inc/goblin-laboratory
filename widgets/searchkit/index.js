@@ -34,7 +34,7 @@ class SearchKit extends Widget {
   render() {
     const {index, fields} = this.props;
     this.searchkit = new SearchkitManager(`http://localhost:9200/${index}/`);
-    this.searchkit.setQueryProcessor(q => {
+    this.searchkit.setQueryProcessor((q) => {
       if (!q.query) {
         return q;
       }

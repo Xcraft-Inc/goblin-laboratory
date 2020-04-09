@@ -26,7 +26,7 @@ class Renderer {
       this.send
     );
 
-    document.addEventListener('drop', e => {
+    document.addEventListener('drop', (e) => {
       e.preventDefault();
       e.stopPropagation();
 
@@ -40,7 +40,7 @@ class Renderer {
       }
     });
 
-    document.addEventListener('dragover', e => {
+    document.addEventListener('dragover', (e) => {
       e.preventDefault();
       e.stopPropagation();
       e.dataTransfer.dropEffect = 'copy';

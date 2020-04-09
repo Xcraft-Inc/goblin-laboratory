@@ -23,7 +23,7 @@ function insertCompensators(store, action) {
   }
 }
 
-const questMiddleware = send => store => next => action => {
+const questMiddleware = (send) => (store) => (next) => (action) => {
   if (action.type === 'QUEST') {
     /* Provide the compensatored states to the reducer */
     insertCompensators(store, action);
@@ -71,7 +71,7 @@ const handleChange = (send, action, registry) => {
 
 const handleChangeWithThrottle = _.debounce(handleChange, 200);
 
-const formMiddleware = send => store => next => action => {
+const formMiddleware = (send) => (store) => (next) => (action) => {
   switch (action.type) {
     case 'FIELD-CHANGED':
       {
@@ -110,7 +110,7 @@ const formMiddleware = send => store => next => action => {
   return next(action);
 };
 
-const transitMiddleware = store => next => action => {
+const transitMiddleware = (store) => (next) => (action) => {
   if (
     action.type === 'NEW_BACKEND_STATE' &&
     action.data &&
@@ -139,7 +139,7 @@ const transitMiddleware = store => next => action => {
   return next(action);
 };
 
-module.exports = send => {
+module.exports = (send) => {
   const _send = (type, action) => {
     let data = action;
     if (action.type === 'QUEST') {
