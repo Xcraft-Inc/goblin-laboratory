@@ -127,6 +127,7 @@ Goblin.registerQuest(goblinName, 'create', function* (
         process.env.WESTEROS_DEVTOOLS === '1',
       useWS: config.useWS,
       target: config.target,
+      title: config.title,
       //enableTestAutomationLogguer: true,
     },
   });
