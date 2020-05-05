@@ -20,6 +20,7 @@ const logicHandlers = {
       clientSessionId: action.get('clientSessionId'),
       feeds: conf.feeds,
       theme: null,
+      zoom: null,
       themeContext: conf.themeContext || 'polypheme',
     });
   },
@@ -98,13 +99,10 @@ Goblin.registerQuest(goblinName, 'create', function* (
   yield quest.doSync({id: quest.goblin.id, feed, wid: winId, url, config});
 
   const labConfig = require('xcraft-core-etc')().load('goblin-laboratory');
-
-  const zoom = labConfig.defaultZoom;
-  if (zoom) {
-    yield quest.me.setZoom({
-      zoom,
-    });
-  }
+  yield quest.me.initZoom({
+    clientSessionId,
+    defaultZoom: labConfig.defaultZoom,
+  });
 
   quest.goblin.defer(
     quest.sub(`*::${winId}.${labId}.window-closed`, function* () {
@@ -257,21 +255,63 @@ Goblin.registerQuest(goblinName, 'change-theme', function (quest, name) {
   quest.do({name});
 });
 
-Goblin.registerQuest(goblinName, 'set-zoom', function (quest) {
-  quest.do();
+Goblin.registerQuest(goblinName, 'save-settings', function* (quest, propertie) {
+  const value = quest.goblin.getState().get(propertie);
+  const clientSessionId = quest.goblin.getX('clientSessionId');
+  yield quest.cmd(`client-session.set-${propertie}`, {
+    id: clientSessionId,
+    [propertie]: value,
+  });
 });
 
-Goblin.registerQuest(goblinName, 'zoom', function (quest) {
-  quest.do();
+/******************************************************************************/
+
+Goblin.registerQuest(goblinName, 'init-zoom', function* (
+  quest,
+  clientSessionId,
+  defaultZoom
+) {
+  let zoom = yield quest.cmd('client-session.get-zoom', {
+    id: clientSessionId,
+  });
+  if (zoom === null) {
+    if (defaultZoom) {
+      yield quest.me.setZoom({
+        zoom: defaultZoom,
+      });
+    } else {
+      yield quest.me.setZoom({
+        zoom: 1,
+      });
+    }
+  } else {
+    yield quest.me.setZoom({
+      zoom,
+    });
+  }
 });
 
-Goblin.registerQuest(goblinName, 'un-zoom', function (quest) {
+Goblin.registerQuest(goblinName, 'set-zoom', function* (quest) {
   quest.do();
+  yield quest.me.saveSettings({propertie: 'zoom'});
 });
 
-Goblin.registerQuest(goblinName, 'default-zoom', function (quest) {
+Goblin.registerQuest(goblinName, 'zoom', function* (quest) {
   quest.do();
+  yield quest.me.saveSettings({propertie: 'zoom'});
 });
+
+Goblin.registerQuest(goblinName, 'un-zoom', function* (quest) {
+  quest.do();
+  yield quest.me.saveSettings({propertie: 'zoom'});
+});
+
+Goblin.registerQuest(goblinName, 'default-zoom', function* (quest) {
+  quest.do();
+  yield quest.me.saveSettings({propertie: 'zoom'});
+});
+
+/******************************************************************************/
 
 Goblin.registerQuest(goblinName, 'dispatch', function* (quest, action) {
   const win = quest.getAPI(`wm@${quest.goblin.id}`);
