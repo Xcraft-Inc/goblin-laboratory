@@ -102,6 +102,10 @@ Goblin.registerQuest(goblinName, 'create', function* (
     clientSessionId,
   });
 
+  yield quest.me.initTheme({
+    clientSessionId,
+  });
+
   quest.goblin.defer(
     quest.sub(`*::${winId}.${labId}.window-closed`, function* () {
       yield quest.cmd('laboratory.close-window', {
@@ -249,9 +253,7 @@ Goblin.registerQuest(goblinName, 'nav', function* (quest, route) {
   yield win.nav({route});
 });
 
-Goblin.registerQuest(goblinName, 'change-theme', function (quest, name) {
-  quest.do({name});
-});
+/************************        SETTINGS      *********************************/
 
 Goblin.registerQuest(goblinName, 'save-settings', function* (quest, propertie) {
   const value = quest.goblin.getState().get(propertie);
@@ -260,6 +262,28 @@ Goblin.registerQuest(goblinName, 'save-settings', function* (quest, propertie) {
     id: clientSessionId,
     [propertie]: value,
   });
+});
+
+/******************************************************************************/
+
+Goblin.registerQuest(goblinName, 'init-theme', function* (
+  quest,
+  clientSessionId
+) {
+  let name = yield quest.cmd('client-session.get-theme', {
+    id: clientSessionId,
+  });
+
+  if (name) {
+    yield quest.me.changeTheme({
+      name,
+    });
+  }
+});
+
+Goblin.registerQuest(goblinName, 'change-theme', function* (quest, name) {
+  quest.do({name});
+  yield quest.me.saveSettings({propertie: 'theme'});
 });
 
 /******************************************************************************/
