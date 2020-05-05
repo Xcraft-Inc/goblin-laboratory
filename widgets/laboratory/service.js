@@ -98,10 +98,8 @@ Goblin.registerQuest(goblinName, 'create', function* (
 
   yield quest.doSync({id: quest.goblin.id, feed, wid: winId, url, config});
 
-  const labConfig = require('xcraft-core-etc')().load('goblin-laboratory');
   yield quest.me.initZoom({
     clientSessionId,
-    defaultZoom: labConfig.defaultZoom,
   });
 
   quest.goblin.defer(
@@ -268,27 +266,15 @@ Goblin.registerQuest(goblinName, 'save-settings', function* (quest, propertie) {
 
 Goblin.registerQuest(goblinName, 'init-zoom', function* (
   quest,
-  clientSessionId,
-  defaultZoom
+  clientSessionId
 ) {
   let zoom = yield quest.cmd('client-session.get-zoom', {
     id: clientSessionId,
   });
-  if (zoom === null) {
-    if (defaultZoom) {
-      yield quest.me.setZoom({
-        zoom: defaultZoom,
-      });
-    } else {
-      yield quest.me.setZoom({
-        zoom: 1,
-      });
-    }
-  } else {
-    yield quest.me.setZoom({
-      zoom,
-    });
-  }
+
+  yield quest.me.setZoom({
+    zoom,
+  });
 });
 
 Goblin.registerQuest(goblinName, 'set-zoom', function* (quest) {
