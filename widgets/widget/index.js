@@ -17,6 +17,7 @@ import _connect from './utils/connect';
 import connectWidget from './utils/connectWidget';
 import connectBackend from './utils/connectBackend';
 import * as widgetsActions from './utils/widgets-actions';
+import {getParameter} from '../../lib/helpers.js';
 
 const stylesImporter = importer('styles');
 const reducerImporter = importer('reducer');
@@ -925,18 +926,7 @@ class Widget extends React.Component {
   }
 
   static GetParameter(search, name) {
-    if (!search) {
-      return null;
-    }
-    const query = search.substring(1);
-    const vars = query.split('&');
-    for (const v of vars) {
-      const pair = v.split('=');
-      if (decodeURIComponent(pair[0]) === name) {
-        return decodeURIComponent(pair[1]);
-      }
-    }
-    return null;
+    return getParameter(search, name);
   }
 
   getWorkItemId() {
