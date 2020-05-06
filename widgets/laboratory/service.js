@@ -107,10 +107,23 @@ Goblin.registerQuest(goblinName, 'create', function* (
   });
 
   quest.goblin.defer(
-    quest.sub(`*::${winId}.${labId}.window-closed`, function* () {
+    quest.sub(`*::${winId}.${clientSessionId}.window-closed`, function* () {
       yield quest.cmd('laboratory.close-window', {
         id: quest.goblin.id,
         winId: winId,
+      });
+    })
+  );
+
+  quest.goblin.defer(
+    quest.sub(`*::${winId}.${clientSessionId}.window-state-changed`, function* (
+      err,
+      {msg}
+    ) {
+      yield quest.cmd('laboratory.save-window-state', {
+        id: quest.goblin.id,
+        winId,
+        state: msg.data.state,
       });
     })
   );
@@ -120,6 +133,7 @@ Goblin.registerQuest(goblinName, 'create', function* (
     desktopId: desktopId,
     url,
     labId: quest.goblin.id,
+    clientSessionId,
     feeds: config.feeds,
     options: {
       openDevTools:
@@ -261,6 +275,19 @@ Goblin.registerQuest(goblinName, 'save-settings', function* (quest, propertie) {
   yield quest.cmd(`client-session.set-${propertie}`, {
     id: clientSessionId,
     [propertie]: value,
+  });
+});
+
+Goblin.registerQuest(goblinName, 'save-window-state', function* (
+  quest,
+  winId,
+  state
+) {
+  const clientSessionId = quest.goblin.getX('clientSessionId');
+  yield quest.cmd(`client-session.set-window-state`, {
+    id: clientSessionId,
+    winId,
+    state,
   });
 });
 
