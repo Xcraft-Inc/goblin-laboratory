@@ -111,7 +111,6 @@ Goblin.registerQuest(goblinName, 'create', function* (
       yield quest.cmd('laboratory.close-window', {
         id: quest.goblin.id,
         winId: winId,
-        clientSessionId,
       });
     })
   );
@@ -374,14 +373,11 @@ Goblin.registerQuest(goblinName, 'del', function* (quest, widgetId) {
   }
 });
 
-Goblin.registerQuest(goblinName, 'close-window', function* (
-  quest,
-  winId,
-  clientSessionId
-) {
+Goblin.registerQuest(goblinName, 'close-window', function* (quest, winId) {
   //TODO:multi-window mgmt
   yield quest.kill([winId]);
   //cleaning
+  const clientSessionId = quest.goblin.getX('clientSessionId');
   yield quest.cmd('client-session.close-window', {id: clientSessionId, winId});
   const labId = quest.goblin.id;
   yield quest.warehouse.unsubscribe({feed: labId});
