@@ -54,7 +54,7 @@ const {StyleSheet, css} = Aphrodite.extend([
         if (selector[0] === '&') {
           const tag = key === 0 ? subselector.slice(1) : subselector;
           const nestedTag = generateSubtreeStyles(
-            `${baseSelector} ${tag}`.replace(/ +(?= )/g, '')
+            `${baseSelector}${tag}`.replace(/ +(?= )/g, '')
           );
           nestedTags.push(nestedTag);
         }
