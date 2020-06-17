@@ -19,9 +19,9 @@ const logicHandlers = {
       wid: action.get('wid'),
       clientSessionId: action.get('clientSessionId'),
       feeds: conf.feeds,
-      theme: null,
+      theme: 'default',
       zoom: null,
-      themeContext: conf.themeContext || 'polypheme',
+      themeContext: conf.themeContexts ? conf.themeContexts[0] : 'theme',
     });
   },
   'set-feed': (state, action) => {
@@ -85,6 +85,17 @@ Goblin.registerQuest(goblinName, 'create', function* (
 
   if (!config.feeds.includes(clientSessionId)) {
     config.feeds.push(clientSessionId);
+  }
+
+  const themeContexts = config.themeContexts || ['theme'];
+
+  for (const ctx of themeContexts) {
+    const composerId = `theme-composer@${ctx}`;
+    yield quest.create('theme-composer', {
+      id: composerId,
+      desktopId: desktopId,
+    });
+    config.feeds.push(composerId);
   }
 
   quest.goblin.defer(
@@ -301,11 +312,11 @@ Goblin.registerQuest(goblinName, 'init-theme', function* (
     id: clientSessionId,
   });
 
-  if (name) {
+  /*if (name) {
     yield quest.me.changeTheme({
-      name,
+      name: 'default', //TODO: compose use themes
     });
-  }
+  }*/
 });
 
 Goblin.registerQuest(goblinName, 'change-theme', function* (quest, name) {

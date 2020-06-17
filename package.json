@@ -14,6 +14,7 @@
     }
   },
   "dependencies": {
+    "goblin-theme": "^0.0.1",
     "xcraft-core-goblin": "^3.0.0",
     "xcraft-core-probe": "^1.0.0",
     "xcraft-core-transport": "^2.0.0"

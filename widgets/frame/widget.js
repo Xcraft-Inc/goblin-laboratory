@@ -23,12 +23,17 @@ class Frame extends React.PureComponent {
   }
 
   render() {
-    const {labId, themeContext} = this.props;
+    const {labId, store, currentTheme, themeContext, desktopId} = this.props;
 
     return (
       <div className={`root-${labId.replace(/@/g, '-')}`}>
-        <Provider store={this.props.store}>
-          <Laboratory id={labId} frameThemeContext={themeContext}>
+        <Provider store={store}>
+          <Laboratory
+            id={labId}
+            desktopId={desktopId}
+            frameThemeContext={themeContext}
+            currentTheme={currentTheme}
+          >
             {this.props.children}
           </Laboratory>
         </Provider>

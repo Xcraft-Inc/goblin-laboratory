@@ -1,7 +1,6 @@
 //T:2019-02-27
 import React from 'react';
 import Widget from 'goblin-laboratory/widgets/widget';
-import {Theme} from 'electrum-theme';
 import PropTypes from 'prop-types';
 import importer from 'goblin_importer';
 import jsToCSS from './js-to-css.js';
@@ -12,13 +11,12 @@ class ThemeContext extends Widget {
   constructor() {
     super(...arguments);
     this._theme = null;
-    this._themeContextName = null;
   }
 
   getChildContext() {
     return {
       theme: this._theme,
-      themeContextName: this._themeContextName,
+      themeContextName: this.props.themeContextName,
     };
   }
 
@@ -29,12 +27,48 @@ class ThemeContext extends Widget {
     };
   }
 
-  render() {
-    this._themeContextName =
-      this.props.frameThemeContext || this.props.themeContext || 'theme';
-    const themeContext = themeContextImporter(this._themeContextName);
+  build(themeContext) {
+    let theme = this.props.theme ? this.props.theme.toJS() : null;
+    if (!theme) {
+      return null;
+    }
 
-    this._theme = Theme.create(this.props.theme || themeContext.theme);
+    const {
+      paletteBuilder,
+      shapesBuilder,
+      stylesBuilder,
+      transitionsBuilder,
+      typoBuilder,
+    } = themeContext.builders[theme.builder];
+
+    const palette = paletteBuilder(theme.colors);
+    const shapes = shapesBuilder(theme.spacing);
+    const transitions = transitionsBuilder(theme.timing);
+    const typo = typoBuilder(theme.spacing);
+
+    const styles = stylesBuilder({
+      colors: theme.colors,
+      palette,
+      shapes,
+      spacing: theme.spacing,
+      timing: theme.timing,
+      transitions,
+      typo,
+      look: theme.look,
+    });
+
+    return {...theme, styles, palette, shapes, transitions, typo};
+  }
+
+  render() {
+    if (!this.props.theme) {
+      return null;
+    }
+    const themeContext = themeContextImporter(this.props.themeContextName);
+    this._theme = this.build(themeContext);
+    if (!this._theme) {
+      return null;
+    }
     const globalStyles = themeContext.getGlobalStyles(this._theme);
     if (this.props.frameThemeContext && globalStyles['.root']) {
       globalStyles[`.root-${this.props.labId.replace(/@/g, '-')}`] =
@@ -63,8 +97,23 @@ class ThemeContext extends Widget {
 }
 
 export default Widget.connect((state, props) => {
+  let currentTheme = state.get(`backend.${props.labId}.theme`);
+
+  if (props.currentTheme) {
+    currentTheme = props.currentTheme;
+  }
+
+  const laboratoryThemeContext = state.get(
+    `backend.${props.labId}.themeContext`
+  );
+
+  const themeContextName =
+    props.frameThemeContext || props.themeContext || laboratoryThemeContext;
+
   return {
-    theme: state.get(`backend.${props.labId}.theme`),
-    themeContext: state.get(`backend.${props.labId}.themeContext`),
+    theme: state.get(
+      `backend.theme-composer@${themeContextName}.themes.${currentTheme}`
+    ),
+    themeContextName: themeContextName,
   };
 })(ThemeContext);
