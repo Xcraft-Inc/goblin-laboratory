@@ -33,6 +33,8 @@ class ThemeContext extends Widget {
       return null;
     }
 
+    theme.name = `${theme.name}-${this.props.themeGen}`;
+
     const {
       paletteBuilder,
       shapesBuilder,
@@ -57,7 +59,14 @@ class ThemeContext extends Widget {
       look: theme.look,
     });
 
-    return {...theme, styles, palette, shapes, transitions, typo};
+    return {
+      ...theme,
+      styles,
+      palette,
+      shapes,
+      transitions,
+      typo,
+    };
   }
 
   render() {

@@ -6,6 +6,41 @@ import ThemeContext from 'goblin-laboratory/widgets/theme-context/widget';
 import importer from 'goblin_importer';
 const widgetImporter = importer('widget');
 
+class RootNC extends Widget {
+  constructor() {
+    super(...arguments);
+  }
+
+  render() {
+    {
+      const {
+        status,
+        maintenanceMode,
+        root,
+        rootId,
+        themeName,
+        themeGen,
+      } = this.props;
+      if (status && status !== 'off') {
+        return <Maintenance mode={maintenanceMode} />;
+      } else {
+        const widgetName = root.split('@')[0];
+        const RootWidget = widgetImporter(widgetName);
+        return (
+          <RootWidget id={rootId} themeName={themeName} themeGen={themeGen} />
+        );
+      }
+    }
+  }
+}
+
+const Root = Widget.connect((state, props) => {
+  const status = state.get('backend.workshop.maintenance.status');
+  const root = state.get(`backend.${props.labId}.root`);
+  const rootId = state.get(`backend.${props.labId}.rootId`);
+  return {root, rootId, status};
+})(RootNC);
+
 class Laboratory extends Widget {
   constructor() {
     super(...arguments);
@@ -14,36 +49,24 @@ class Laboratory extends Widget {
   static get wiring() {
     return {
       id: 'id',
-      root: 'root',
       rootId: 'rootId',
       theme: 'theme',
+      themeGen: 'themeGen',
       themeContext: 'themeContext',
     };
   }
 
   renderRoot() {
-    const {id, root, rootId, maintenanceMode} = this.props;
-
-    const Root = (props) => {
-      if (props.status && props.status !== 'off') {
-        return <Maintenance mode={maintenanceMode} />;
-      } else {
-        const widgetName = root.split('@')[0];
-        const RootWidget = widgetImporter(widgetName);
-        const WiredRoot = Widget.Wired(RootWidget)(rootId);
-        return <WiredRoot />;
-      }
-    };
-
-    const WithMaintenance = this.mapWidget(
-      Root,
-      (status) => ({status}),
-      'backend.workshop.maintenance.status'
-    );
+    const {id, maintenanceMode, themeGen, theme} = this.props;
 
     return (
-      <ThemeContext labId={id}>
-        <WithMaintenance />
+      <ThemeContext labId={id} themeGen={themeGen}>
+        <Root
+          labId={id}
+          themeName={theme}
+          themeGen={themeGen}
+          maintenanceMode={maintenanceMode}
+        />
       </ThemeContext>
     );
   }
@@ -62,6 +85,7 @@ class Laboratory extends Widget {
     return (
       <ThemeContext
         labId={id}
+        themeGen={themeGen}
         themeContext={this.props.themeContext}
         currentTheme={this.props.currentTheme}
         frameThemeContext={this.props.frameThemeContext}
