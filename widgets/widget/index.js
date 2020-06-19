@@ -778,6 +778,12 @@ class Widget extends React.Component {
     if (args && !args.labId) {
       args.labId = this.context.labId;
     }
+
+    if (args && !args.clientSessionId) {
+      const state = this.getState().backend;
+      args.clientSessionId = state.get(args.labId).get('clientSessionId');
+    }
+
     if (args && !args.desktopId) {
       args.desktopId = this.context.desktopId;
     }

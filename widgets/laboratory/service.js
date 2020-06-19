@@ -20,6 +20,7 @@ const logicHandlers = {
       clientSessionId: action.get('clientSessionId'),
       feeds: conf.feeds,
       theme: 'default',
+      themeGen: 1,
       zoom: null,
       themeContext: conf.themeContexts ? conf.themeContexts[0] : 'theme',
     });
@@ -41,6 +42,10 @@ const logicHandlers = {
   },
   'change-theme': (state, action) => {
     return state.set('theme', action.get('name'));
+  },
+  'reload-theme': (state, action) => {
+    const gen = state.get('themeGen') + 1;
+    return state.set('themeGen', gen).set('theme', action.get('name'));
   },
   'update-feeds': (state, action) => {
     return state.set('feeds', action.get('feeds'));
@@ -105,6 +110,15 @@ Goblin.registerQuest(goblinName, 'create', function* (
         widgetId: msg.data.id,
       });
     })
+  );
+
+  quest.goblin.defer(
+    quest.sub(
+      `*::theme-composer@*.${clientSessionId}.reload-theme.requested`,
+      function* (err, {msg}) {
+        yield quest.me.reloadTheme(msg.data);
+      }
+    )
   );
 
   yield quest.doSync({id: quest.goblin.id, feed, wid: winId, url, config});
@@ -253,6 +267,7 @@ Goblin.registerQuest(goblinName, 'listen', function (quest, desktopId) {
         yield quest.me.changeTheme(msg.data);
       })
     );
+
     quest.goblin.setX(
       `${desktopId}.dispatch-unsub`,
       quest.sub(`${desktopId}.dispatch.requested`, function* (err, {msg}) {
@@ -268,7 +283,7 @@ Goblin.registerQuest(goblinName, 'unlisten', function (quest, desktopId) {
     quest.goblin.getX(`${desktopId}.change-theme-unsub`)();
     quest.goblin.getX(`${desktopId}.dispatch-unsub`)();
     quest.goblin.delX(`${desktopId}.nav-unsub`);
-    quest.goblin.delX(`${desktopId}.change-theme-unsub`);
+    quest.goblin.delX(`${desktopId}.reload-theme-unsub`);
     quest.goblin.delX(`${desktopId}.dispatch-unsub`);
   }
 });
@@ -322,6 +337,10 @@ Goblin.registerQuest(goblinName, 'init-theme', function* (
 Goblin.registerQuest(goblinName, 'change-theme', function* (quest, name) {
   quest.do({name});
   yield quest.me.saveSettings({propertie: 'theme'});
+});
+
+Goblin.registerQuest(goblinName, 'reload-theme', function (quest, name) {
+  quest.do({name});
 });
 
 /******************************************************************************/

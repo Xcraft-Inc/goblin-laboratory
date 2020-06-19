@@ -51,7 +51,11 @@ const handleChange = (send, action, registry) => {
     const questAction = {
       type: 'QUEST',
       cmd: changeFieldCommand,
-      data: {id: goblinId, newValue: action.value},
+      data: {
+        id: goblinId,
+        newValue: action.value,
+        clientSessionId: action.clientSessionId,
+      },
       _xcraftIPC,
     };
     send('QUEST', questAction);
@@ -62,7 +66,12 @@ const handleChange = (send, action, registry) => {
     const questAction = {
       type: 'QUEST',
       cmd: command,
-      data: {id: goblinId, path: fields.join('.'), newValue: action.value},
+      data: {
+        id: goblinId,
+        path: fields.join('.'),
+        newValue: action.value,
+        clientSessionId: action.clientSessionId,
+      },
       _xcraftIPC,
     };
     send('QUEST', questAction);
@@ -76,9 +85,13 @@ const formMiddleware = (send) => (store) => (next) => (action) => {
     case 'FIELD-CHANGED':
       {
         if (action.path.startsWith('backend')) {
+          const clientSessionId = store
+            .getState()
+            .backend.get(window.labId)
+            .get('clientSessionId');
           handleChange(
             send,
-            {model: action.path, value: action.value},
+            {model: action.path, value: action.value, clientSessionId},
             store.getState().commands.get('registry')
           );
         }
