@@ -793,7 +793,7 @@ class Widget extends React.Component {
     }
 
     const action = {
-      type: 'QUEST', // FIXME: it seems not used
+      type: 'QUEST',
       cmd,
       data: args,
       _xcraftIPC: true,
