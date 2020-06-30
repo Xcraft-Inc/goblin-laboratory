@@ -157,6 +157,7 @@ module.exports = (send) => {
     let data = action;
     if (action.type === 'QUEST') {
       data = helpers.toXcraftJSON(action)[0];
+      delete data.compensatorStates; /* only for the frontend and not serializable */
     }
 
     send(type, data);
