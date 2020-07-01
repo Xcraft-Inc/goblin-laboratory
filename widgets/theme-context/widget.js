@@ -34,6 +34,7 @@ class ThemeContext extends Widget {
     }
 
     theme.name = `${theme.name}-${this.props.themeGen}`;
+    theme.baseName = theme.name;
 
     const {
       paletteBuilder,
