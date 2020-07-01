@@ -33,8 +33,8 @@ class ThemeContext extends Widget {
       return null;
     }
 
-    theme.name = `${theme.name}-${this.props.themeGen}`;
     theme.baseName = theme.name;
+    theme.name = `${theme.name}-${this.props.themeGen}`;
 
     const {
       paletteBuilder,
