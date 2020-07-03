@@ -45,7 +45,7 @@ class ThemeContext extends Widget {
     } = themeContext.builders[theme.builder];
 
     const palette = paletteBuilder(theme.colors);
-    const shapes = shapesBuilder(theme.spacing);
+    const shapes = shapesBuilder(theme.spacing, theme.colors);
     const transitions = transitionsBuilder(theme.timing);
     const typo = typoBuilder(theme.spacing);
 
