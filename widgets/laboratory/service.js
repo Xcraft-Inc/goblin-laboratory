@@ -67,6 +67,10 @@ const logicHandlers = {
   'default-zoom': (state) => {
     return state.set('zoom', 1.0);
   },
+  'change-zoom': (state, action) => {
+    const zoom = action.get('zoom');
+    return state.set('zoom', zoom);
+  },
 };
 
 // Register quest's according rc.json
@@ -374,6 +378,11 @@ Goblin.registerQuest(goblinName, 'un-zoom', function* (quest) {
 });
 
 Goblin.registerQuest(goblinName, 'default-zoom', function* (quest) {
+  quest.do();
+  yield quest.me.saveSettings({propertie: 'zoom'});
+});
+
+Goblin.registerQuest(goblinName, 'change-zoom', function* (quest) {
   quest.do();
   yield quest.me.saveSettings({propertie: 'zoom'});
 });
