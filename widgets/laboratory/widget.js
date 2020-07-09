@@ -13,15 +13,13 @@ class RootNC extends Widget {
 
   render() {
     {
-      const {status, root, rootId, themeName, themeGen} = this.props;
+      const {status, root, rootId} = this.props;
       if (status && status !== 'off') {
         return <Maintenance />;
       } else {
         const widgetName = root.split('@')[0];
         const RootWidget = widgetImporter(widgetName);
-        return (
-          <RootWidget id={rootId} themeName={themeName} themeGen={themeGen} />
-        );
+        return <RootWidget id={rootId} />;
       }
     }
   }
@@ -43,18 +41,17 @@ class Laboratory extends Widget {
     return {
       id: 'id',
       rootId: 'rootId',
-      theme: 'theme',
       themeGen: 'themeGen',
       themeContext: 'themeContext',
     };
   }
 
   renderRoot() {
-    const {id, themeGen, theme} = this.props;
+    const {id, themeGen} = this.props;
 
     return (
       <ThemeContext labId={id} themeGen={themeGen}>
-        <Root labId={id} themeName={theme} themeGen={themeGen} />
+        <Root labId={id} />
       </ThemeContext>
     );
   }
