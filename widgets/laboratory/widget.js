@@ -13,16 +13,9 @@ class RootNC extends Widget {
 
   render() {
     {
-      const {
-        status,
-        maintenanceMode,
-        root,
-        rootId,
-        themeName,
-        themeGen,
-      } = this.props;
+      const {status, root, rootId, themeName, themeGen} = this.props;
       if (status && status !== 'off') {
-        return <Maintenance mode={maintenanceMode} />;
+        return <Maintenance />;
       } else {
         const widgetName = root.split('@')[0];
         const RootWidget = widgetImporter(widgetName);
@@ -57,16 +50,11 @@ class Laboratory extends Widget {
   }
 
   renderRoot() {
-    const {id, maintenanceMode, themeGen, theme} = this.props;
+    const {id, themeGen, theme} = this.props;
 
     return (
       <ThemeContext labId={id} themeGen={themeGen}>
-        <Root
-          labId={id}
-          themeName={theme}
-          themeGen={themeGen}
-          maintenanceMode={maintenanceMode}
-        />
+        <Root labId={id} themeName={theme} themeGen={themeGen} />
       </ThemeContext>
     );
   }
