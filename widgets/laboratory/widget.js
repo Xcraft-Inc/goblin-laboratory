@@ -32,6 +32,12 @@ const Root = Widget.connect((state, props) => {
   return {root, rootId, status};
 })(RootNC);
 
+const ThemeContextRoot = Widget.connect((state, props) => {
+  const themesGen = state.get(`backend.${props.labId}.themesGen`);
+  const themeGen = themesGen.get(props.currentTheme, 1);
+  return {themeGen};
+})(ThemeContext);
+
 class Laboratory extends Widget {
   constructor() {
     super(...arguments);
@@ -41,16 +47,17 @@ class Laboratory extends Widget {
     return {
       id: 'id',
       rootId: 'rootId',
-      themeGen: 'themeGen',
+      theme: 'theme',
+      themesGen: 'themesGen',
       themeContext: 'themeContext',
     };
   }
 
   renderRoot() {
-    const {id, themeGen} = this.props;
+    const {id, theme, themesGen} = this.props;
 
     return (
-      <ThemeContext labId={id} themeGen={themeGen}>
+      <ThemeContext labId={id} themeGen={themesGen.get(theme, 1)}>
         <Root labId={id} />
       </ThemeContext>
     );
@@ -68,15 +75,14 @@ class Laboratory extends Widget {
     }
 
     return (
-      <ThemeContext
+      <ThemeContextRoot
         labId={id}
-        themeGen={this.props.themeGen}
         themeContext={this.props.themeContext}
         currentTheme={this.props.currentTheme}
         frameThemeContext={this.props.frameThemeContext}
       >
         {this.props.children}
-      </ThemeContext>
+      </ThemeContextRoot>
     );
   }
 }

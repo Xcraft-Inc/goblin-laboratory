@@ -20,7 +20,7 @@ const logicHandlers = {
       clientSessionId: action.get('clientSessionId'),
       feeds: conf.feeds,
       theme: 'default',
-      themeGen: 1,
+      themesGen: {default: 1},
       zoom: null,
       themeContext: conf.themeContexts ? conf.themeContexts[0] : 'theme',
     });
@@ -44,8 +44,9 @@ const logicHandlers = {
     return state.set('theme', action.get('name'));
   },
   'reload-theme': (state, action) => {
-    const gen = state.get('themeGen') + 1;
-    return state.set('themeGen', gen).set('theme', action.get('name'));
+    const path = `themesGen.${action.get('name')}`;
+    const gen = state.get(path, 1) + 1;
+    return state.set(path, gen);
   },
   'update-feeds': (state, action) => {
     return state.set('feeds', action.get('feeds'));
