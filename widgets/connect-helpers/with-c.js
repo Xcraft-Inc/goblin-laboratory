@@ -5,6 +5,7 @@ import Shredder from 'xcraft-core-shredder';
 import arrayEquals from './arrayEquals.js';
 import WithModel from '../with-model/widget.js';
 import joinModels from './join-models.js';
+import ModelContext from '../with-model/context.js';
 
 function isShredderOrImmutable(obj) {
   return obj && (Shredder.isShredder(obj) || Shredder.isImmutable(obj));
@@ -267,5 +268,9 @@ export default function withC(Component, dispatchProps = {}, {modelProp} = {}) {
     }
   }
 
-  return WithC;
+  return (props) => (
+    <ModelContext.Consumer>
+      {(model) => <WithC model={model} {...props} />}
+    </ModelContext.Consumer>
+  );
 }
