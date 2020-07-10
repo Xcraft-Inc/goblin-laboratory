@@ -176,7 +176,7 @@ Goblin.registerQuest(goblinName, 'create', function* (
     },
   });
 
-  yield win.feedSub({wid: desktopId, feeds: config.feeds});
+  yield win.feedSub({desktopId, feeds: config.feeds});
   yield win.beginRender();
 
   quest.log.info(`Laboratory ${quest.goblin.id} created!`);
@@ -204,7 +204,7 @@ Goblin.registerQuest(goblinName, 'set-feed', function* (quest, desktopId) {
   quest.goblin.setX('desktopId', desktopId);
   const feeds = quest.goblin.getState().get('feeds');
   const wm = quest.getAPI(`wm@${quest.goblin.id}`);
-  yield wm.feedSub({wid: desktopId, feeds: feeds.toArray()});
+  yield wm.feedSub({desktopId, feeds: feeds.toArray()});
   yield quest.warehouse.resend({feed: desktopId});
   quest.do();
 });
@@ -431,9 +431,6 @@ Goblin.registerQuest(goblinName, 'delete', function* (quest) {
   quest.log.info(`Deleting laboratory`);
   const state = quest.goblin.getState();
   const wid = state.get('wid');
-  yield quest.cmd('warehouse.unsubscribe', {
-    feed: wid,
-  });
   yield quest.cmd('warehouse.release', {
     branch: wid,
   });
