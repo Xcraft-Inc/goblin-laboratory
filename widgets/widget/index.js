@@ -258,7 +258,7 @@ class Widget extends React.Component {
 
     let hashTheme = '';
     if (myStyle.hasThemeParam) {
-      hashTheme = this.context.theme.name;
+      hashTheme = this.context.theme.cacheName;
     }
 
     return `${this.name}${hashTheme}${hashProps}`;

@@ -33,8 +33,7 @@ class ThemeContext extends Widget {
       return null;
     }
 
-    theme.baseName = theme.name;
-    theme.name = `${theme.name}-${this.props.themeGen}`;
+    theme.cacheName = `${theme.name}-${this.props.themeGen}`;
 
     const {
       paletteBuilder,
@@ -90,7 +89,7 @@ class ThemeContext extends Widget {
     return (
       // The `key` prop forces all children to be recreated when the theme changes
       // Changing the (legacy) context is not sufficient to redraw the children
-      <React.Fragment key={this._theme.name}>
+      <React.Fragment key={this._theme.cacheName}>
         {/* // This <style> is not necessary without shadow dom and causes errors in aphrodite after unmount and remount */}
         {/* <style type="text/css" data-aphrodite /> */}
         {globalStyles && (
