@@ -26,7 +26,10 @@ class Frame extends React.PureComponent {
     const {labId, store, currentTheme, themeContext, desktopId} = this.props;
 
     return (
-      <div className={`root-${labId.replace(/@/g, '-')}`}>
+      <div
+        className={`root-${labId.replace(/@/g, '-')}`}
+        style={this.props.style}
+      >
         <Provider store={store}>
           <Laboratory
             id={labId}
