@@ -431,9 +431,6 @@ Goblin.registerQuest(goblinName, 'delete', function* (quest) {
   quest.log.info(`Deleting laboratory`);
   const state = quest.goblin.getState();
   const wid = state.get('wid');
-  yield quest.cmd('warehouse.unsubscribe', {
-    feed: wid,
-  });
   yield quest.cmd('warehouse.release', {
     branch: wid,
   });
