@@ -36,6 +36,10 @@ class ThemeContext extends Widget {
     theme.cacheName = `${theme.name}-${this.props.themeGen}`;
 
     const {
+      colors = theme.colors,
+      spacing = theme.spacing,
+      timing = theme.timing,
+      look = theme.look,
       paletteBuilder,
       shapesBuilder,
       stylesBuilder,
@@ -43,20 +47,20 @@ class ThemeContext extends Widget {
       typoBuilder,
     } = themeContext.builders[theme.builder];
 
-    const palette = paletteBuilder(theme.colors);
-    const shapes = shapesBuilder(theme.spacing, theme.colors);
-    const transitions = transitionsBuilder(theme.timing);
-    const typo = typoBuilder(theme.spacing);
+    const palette = paletteBuilder(colors);
+    const shapes = shapesBuilder(spacing, colors);
+    const transitions = transitionsBuilder(timing);
+    const typo = typoBuilder(spacing);
 
     const styles = stylesBuilder({
-      colors: theme.colors,
+      colors: colors,
       palette,
       shapes,
-      spacing: theme.spacing,
-      timing: theme.timing,
+      spacing: spacing,
+      timing: timing,
       transitions,
       typo,
-      look: theme.look,
+      look: look,
     });
 
     return {
