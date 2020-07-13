@@ -176,7 +176,7 @@ Goblin.registerQuest(goblinName, 'create', function* (
     },
   });
 
-  yield win.feedSub({desktopId, feeds: config.feeds});
+  yield win.feedSub({wid: desktopId, feeds: config.feeds});
   yield win.beginRender();
 
   quest.log.info(`Laboratory ${quest.goblin.id} created!`);
