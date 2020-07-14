@@ -34,7 +34,7 @@ class ThemeContext extends Widget {
     }
 
     const themesGen = this.props.themesGen;
-    const themeGen = themesGen.get(this.props.currentTheme, 1);
+    const themeGen = themesGen ? themesGen.get(this.props.currentTheme, 1) : 1;
     theme.cacheName = `${theme.name}-${themeGen}`;
 
     const {
