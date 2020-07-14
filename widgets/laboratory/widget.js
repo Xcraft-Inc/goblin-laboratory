@@ -6,12 +6,12 @@ import ThemeContext from 'goblin-laboratory/widgets/theme-context/widget';
 import importer from 'goblin_importer';
 const widgetImporter = importer('widget');
 
-class RootNC extends Widget {
+class LaboratoryNC extends Widget {
   constructor() {
     super(...arguments);
   }
 
-  render() {
+  renderContent() {
     {
       const {status, root, rootId} = this.props;
       if (status && status !== 'off') {
@@ -23,68 +23,33 @@ class RootNC extends Widget {
       }
     }
   }
-}
 
-const Root = Widget.connect((state, props) => {
-  const status = state.get('backend.workshop.maintenance.status');
-  const root = state.get(`backend.${props.labId}.root`);
-  const rootId = state.get(`backend.${props.labId}.rootId`);
-  return {root, rootId, status};
-})(RootNC);
-
-const ThemeContextRoot = Widget.connect((state, props) => {
-  const themesGen = state.get(`backend.${props.labId}.themesGen`);
-  const themeGen = themesGen.get(props.currentTheme, 1);
-  return {themeGen};
-})(ThemeContext);
-
-class Laboratory extends Widget {
-  constructor() {
-    super(...arguments);
-  }
-
-  static get wiring() {
-    return {
-      id: 'id',
-      rootId: 'rootId',
-      theme: 'theme',
-      themesGen: 'themesGen',
-      themeContext: 'themeContext',
-    };
-  }
-
-  renderRoot() {
-    const {id, theme, themesGen} = this.props;
-
+  render() {
+    const {id, root, theme, themeContext} = this.props;
+    if (!root) {
+      // Laboratory not loaded
+      return null;
+    }
     return (
-      <ThemeContext labId={id} themeGen={themesGen.get(theme, 1)}>
-        <Root labId={id} />
+      <ThemeContext labId={id} currentTheme={theme} themeContext={themeContext}>
+        {this.renderContent()}
       </ThemeContext>
     );
   }
-
-  render() {
-    const {id, rootId} = this.props;
-
-    if (!id) {
-      return null;
-    }
-
-    if (rootId) {
-      return this.renderRoot();
-    }
-
-    return (
-      <ThemeContextRoot
-        labId={id}
-        themeContext={this.props.themeContext}
-        currentTheme={this.props.currentTheme}
-        frameThemeContext={this.props.frameThemeContext}
-      >
-        {this.props.children}
-      </ThemeContextRoot>
-    );
-  }
 }
+
+const Laboratory = Widget.connect((state, props) => {
+  const labState = state.get('backend').get(props.id);
+  if (!labState) {
+    return {};
+  }
+  return {
+    root: labState.get('root'),
+    rootId: labState.get('rootId'),
+    theme: labState.get('theme'),
+    themeContext: labState.get('themeContext'),
+    status: state.get('backend.workshop.maintenance.status'),
+  };
+})(LaboratoryNC);
 
 export default Laboratory;

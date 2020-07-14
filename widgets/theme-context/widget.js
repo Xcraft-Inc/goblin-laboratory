@@ -16,7 +16,7 @@ class ThemeContext extends Widget {
   getChildContext() {
     return {
       theme: this._theme,
-      themeContextName: this.props.themeContextName,
+      themeContextName: this.props.themeContext,
     };
   }
 
@@ -33,7 +33,9 @@ class ThemeContext extends Widget {
       return null;
     }
 
-    theme.cacheName = `${theme.name}-${this.props.themeGen}`;
+    const themesGen = this.props.themesGen;
+    const themeGen = themesGen.get(this.props.currentTheme, 1);
+    theme.cacheName = `${theme.name}-${themeGen}`;
 
     const {
       colors = theme.colors,
@@ -77,7 +79,7 @@ class ThemeContext extends Widget {
     if (!this.props.theme) {
       return null;
     }
-    const themeContext = themeContextImporter(this.props.themeContextName);
+    const themeContext = themeContextImporter(this.props.themeContext);
     this._theme = this.build(themeContext);
     if (!this._theme) {
       return null;
@@ -112,23 +114,12 @@ class ThemeContext extends Widget {
 }
 
 export default Widget.connect((state, props) => {
-  let currentTheme = state.get(`backend.${props.labId}.theme`);
-
-  if (props.currentTheme) {
-    currentTheme = props.currentTheme;
-  }
-
-  const laboratoryThemeContext = state.get(
-    `backend.${props.labId}.themeContext`
-  );
-
-  const themeContextName =
-    props.frameThemeContext || props.themeContext || laboratoryThemeContext;
-
+  const {labId, themeContext, currentTheme} = props;
+  const themesGen = state.get(`backend.${labId}.themesGen`);
   return {
     theme: state.get(
-      `backend.theme-composer@${themeContextName}.themes.${currentTheme}`
+      `backend.theme-composer@${themeContext}.themes.${currentTheme}`
     ),
-    themeContextName: themeContextName,
+    themesGen,
   };
 })(ThemeContext);

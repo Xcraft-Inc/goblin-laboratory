@@ -2,7 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Laboratory from '../laboratory/widget';
+import ThemeContext from '../theme-context/widget';
 import {Provider} from 'react-redux';
 
 class Frame extends React.PureComponent {
@@ -31,14 +31,13 @@ class Frame extends React.PureComponent {
         style={this.props.style}
       >
         <Provider store={store}>
-          <Laboratory
-            id={labId}
-            desktopId={desktopId}
-            frameThemeContext={themeContext}
+          <ThemeContext
+            labId={labId}
+            themeContext={themeContext}
             currentTheme={currentTheme}
           >
             {this.props.children}
-          </Laboratory>
+          </ThemeContext>
         </Provider>
       </div>
     );

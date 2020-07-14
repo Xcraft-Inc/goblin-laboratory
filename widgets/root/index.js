@@ -7,7 +7,6 @@ import {Provider} from 'react-redux';
 import {ConnectedRouter} from 'connected-react-router/immutable';
 import Widget from 'goblin-laboratory/widgets/widget';
 import Laboratory from '../laboratory/widget';
-const WiredLab = Widget.Wired(Laboratory)();
 
 class Root extends React.PureComponent {
   getChildContext() {
@@ -28,16 +27,16 @@ class Root extends React.PureComponent {
 
   renderLabWithRouter() {
     const {history, labId} = this.props;
-    const WiredLabWithRoute = Widget.withRoute('/')(WiredLab);
+    const LabWithRoute = Widget.withRoute('/')(Laboratory);
     return (
       <ConnectedRouter history={history}>
-        <WiredLabWithRoute id={labId} />
+        <LabWithRoute id={labId} />
       </ConnectedRouter>
     );
   }
 
   renderLab() {
-    return <WiredLab id={this.props.labId} />;
+    return <Laboratory id={this.props.labId} />;
   }
 
   renderContent() {
