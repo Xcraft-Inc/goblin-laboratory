@@ -33,6 +33,7 @@ export function clearStylesCache() {
 }
 
 const debounce500 = _.debounce((fct) => fct(), 500);
+const throttle250 = _.throttle((fct) => fct(), 250);
 
 function isFunction(functionToCheck) {
   var getType = {};
@@ -350,7 +351,7 @@ class Widget extends React.Component {
      * Note that this API should not be called directly because it's an
      * internal function of aphrodite.
      */
-    flushToStyleTag();
+    throttle250(() => flushToStyleTag());
   }
 
   shouldComponentUpdate(newProps, newState) {
