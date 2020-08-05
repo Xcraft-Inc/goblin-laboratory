@@ -32,9 +32,7 @@ export function clearStylesCache() {
   myStyleCache = {};
 }
 
-const debounceCollect = _.debounce((fct) => {
-  fct();
-}, 500);
+const debounce500 = _.debounce((fct) => fct(), 500);
 
 function isFunction(functionToCheck) {
   var getType = {};
@@ -363,9 +361,7 @@ class Widget extends React.Component {
   }
 
   componentWillUnmount() {
-    debounceCollect(() => {
-      this.rawDispatch(widgetsActions.collect());
-    });
+    debounce500(() => this.rawDispatch(widgetsActions.collect()));
   }
 
   ///////////STATE MGMT:
