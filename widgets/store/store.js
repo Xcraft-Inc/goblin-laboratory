@@ -3,7 +3,8 @@ import {routerMiddleware} from 'connected-react-router/immutable';
 import thunk from 'redux-thunk';
 import middlewares from './middlewares';
 
-const rootReducer = require('laboratory/store/root-reducer').default;
+const rootReducer = require('goblin-laboratory/widgets/store/root-reducer')
+  .default;
 
 export default function configureStore(initialState, history, send) {
   const {transitMiddleware, formMiddleware, questMiddleware} = middlewares(
@@ -29,8 +30,9 @@ export default function configureStore(initialState, history, send) {
 
   const store = finalCreateStore(rootReducer, initialState);
   if (module.hot) {
-    module.hot.accept('laboratory/store/root-reducer', () => {
-      const nextRootReducer = require('laboratory/store/root-reducer').default;
+    module.hot.accept('goblin-laboratory/widgets/store/root-reducer', () => {
+      const nextRootReducer = require('goblin-laboratory/widgets/store/root-reducer')
+        .default;
       store.replaceReducer(nextRootReducer);
     });
   }
