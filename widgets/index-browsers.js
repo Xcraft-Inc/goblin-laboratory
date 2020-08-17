@@ -112,6 +112,11 @@ class BrowsersRenderer extends Renderer {
       console.log('Websocket closed:', event);
       this.store.dispatch({type: 'SET_WEBSOCKET_STATUS', status: 'closed'});
 
+      // Do not reconnect immediately in case of error while opening the connection
+      if (event.code === 4001 && this.reconnectTimeout < 16000) {
+        this.reconnectTimeout = 16000;
+      }
+
       clearTimeout(resetTimeoutHandle);
       setTimeout(this.connect, this.reconnectTimeout);
       this.reconnectTimeout *= 2;
