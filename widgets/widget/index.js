@@ -802,10 +802,7 @@ class Widget extends React.Component {
     const desktopId = this.context.desktopId
       ? this.context.desktopId
       : this.props.desktopId;
-    this.cmd(
-      'laboratory.when-ui-crash',
-      Object.assign({id: this.context.labId}, {desktopId, error, info})
-    );
+    this.doFor(this.context.labId, 'when-ui-crash', {desktopId, error, info});
   }
 
   do(action, args) {
