@@ -260,23 +260,40 @@ Goblin.registerQuest(goblinName, 'set-root', function (
 
 Goblin.registerQuest(goblinName, 'listen', function (quest, desktopId) {
   if (!quest.goblin.getX(`${desktopId}.nav-unsub`)) {
+    const labId = quest.goblin.id;
     quest.goblin.setX(
       `${desktopId}.nav-unsub`,
-      quest.sub(`${desktopId}.nav.requested`, function* (err, {msg}) {
-        yield quest.me.nav(msg.data);
+      quest.sub(`${desktopId}.nav.requested`, function* (err, {msg, resp}) {
+        yield resp.command.send('laboratory.nav', {
+          id: labId,
+          desktopId,
+          ...msg.data,
+        });
       })
     );
     quest.goblin.setX(
       `${desktopId}.change-theme-unsub`,
-      quest.sub(`${desktopId}.change-theme.requested`, function* (err, {msg}) {
-        yield quest.me.changeTheme(msg.data);
+      quest.sub(`${desktopId}.change-theme.requested`, function* (
+        err,
+        {msg, resp}
+      ) {
+        yield resp.command.send('laboratory.change-theme', {
+          id: labId,
+          ...msg.data,
+        });
       })
     );
 
     quest.goblin.setX(
       `${desktopId}.dispatch-unsub`,
-      quest.sub(`${desktopId}.dispatch.requested`, function* (err, {msg}) {
-        yield quest.me.dispatch(msg.data);
+      quest.sub(`${desktopId}.dispatch.requested`, function* (
+        err,
+        {msg, resp}
+      ) {
+        yield resp.command.send('laboratory.dispatch', {
+          id: labId,
+          ...msg.data,
+        });
       })
     );
   }
@@ -293,9 +310,17 @@ Goblin.registerQuest(goblinName, 'unlisten', function (quest, desktopId) {
   }
 });
 
-Goblin.registerQuest(goblinName, 'nav', function* (quest, route) {
-  const win = quest.getAPI(`wm@${quest.goblin.id}`);
-  yield win.nav({route});
+Goblin.registerQuest(goblinName, 'nav', function* (quest, desktopId, route) {
+  const deskAPI = quest.getAPI(desktopId);
+  const ready = yield deskAPI.startNav();
+  if (ready) {
+    const win = quest.getAPI(`wm@${quest.goblin.id}`);
+    yield win.nav({route});
+    console.log('NAV://', route);
+    yield deskAPI.endNav();
+  } else {
+    console.log('NAV://discarded!');
+  }
 });
 
 /************************        SETTINGS      *********************************/
