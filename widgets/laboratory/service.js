@@ -310,16 +310,20 @@ Goblin.registerQuest(goblinName, 'unlisten', function (quest, desktopId) {
   }
 });
 
-Goblin.registerQuest(goblinName, 'nav', function* (quest, desktopId, route) {
+Goblin.registerQuest(goblinName, 'nav', function* (
+  quest,
+  desktopId,
+  route,
+  navRequestId
+) {
   const deskAPI = quest.getAPI(desktopId);
   const ready = yield deskAPI.startNav();
   if (ready) {
     const win = quest.getAPI(`wm@${quest.goblin.id}`);
     yield win.nav({route});
-    console.log('NAV://', route);
-    yield deskAPI.endNav();
+    yield deskAPI.endNav({navRequestId});
   } else {
-    console.log('NAV://discarded!');
+    yield deskAPI.endNav({navRequestId, skip: true});
   }
 });
 
