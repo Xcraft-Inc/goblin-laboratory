@@ -263,7 +263,7 @@ Goblin.registerQuest(goblinName, 'listen', function (quest, desktopId) {
     const labId = quest.goblin.id;
     quest.goblin.setX(
       `${desktopId}.nav-unsub`,
-      quest.sub(`${desktopId}.nav.requested`, function* (err, {msg, resp}) {
+      quest.sub(`*::${desktopId}.nav.requested`, function* (err, {msg, resp}) {
         yield resp.command.send('laboratory.nav', {
           id: labId,
           desktopId,
@@ -272,7 +272,7 @@ Goblin.registerQuest(goblinName, 'listen', function (quest, desktopId) {
       })
     );
     quest.goblin.setX(
-      `${desktopId}.change-theme-unsub`,
+      `*::${desktopId}.change-theme-unsub`,
       quest.sub(`${desktopId}.change-theme.requested`, function* (
         err,
         {msg, resp}
@@ -285,7 +285,7 @@ Goblin.registerQuest(goblinName, 'listen', function (quest, desktopId) {
     );
 
     quest.goblin.setX(
-      `${desktopId}.dispatch-unsub`,
+      `*::${desktopId}.dispatch-unsub`,
       quest.sub(`${desktopId}.dispatch.requested`, function* (
         err,
         {msg, resp}
@@ -321,7 +321,7 @@ Goblin.registerQuest(goblinName, 'nav', function* (
   if (ready) {
     const win = quest.getAPI(`wm@${quest.goblin.id}`);
     yield win.nav({route});
-    yield deskAPI.endNav({navRequestId});
+    yield deskAPI.endNav({navRequestId, route});
   } else {
     yield deskAPI.endNav({navRequestId, skip: true});
   }
@@ -450,8 +450,6 @@ Goblin.registerQuest(goblinName, 'close-window', function* (quest, winId) {
   yield quest.cmd('client-session.close-window', {id: clientSessionId, winId});
   const labId = quest.goblin.id;
   yield quest.warehouse.unsubscribe({feed: labId});
-  const desktopId = quest.goblin.getX('desktopId');
-  yield quest.me.unlisten({desktopId});
   //self-kill
   yield quest.kill([labId], labId);
 });
