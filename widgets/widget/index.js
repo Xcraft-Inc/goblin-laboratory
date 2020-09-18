@@ -925,8 +925,9 @@ class Widget extends React.Component {
 
   ///////////NAVIGATION:
 
-  nav(path) {
-    this.context.dispatch(push(path));
+  nav(route) {
+    //this.context.dispatch(push(path));
+    this.doFor(this.context.labId, 'nav', {route});
   }
 
   static GetParameter(search, name) {
@@ -1187,14 +1188,6 @@ class Widget extends React.Component {
       id: detailServiceId,
       entityId,
     });
-  }
-
-  navGoBack() {
-    this.context.dispatch(goBack());
-  }
-
-  replaceNav(path) {
-    this.context.dispatch(replace(path));
   }
 
   getNearestId() {
