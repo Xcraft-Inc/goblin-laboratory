@@ -137,10 +137,14 @@ Goblin.registerQuest(goblinName, 'create', function* (
   });
 
   quest.goblin.defer(
-    quest.sub(`*::${winId}.${clientSessionId}.window-closed`, function* () {
+    quest.sub(`*::${winId}.${clientSessionId}.window-closed`, function* (
+      err,
+      {msg}
+    ) {
       yield quest.cmd('laboratory.close-window', {
         id: quest.goblin.id,
         winId: winId,
+        currentUrl: msg.data.currentUrl,
       });
     })
   );
@@ -442,7 +446,19 @@ Goblin.registerQuest(goblinName, 'del', function* (quest, widgetId) {
   }
 });
 
-Goblin.registerQuest(goblinName, 'close-window', function* (quest, winId) {
+Goblin.registerQuest(goblinName, 'close-window', function* (
+  quest,
+  winId,
+  currentUrl
+) {
+  const rootId = quest.goblin.getState().get('rootId');
+  const rootServiceId = yield quest.warehouse.get({path: `${rootId}.id`});
+  if (rootServiceId) {
+    const api = quest.getAPI(rootServiceId);
+    if (api.onCloseWindow) {
+      yield api.onCloseWindow({currentUrl});
+    }
+  }
   //TODO:multi-window mgmt
   yield quest.kill([winId]);
   //cleaning
