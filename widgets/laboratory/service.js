@@ -108,10 +108,12 @@ Goblin.registerQuest(goblinName, 'create', function* (
     config.feeds.push(composerId);
   }
 
+  const id = quest.goblin.id;
+
   quest.goblin.defer(
-    quest.sub('goblin.released', function* (err, {msg}) {
-      yield quest.cmd('laboratory.del', {
-        id: quest.goblin.id,
+    quest.sub('goblin.released', function* (err, {msg, resp}) {
+      yield resp.cmd('laboratory.del', {
+        id,
         widgetId: msg.data.id,
       });
     })
@@ -120,8 +122,8 @@ Goblin.registerQuest(goblinName, 'create', function* (
   quest.goblin.defer(
     quest.sub(
       `*::theme-composer@*.${clientSessionId}.reload-theme.requested`,
-      function* (err, {msg}) {
-        yield quest.me.reloadTheme(msg.data);
+      function* (err, {msg, resp}) {
+        yield resp.cmd('laboratory.reload-theme', {...msg.data, id});
       }
     )
   );
@@ -139,10 +141,10 @@ Goblin.registerQuest(goblinName, 'create', function* (
   quest.goblin.defer(
     quest.sub(`*::${winId}.${clientSessionId}.window-closed`, function* (
       err,
-      {msg}
+      {msg, resp}
     ) {
-      yield quest.cmd('laboratory.close-window', {
-        id: quest.goblin.id,
+      yield resp.cmd('laboratory.close-window', {
+        id,
         winId: winId,
         currentUrl: msg.data.currentUrl,
       });
@@ -152,10 +154,10 @@ Goblin.registerQuest(goblinName, 'create', function* (
   quest.goblin.defer(
     quest.sub(`*::${winId}.${clientSessionId}.window-state-changed`, function* (
       err,
-      {msg}
+      {msg, resp}
     ) {
-      yield quest.cmd('laboratory.save-window-state', {
-        id: quest.goblin.id,
+      yield resp.cmd('laboratory.save-window-state', {
+        id,
         winId,
         state: msg.data.state,
       });
