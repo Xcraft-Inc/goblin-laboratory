@@ -270,7 +270,7 @@ Goblin.registerQuest(goblinName, 'listen', function (quest, desktopId) {
     quest.goblin.setX(
       `${desktopId}.nav-unsub`,
       quest.sub(`*::${desktopId}.nav.requested`, function* (err, {msg, resp}) {
-        yield resp.command.send('laboratory.nav', {
+        yield resp.cmd('laboratory.nav', {
           id: labId,
           desktopId,
           ...msg.data,
@@ -283,7 +283,7 @@ Goblin.registerQuest(goblinName, 'listen', function (quest, desktopId) {
         err,
         {msg, resp}
       ) {
-        yield resp.command.send('laboratory.change-theme', {
+        yield resp.cmd('laboratory.change-theme', {
           id: labId,
           ...msg.data,
         });
@@ -296,7 +296,7 @@ Goblin.registerQuest(goblinName, 'listen', function (quest, desktopId) {
         err,
         {msg, resp}
       ) {
-        yield resp.command.send('laboratory.dispatch', {
+        yield resp.cmd('laboratory.dispatch', {
           id: labId,
           ...msg.data,
         });
