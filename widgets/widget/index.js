@@ -925,9 +925,12 @@ class Widget extends React.Component {
 
   ///////////NAVIGATION:
 
-  nav(route) {
-    //this.context.dispatch(push(path));
-    this.doFor(this.context.labId, 'nav', {route});
+  nav(route, frontOnly) {
+    if (frontOnly) {
+      this.context.dispatch(push(route));
+    } else {
+      this.doFor(this.context.labId, 'nav', {route});
+    }
   }
 
   static GetParameter(search, name) {
@@ -1131,7 +1134,7 @@ class Widget extends React.Component {
       if (!hinterType.endsWith('-hidden')) {
         hinterType += '-hidden';
       }
-      this.nav(`${path}${hinterType}${search}${hash}`);
+      this.nav(`${path}${hinterType}${search}${hash}`, true);
     }
   }
 
@@ -1153,13 +1156,15 @@ class Widget extends React.Component {
 
         if (!hinterType) {
           this.nav(
-            `${path}${search}#${this.context.model}.${this.props.hinter}`
+            `${path}${search}#${this.context.model}.${this.props.hinter}`,
+            true
           );
           return;
         }
 
         this.nav(
-          `${path}/${hinterType}${search}#${this.context.model}.${this.props.hinter}`
+          `${path}/${hinterType}${search}#${this.context.model}.${this.props.hinter}`,
+          true
         );
       }
     } else {
@@ -1180,7 +1185,8 @@ class Widget extends React.Component {
     }
 
     this.nav(
-      `${path}/${hinterName}-hidden${search}#backend.${workitemId}.${type}`
+      `${path}/${hinterName}-hidden${search}#backend.${workitemId}.${type}`,
+      true
     );
 
     const detailServiceId = `${hinterName}-detail@${workitemId}`;
