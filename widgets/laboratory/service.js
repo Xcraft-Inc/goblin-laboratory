@@ -278,8 +278,8 @@ Goblin.registerQuest(goblinName, 'listen', function (quest, desktopId) {
       })
     );
     quest.goblin.setX(
-      `*::${desktopId}.change-theme-unsub`,
-      quest.sub(`${desktopId}.change-theme.requested`, function* (
+      `${desktopId}.change-theme-unsub`,
+      quest.sub(`*::${desktopId}.change-theme.requested`, function* (
         err,
         {msg, resp}
       ) {
@@ -291,8 +291,8 @@ Goblin.registerQuest(goblinName, 'listen', function (quest, desktopId) {
     );
 
     quest.goblin.setX(
-      `*::${desktopId}.dispatch-unsub`,
-      quest.sub(`${desktopId}.dispatch.requested`, function* (
+      `${desktopId}.dispatch-unsub`,
+      quest.sub(`*::${desktopId}.dispatch.requested`, function* (
         err,
         {msg, resp}
       ) {
