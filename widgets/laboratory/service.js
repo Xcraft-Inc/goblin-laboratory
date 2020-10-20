@@ -450,14 +450,6 @@ Goblin.registerQuest(goblinName, 'close-window', function* (
   winId,
   currentUrl
 ) {
-  const rootId = quest.goblin.getState().get('rootId');
-  const rootServiceId = yield quest.warehouse.get({path: `${rootId}.id`});
-  if (rootServiceId) {
-    const api = quest.getAPI(rootServiceId);
-    if (api.onCloseWindow) {
-      yield api.onCloseWindow({currentUrl});
-    }
-  }
   //TODO:multi-window mgmt
   yield quest.kill([winId]);
   //cleaning
