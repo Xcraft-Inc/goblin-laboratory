@@ -265,56 +265,57 @@ Goblin.registerQuest(goblinName, 'set-root', function (
 });
 
 Goblin.registerQuest(goblinName, 'listen', function (quest, desktopId) {
-  if (!quest.goblin.getX(`${desktopId}.nav-unsub`)) {
-    const labId = quest.goblin.id;
-    quest.goblin.setX(
-      `${desktopId}.nav-unsub`,
-      quest.sub(`*::${desktopId}.nav.requested`, function* (err, {msg, resp}) {
-        yield resp.cmd('laboratory.nav', {
-          id: labId,
-          desktopId,
-          ...msg.data,
-        });
-      })
-    );
-    quest.goblin.setX(
-      `${desktopId}.change-theme-unsub`,
-      quest.sub(`*::${desktopId}.change-theme.requested`, function* (
-        err,
-        {msg, resp}
-      ) {
-        yield resp.cmd('laboratory.change-theme', {
-          id: labId,
-          ...msg.data,
-        });
-      })
-    );
+  unlisten(quest);
 
-    quest.goblin.setX(
-      `${desktopId}.dispatch-unsub`,
-      quest.sub(`*::${desktopId}.dispatch.requested`, function* (
-        err,
-        {msg, resp}
-      ) {
-        yield resp.cmd('laboratory.dispatch', {
-          id: labId,
-          ...msg.data,
-        });
-      })
-    );
-  }
+  const labId = quest.goblin.id;
+  quest.goblin.setX(
+    `nav-unsub`,
+    quest.sub(`*::${desktopId}.nav.requested`, function* (err, {msg, resp}) {
+      yield resp.cmd('laboratory.nav', {
+        id: labId,
+        desktopId,
+        ...msg.data,
+      });
+    })
+  );
+
+  quest.goblin.setX(
+    `change-theme-unsub`,
+    quest.sub(`*::${desktopId}.change-theme.requested`, function* (
+      err,
+      {msg, resp}
+    ) {
+      yield resp.cmd('laboratory.change-theme', {
+        id: labId,
+        ...msg.data,
+      });
+    })
+  );
+
+  quest.goblin.setX(
+    `dispatch-unsub`,
+    quest.sub(`*::${desktopId}.dispatch.requested`, function* (
+      err,
+      {msg, resp}
+    ) {
+      yield resp.cmd('laboratory.dispatch', {
+        id: labId,
+        ...msg.data,
+      });
+    })
+  );
 });
 
-Goblin.registerQuest(goblinName, 'unlisten', function (quest, desktopId) {
-  if (quest.goblin.getX(`${desktopId}.nav-unsub`)) {
-    quest.goblin.getX(`${desktopId}.nav-unsub`)();
-    quest.goblin.getX(`${desktopId}.change-theme-unsub`)();
-    quest.goblin.getX(`${desktopId}.dispatch-unsub`)();
-    quest.goblin.delX(`${desktopId}.nav-unsub`);
-    quest.goblin.delX(`${desktopId}.reload-theme-unsub`);
-    quest.goblin.delX(`${desktopId}.dispatch-unsub`);
+function unlisten(quest) {
+  if (quest.goblin.getX(`nav-unsub`)) {
+    quest.goblin.getX(`nav-unsub`)();
+    quest.goblin.getX(`change-theme-unsub`)();
+    quest.goblin.getX(`dispatch-unsub`)();
+    quest.goblin.delX(`nav-unsub`);
+    quest.goblin.delX(`reload-theme-unsub`);
+    quest.goblin.delX(`dispatch-unsub`);
   }
-});
+}
 
 Goblin.registerQuest(goblinName, 'nav', function* (
   quest,
@@ -474,6 +475,7 @@ Goblin.registerQuest(goblinName, 'close-window', function* (
 
 Goblin.registerQuest(goblinName, 'delete', function* (quest) {
   quest.log.info(`Deleting laboratory`);
+  unlisten(quest);
   const state = quest.goblin.getState();
   const wid = state.get('wid');
   yield quest.cmd('warehouse.release', {
