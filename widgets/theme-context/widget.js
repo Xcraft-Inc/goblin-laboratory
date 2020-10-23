@@ -116,6 +116,11 @@ class ThemeContext extends Widget {
 export default Widget.connect((state, props) => {
   const {labId, themeContext, currentTheme} = props;
   const themesGen = state.get(`backend.${labId}.themesGen`);
+
+  if (!state.has(`backend.theme-composer@${themeContext}`)) {
+    console.warn(`theme context "${themeContext}" is missing`);
+  }
+
   return {
     theme: state.get(
       `backend.theme-composer@${themeContext}.themes.${currentTheme}`
