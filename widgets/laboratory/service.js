@@ -445,31 +445,27 @@ Goblin.registerQuest(goblinName, 'del', function* (quest, widgetId) {
   yield quest.warehouse.feedSubscriptionDel({feed, branch, parents: labId});
 });
 
-Goblin.registerQuest(goblinName, 'close-window', function* (
-  quest,
-  winId,
-  currentUrl
-) {
-  //TODO:multi-window mgmt
-  yield quest.kill([winId]);
-  //cleaning
+Goblin.registerQuest(goblinName, 'close-window', function* (quest, winId) {
   const labId = quest.goblin.id;
-  const clientSessionId = quest.goblin.getX('clientSessionId');
-  yield quest.cmd('client-session.close-window', {id: clientSessionId, winId});
-  yield quest.cmd('client.close-window', {labId});
-  yield quest.warehouse.unsubscribe({feed: labId});
-  //self-kill
-  yield quest.kill([labId], labId);
+  const desktopId = quest.goblin.getX('desktopId');
+  if (labId === desktopId) {
+    //remove this feed (laboratory feed case)
+    yield quest.warehouse.unsubscribe({feed: labId});
+  } else {
+    //self-kill
+    yield quest.kill([labId], labId);
+  }
 });
 
 Goblin.registerQuest(goblinName, 'delete', function* (quest) {
-  quest.log.info(`Deleting laboratory`);
   unlisten(quest);
-  const state = quest.goblin.getState();
-  const wid = state.get('wid');
-  yield quest.cmd('warehouse.release', {
-    branch: wid,
+  const labId = quest.goblin.id;
+  const clientSessionId = quest.goblin.getX('clientSessionId');
+  yield quest.cmd('client-session.close-window', {
+    id: clientSessionId,
+    winId: `wm@${quest.goblin.id}`,
   });
+  yield quest.cmd('client.close-window', {labId});
 });
 
 // Create a Goblin with initial state and handlers
