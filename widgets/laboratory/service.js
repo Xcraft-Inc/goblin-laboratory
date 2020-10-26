@@ -447,14 +447,8 @@ Goblin.registerQuest(goblinName, 'del', function* (quest, widgetId) {
 
 Goblin.registerQuest(goblinName, 'close-window', function* (quest, winId) {
   const labId = quest.goblin.id;
-  const desktopId = quest.goblin.getX('desktopId');
-  if (labId === desktopId) {
-    //remove this feed (laboratory feed case)
-    yield quest.warehouse.unsubscribe({feed: labId});
-  } else {
-    //self-kill
-    yield quest.kill([labId], labId);
-  }
+  yield quest.warehouse.unsubscribe({feed: labId});
+  yield quest.kill([labId], labId);
 });
 
 Goblin.registerQuest(goblinName, 'delete', function* (quest) {
