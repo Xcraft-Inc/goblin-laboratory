@@ -59,13 +59,6 @@ class Renderer {
     });
   }
 
-  newBackendInfos(transitState) {
-    this.store.dispatch({
-      type: 'NEW_BACKEND_INFOS',
-      data: transitState,
-    });
-  }
-
   main(labId) {
     //PUT LABID IN WINDOW STATE
     //USEFULL IN SOME CONNECT()

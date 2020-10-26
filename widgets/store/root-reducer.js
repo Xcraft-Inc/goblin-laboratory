@@ -1,6 +1,5 @@
 import {combineReducers} from 'redux';
 import backendReducer from 'goblin-laboratory/widgets/store/backend-reducer';
-import infosReducer from 'goblin-laboratory/widgets/store/infos-reducer';
 import commandsReducer from 'goblin-laboratory/widgets/store/commands-reducer';
 import widgetsReducer from 'goblin-laboratory/widgets/store/widgets-reducer';
 
@@ -29,7 +28,6 @@ export function routerReducer(state = initialState, {type, payload} = {}) {
 export default combineReducers({
   router: routerReducer,
   commands: commandsReducer,
-  infos: infosReducer,
   backend: backendReducer,
   widgets: widgetsReducer,
 });
