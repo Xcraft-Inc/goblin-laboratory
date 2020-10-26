@@ -143,11 +143,7 @@ Goblin.registerQuest(goblinName, 'create', function* (
       err,
       {msg, resp}
     ) {
-      yield resp.cmd('laboratory.close-window', {
-        id,
-        winId: winId,
-        currentUrl: msg.data.currentUrl,
-      });
+      yield resp.cmd('laboratory.close', {id});
     })
   );
 
@@ -190,8 +186,15 @@ Goblin.registerQuest(goblinName, 'create', function* (
 });
 
 Goblin.registerQuest(goblinName, 'close', function* (quest) {
-  const winId = quest.goblin.getState().get('wid');
-  yield quest.me.closeWindow({winId});
+  const clientSessionId = quest.goblin.getX('clientSessionId');
+  const labId = quest.goblin.id;
+
+  yield quest.cmd('client-session.close-window', {
+    id: clientSessionId,
+    winId: `wm@${labId}`,
+  });
+  yield quest.cmd('client.close-window', {labId});
+  quest.release(labId);
 });
 
 Goblin.registerQuest(goblinName, 'get-client-session-id', function (quest) {
@@ -443,20 +446,6 @@ Goblin.registerQuest(goblinName, 'del', function* (quest, widgetId) {
   const labId = quest.goblin.id;
   quest.log.info(`Laboratory deleting widget ${widgetId} from window ${feed}`);
   yield quest.warehouse.feedSubscriptionDel({feed, branch, parents: labId});
-});
-
-Goblin.registerQuest(goblinName, 'close-window', function* (quest) {
-  const labId = quest.goblin.id;
-
-  const clientSessionId = quest.goblin.getX('clientSessionId');
-  yield quest.cmd('client-session.close-window', {
-    id: clientSessionId,
-    winId: `wm@${quest.goblin.id}`,
-  });
-  yield quest.cmd('client.close-window', {labId});
-
-  yield quest.warehouse.unsubscribe({feed: labId});
-  yield quest.kill([labId], labId);
 });
 
 Goblin.registerQuest(goblinName, 'delete', function (quest) {
