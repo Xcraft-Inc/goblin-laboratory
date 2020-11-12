@@ -244,7 +244,9 @@ Goblin.registerQuest(goblinName, 'when-ui-crash', function (
   info
 ) {
   quest.log.err(
-    `UI generate errors ! ${info.componentStack.replace(/\\n/g, '\n')}`
+    `UI generate errors ! ${
+      (error && error.stack) || ''
+    }\nStack :${info.componentStack.replace(/\\n/g, '\n')}`
   );
   /*quest.fail(
     'Erreur UI',
