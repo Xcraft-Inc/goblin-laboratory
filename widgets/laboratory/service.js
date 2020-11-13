@@ -299,7 +299,7 @@ Goblin.registerQuest(goblinName, 'listen', function (quest, desktopId) {
 
   quest.goblin.setX(
     `dispatch-unsub`,
-    quest.sub(`*::${desktopId}.dispatch.requested`, function* (
+    quest.sub(`*::<${desktopId}.dispatch.requested>`, function* (
       err,
       {msg, resp}
     ) {
