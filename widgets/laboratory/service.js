@@ -275,7 +275,7 @@ Goblin.registerQuest(goblinName, 'listen', function (quest, desktopId) {
   const labId = quest.goblin.id;
   quest.goblin.setX(
     `nav-unsub`,
-    quest.sub(`*::${desktopId}.nav.requested`, function* (err, {msg, resp}) {
+    quest.sub(`*::<${desktopId}.nav.requested>`, function* (err, {msg, resp}) {
       yield resp.cmd('laboratory.nav', {
         id: labId,
         desktopId,
