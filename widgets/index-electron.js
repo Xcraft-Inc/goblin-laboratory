@@ -3,24 +3,35 @@ import Renderer from './renderer.js';
 class ElectronRenderer extends Renderer {
   constructor(options) {
     const electron = require('electron');
-    const {ipcRenderer, webFrame, remote} = electron;
-    const wid = remote.getCurrentWindow().id;
+    const {ipcRenderer, webFrame} = electron;
+
+    const url = new URL(window.location.href);
+    const wid = url.searchParams.get('wid');
+    const labId = url.searchParams.get('labId');
+
+    if (!wid) {
+      throw 'ElectronRenderer: unable to find wid= in url';
+    }
+    if (!labId) {
+      throw new Error(`ElectronRenderer: unable to find labId= in url`);
+    }
+
     const send = (verb, ...args) => {
       ipcRenderer.send(`${wid}-${verb}`, ...args);
     };
 
     super(send, options);
+
     let zoom = webFrame.getZoomFactor();
-    let laboratoryId;
     this.store.subscribe(() => {
-      if (!laboratoryId) {
+      if (!labId) {
         return;
       }
       const state = this.store.getState();
       if (!state || !state.backend) {
         return;
       }
-      const lab = state.backend.get(laboratoryId);
+      const lab = state.backend.get(labId);
       if (!lab) {
         return;
       }
@@ -45,8 +56,7 @@ class ElectronRenderer extends Renderer {
       this.newBackendState(transitState)
     );
 
-    ipcRenderer.on('BEGIN_RENDER', (event, labId) => {
-      laboratoryId = labId;
+    ipcRenderer.on('BEGIN_RENDER', () => {
       return super.main(labId);
     });
 
