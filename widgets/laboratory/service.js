@@ -369,15 +369,13 @@ Goblin.registerQuest(goblinName, 'init-theme', function* (
   quest,
   clientSessionId
 ) {
-  let name = yield quest.cmd('client-session.get-theme', {
+  const name = yield quest.cmd('client-session.get-theme', {
     id: clientSessionId,
   });
 
-  /*if (name) {
-    yield quest.me.changeTheme({
-      name: 'default', //TODO: compose use themes
-    });
-  }*/
+  if (name) {
+    yield quest.me.changeTheme({name});
+  }
 });
 
 Goblin.registerQuest(goblinName, 'change-theme', function* (quest, name) {
