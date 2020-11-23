@@ -322,21 +322,9 @@ function unlisten(quest) {
   }
 }
 
-Goblin.registerQuest(goblinName, 'nav', function* (
-  quest,
-  desktopId,
-  route,
-  navRequestId
-) {
-  const deskAPI = quest.getAPI(desktopId);
-  const ready = yield deskAPI.startNav();
-  if (ready) {
-    const win = quest.getAPI(`wm@${quest.goblin.id}`);
-    yield win.nav({route});
-    yield deskAPI.endNav({navRequestId, route});
-  } else {
-    yield deskAPI.endNav({navRequestId, skip: true});
-  }
+Goblin.registerQuest(goblinName, 'nav', function* (quest, route) {
+  const win = quest.getAPI(`wm@${quest.goblin.id}`);
+  yield win.nav({route});
 });
 
 /************************        SETTINGS      *********************************/
