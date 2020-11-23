@@ -275,7 +275,7 @@ Goblin.registerQuest(goblinName, 'listen', function (quest, desktopId) {
   const labId = quest.goblin.id;
   quest.goblin.setX(
     `nav-unsub`,
-    quest.sub(`*::<${desktopId}.nav.requested>`, function* (err, {msg, resp}) {
+    quest.sub(`*::<${desktopId}>.nav.requested`, function* (err, {msg, resp}) {
       yield resp.cmd('laboratory.nav', {
         id: labId,
         desktopId,
@@ -286,7 +286,7 @@ Goblin.registerQuest(goblinName, 'listen', function (quest, desktopId) {
 
   quest.goblin.setX(
     `change-theme-unsub`,
-    quest.sub(`*::${desktopId}.change-theme.requested`, function* (
+    quest.sub(`*::<${desktopId}>.change-theme.requested`, function* (
       err,
       {msg, resp}
     ) {
@@ -299,7 +299,7 @@ Goblin.registerQuest(goblinName, 'listen', function (quest, desktopId) {
 
   quest.goblin.setX(
     `dispatch-unsub`,
-    quest.sub(`*::<${desktopId}.dispatch.requested>`, function* (
+    quest.sub(`*::<${desktopId}>.dispatch.requested`, function* (
       err,
       {msg, resp}
     ) {
