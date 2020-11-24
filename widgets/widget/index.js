@@ -785,10 +785,6 @@ class Widget extends React.Component {
       args.desktopId = this.context.desktopId;
     }
 
-    if (args && !args.currentLocation) {
-      args.currentLocation = this.getRouting().get('location');
-    }
-
     const action = {
       type: 'QUEST',
       cmd,
