@@ -432,8 +432,15 @@ Goblin.registerQuest(goblinName, 'del', function* (quest, widgetId) {
   const feed = state.get('feed');
   const branch = widgetId;
   const labId = quest.goblin.id;
-  quest.log.info(`Laboratory deleting widget ${widgetId} from window ${feed}`);
-  yield quest.warehouse.feedSubscriptionDel({feed, branch, parents: labId});
+
+  if (branch === feed) {
+    yield quest.warehouse.unsubscribe({feed: branch});
+  } else {
+    quest.log.info(
+      `Laboratory deleting widget ${widgetId} from window ${feed}`
+    );
+    yield quest.warehouse.feedSubscriptionDel({feed, branch, parents: labId});
+  }
 });
 
 Goblin.registerQuest(goblinName, 'delete', function (quest) {
