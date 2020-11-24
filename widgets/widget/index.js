@@ -937,27 +937,6 @@ class Widget extends React.Component {
     return getParameter(search, name);
   }
 
-  getWorkItemId() {
-    const search = this.getRouting().get('location.search');
-    if (search) {
-      return Widget.GetParameter(search, 'wid');
-    }
-  }
-
-  getModelId() {
-    const search = this.getRouting().get('location.search');
-    if (search) {
-      return Widget.GetParameter(search, 'mid');
-    }
-  }
-
-  getHinterId() {
-    const search = this.getRouting().get('location.search');
-    if (search) {
-      return Widget.GetParameter(search, 'hid');
-    }
-  }
-
   setBackendValue(path, value) {
     this.rawDispatch({
       type: 'FIELD-CHANGED',
@@ -1122,78 +1101,6 @@ class Widget extends React.Component {
 
   getHash() {
     return this.getRouting().get('location.hash');
-  }
-
-  hideHinter() {
-    let path = this.getRouting().get('location.pathname');
-    const search = this.getRouting().get('location.search');
-    const hash = this.getRouting().get('location.hash');
-    if (path.split('/').length === 4) {
-      let hinterType = path.substr(path.lastIndexOf('/'), path.length);
-      path = path.substr(0, path.lastIndexOf('/'));
-      if (!hinterType.endsWith('-hidden')) {
-        hinterType += '-hidden';
-      }
-      this.nav(`${path}${hinterType}${search}${hash}`, true);
-    }
-  }
-
-  navToHinter() {
-    if (this.props.hinter) {
-      if (this.props.displayValue) {
-        if (this.props.model && this.props.selectedId) {
-          console.log(this.props.selectedId);
-          this.navToDetail(this.props.id, this.props.selectedId);
-        }
-      } else {
-        let path = this.getRouting().get('location.pathname');
-        const search = this.getRouting().get('location.search');
-        if (path.split('/').length === 4) {
-          path = path.substr(0, path.lastIndexOf('/'));
-        }
-
-        const hinterType = this.getHinterType(this.props.hinter);
-
-        if (!hinterType) {
-          this.nav(
-            `${path}${search}#${this.context.model}.${this.props.hinter}`,
-            true
-          );
-          return;
-        }
-
-        this.nav(
-          `${path}/${hinterType}${search}#${this.context.model}.${this.props.hinter}`,
-          true
-        );
-      }
-    } else {
-      this.hideHinter();
-    }
-  }
-
-  navToDetail(workitemId, entityId, hinterName) {
-    const type = entityId.split('@')[0];
-    let path = this.getRouting().get('location.pathname');
-    const search = this.getRouting().get('location.search');
-    if (path.split('/').length === 4) {
-      path = path.substr(0, path.lastIndexOf('/'));
-    }
-
-    if (!hinterName) {
-      hinterName = type;
-    }
-
-    this.nav(
-      `${path}/${hinterName}-hidden${search}#backend.${workitemId}.${type}`,
-      true
-    );
-
-    const detailServiceId = `${hinterName}-detail@${workitemId}`;
-    this.cmd(`detail.set-entity`, {
-      id: detailServiceId,
-      entityId,
-    });
   }
 
   getNearestId() {
