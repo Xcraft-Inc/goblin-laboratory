@@ -139,25 +139,25 @@ Goblin.registerQuest(goblinName, 'create', function* (
   });
 
   quest.goblin.defer(
-    quest.sub(`*::${winId}.${clientSessionId}.window-closed`, function* (
-      err,
-      {msg, resp}
-    ) {
-      yield resp.cmd('laboratory.close', {id});
-    })
+    quest.sub.local(
+      `*::${winId}.${clientSessionId}.<window-closed>`,
+      function* (err, {msg, resp}) {
+        yield resp.cmd('laboratory.close', {id});
+      }
+    )
   );
 
   quest.goblin.defer(
-    quest.sub(`*::${winId}.${clientSessionId}.window-state-changed`, function* (
-      err,
-      {msg, resp}
-    ) {
-      yield resp.cmd('laboratory.save-window-state', {
-        id,
-        winId,
-        state: msg.data.state,
-      });
-    })
+    quest.sub.local(
+      `*::${winId}.${clientSessionId}.<window-state-changed>`,
+      function* (err, {msg, resp}) {
+        yield resp.cmd('laboratory.save-window-state', {
+          id,
+          winId,
+          state: msg.data.state,
+        });
+      }
+    )
   );
 
   const win = yield quest.create('wm', {
