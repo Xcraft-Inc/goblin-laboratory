@@ -12,6 +12,7 @@ export function collect() {
         }
         return id && !backendState.has(id);
       })
+      .valueSeq()
       .toArray();
     if (ids.length > 0) {
       return dispatch({type: 'WIDGETS_COLLECT', ids});
