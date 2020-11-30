@@ -168,9 +168,7 @@ Goblin.registerQuest(goblinName, 'create', function* (
     clientSessionId,
     feeds: config.feeds,
     options: {
-      openDevTools:
-        process.env.XCRAFT_APPENV !== 'release' ||
-        process.env.WESTEROS_DEVTOOLS === '1',
+      openDevTools: process.env.WESTEROS_DEVTOOLS === '1',
       useWS: config.useWS,
       target: config.target,
       title: config.title,
