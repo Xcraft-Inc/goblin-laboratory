@@ -6,7 +6,7 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import Shredder from 'xcraft-core-shredder';
 import LinkedList from 'linked-list';
-import {push, replace, goBack} from 'connected-react-router/immutable';
+import {push} from 'connected-react-router/immutable';
 import {matchPath} from 'react-router';
 import fasterStringify from 'faster-stable-stringify';
 import {StyleSheet as Aphrodite, flushToStyleTag} from 'aphrodite/no-important';
