@@ -152,7 +152,7 @@ const transitMiddleware = (store) => (next) => (action) => {
   return next(action);
 };
 
-module.exports = (send) => {
+export default (send) => {
   const _send = (type, action) => {
     let data = action;
     if (action.type === 'QUEST') {
