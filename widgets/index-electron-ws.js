@@ -1,4 +1,3 @@
-import '@babel/polyfill';
 import Renderer from './renderer.js';
 
 const WT = `
