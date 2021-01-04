@@ -267,8 +267,16 @@ Goblin.registerQuest(goblinName, 'set-root', function (
   quest.do();
 });
 
-Goblin.registerQuest(goblinName, 'listen', function (quest, desktopId) {
+Goblin.registerQuest(goblinName, 'listen', function (
+  quest,
+  desktopId,
+  useConfigurator
+) {
   unlisten(quest);
+
+  if (useConfigurator === true || useConfigurator === false) {
+    quest.goblin.setX('useConfigurator', useConfigurator);
+  }
 
   const labId = quest.goblin.id;
   quest.goblin.setX(
@@ -430,8 +438,9 @@ Goblin.registerQuest(goblinName, 'del', function* (quest, widgetId) {
   const feed = state.get('feed');
   const branch = widgetId;
   const labId = quest.goblin.id;
+  const useConfigurator = quest.goblin.getX('useConfigurator');
 
-  if (branch === feed) {
+  if (branch === feed || (branch === labId && useConfigurator === false)) {
     yield quest.warehouse.unsubscribe({feed: branch});
   } else {
     quest.log.info(
