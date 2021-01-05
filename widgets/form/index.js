@@ -50,7 +50,7 @@ class Form extends Widget {
   get formConfigWithoutStyle() {
     const id = this.props.id ? this.props.id : this.context.id;
     return {
-      component: 'div',
+      component: React.Fragment,
       validateOn: 'submit',
       model: `backend.${id}`,
     };
