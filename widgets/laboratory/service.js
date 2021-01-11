@@ -89,14 +89,6 @@ Goblin.registerQuest(goblinName, 'create', function* (
   const feed = desktopId;
   const winId = `wm@${labId}`;
 
-  if (!config.feeds.includes(quest.goblin.id)) {
-    config.feeds.push(quest.goblin.id);
-  }
-
-  if (!config.feeds.includes(clientSessionId)) {
-    config.feeds.push(clientSessionId);
-  }
-
   const themeContexts = config.themeContexts || ['theme'];
 
   for (const ctx of themeContexts) {
