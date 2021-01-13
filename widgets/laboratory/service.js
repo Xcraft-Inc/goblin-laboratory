@@ -438,7 +438,14 @@ Goblin.registerQuest(goblinName, 'del', function* (quest, widgetId) {
     quest.log.info(
       `Laboratory deleting widget ${widgetId} from window ${feed}`
     );
-    yield quest.warehouse.feedSubscriptionDel({feed, branch, parents: labId});
+    const parents = [labId];
+    /* This special case ensures that the laboratory is removed like the case
+     * where a client (orc socket) is destroyed.
+     */
+    if (branch === labId) {
+      parents.push(`goblin-orc@*`);
+    }
+    yield quest.warehouse.feedSubscriptionDel({feed, branch, parents});
   }
 });
 
