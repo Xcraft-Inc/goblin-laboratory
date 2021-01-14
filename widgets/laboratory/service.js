@@ -204,8 +204,20 @@ Goblin.registerQuest(goblinName, 'set-feed', function* (quest, desktopId) {
   const feeds = quest.goblin.getState().get('feeds');
   const wm = quest.getAPI(`wm@${quest.goblin.id}`);
   yield wm.feedSub({desktopId, feeds: feeds.valueSeq().toArray()});
-  yield quest.warehouse.resend({feed: desktopId});
+
+  const labId = quest.goblin.id;
+  const clientSessionId = quest.goblin.getState().get('clientSessionId');
+  const fromFeed = quest.goblin.getState().get('feed');
+  for (const branch of [labId, clientSessionId]) {
+    yield quest.warehouse.graft({
+      branch,
+      fromFeed,
+      toFeed: desktopId,
+    });
+  }
+
   quest.do();
+  yield quest.warehouse.resend({feed: desktopId});
 });
 
 Goblin.registerQuest(goblinName, 'get-feed', function (quest) {
