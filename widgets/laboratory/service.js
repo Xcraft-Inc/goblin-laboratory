@@ -208,7 +208,7 @@ Goblin.registerQuest(goblinName, 'set-feed', function* (quest, desktopId) {
   const labId = quest.goblin.id;
   const clientSessionId = quest.goblin.getState().get('clientSessionId');
   const fromFeed = quest.goblin.getState().get('feed');
-  for (const branch of [labId, clientSessionId]) {
+  for (const branch of [labId, clientSessionId].filter((id) => !!id)) {
     yield quest.warehouse.graft({
       branch,
       fromFeed,
