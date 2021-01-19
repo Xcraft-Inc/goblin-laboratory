@@ -14,6 +14,10 @@ const logicHandlers = {
     const id = action.get('id');
     return state.set('', {
       id: id,
+      root: null,
+      rootId: null,
+      titlebar: null,
+      titlebarId: null,
       url: action.get('url'),
       feed: action.get('feed'),
       wid: action.get('wid'),
@@ -27,6 +31,11 @@ const logicHandlers = {
   },
   'set-feed': (state, action) => {
     return state.set('feed', action.get('desktopId'));
+  },
+  'set-titlebar': (state, action) => {
+    return state
+      .set('titlebar', action.get('titlebar'))
+      .set('titlebarId', action.get('titlebarId'));
   },
   'set-root': (state, action) => {
     const widgetId = action.get('widgetId');
@@ -167,7 +176,11 @@ Goblin.registerQuest(goblinName, 'create', function* (
       //enableTestAutomationLogguer: true,
     },
   });
-
+  const titlebarInfos = yield win.getTitlebar();
+  if (titlebarInfos) {
+    const {titlebar, titlebarId} = titlebarInfos;
+    yield quest.me.setTitlebar({titlebar, titlebarId});
+  }
   yield win.feedSub({desktopId, feeds: config.feeds});
   yield win.beginRender();
 
@@ -218,6 +231,14 @@ Goblin.registerQuest(goblinName, 'set-feed', function* (quest, desktopId) {
 
   quest.do();
   yield quest.warehouse.resend({feed: desktopId});
+});
+
+Goblin.registerQuest(goblinName, 'set-titlebar', function (
+  quest,
+  titlebar,
+  titlebarId
+) {
+  quest.do({titlebar, titlebarId});
 });
 
 Goblin.registerQuest(goblinName, 'get-feed', function (quest) {

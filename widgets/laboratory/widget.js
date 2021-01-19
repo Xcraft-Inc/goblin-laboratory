@@ -25,16 +25,35 @@ class LaboratoryNC extends Widget {
   }
 
   render() {
-    const {id, root, theme, themeContext} = this.props;
+    const {id, root, theme, themeContext, titlebar, titlebarId} = this.props;
     if (!root) {
       // Laboratory not loaded
       return null;
     }
-    return (
-      <ThemeContext labId={id} currentTheme={theme} themeContext={themeContext}>
-        {this.renderContent()}
-      </ThemeContext>
-    );
+    if (titlebar) {
+      const TitlebarWidget = widgetImporter(titlebar);
+      return (
+        <ThemeContext
+          labId={id}
+          currentTheme={theme}
+          themeContext={themeContext}
+        >
+          <TitlebarWidget id={titlebarId}>
+            {this.renderContent()}
+          </TitlebarWidget>
+        </ThemeContext>
+      );
+    } else {
+      return (
+        <ThemeContext
+          labId={id}
+          currentTheme={theme}
+          themeContext={themeContext}
+        >
+          {this.renderContent()}
+        </ThemeContext>
+      );
+    }
   }
 }
 
@@ -46,6 +65,8 @@ const Laboratory = Widget.connect((state, props) => {
   return {
     root: labState.get('root'),
     rootId: labState.get('rootId'),
+    titlebar: labState.get('titlebar'),
+    titlebarId: labState.get('titlebarId'),
     theme: labState.get('theme'),
     themeContext: labState.get('themeContext'),
     status: state.get('backend.workshop.maintenance.status'),
