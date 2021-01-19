@@ -1,6 +1,7 @@
 import {combineReducers} from 'redux';
 import backendReducer from 'goblin-laboratory/widgets/store/backend-reducer';
 import commandsReducer from 'goblin-laboratory/widgets/store/commands-reducer';
+import networkReducer from 'goblin-laboratory/widgets/store/network-reducer';
 import widgetsReducer from 'goblin-laboratory/widgets/store/widgets-reducer';
 
 import Shredder from 'xcraft-core-shredder';
@@ -28,6 +29,7 @@ export function routerReducer(state = initialState, {type, payload} = {}) {
 export default combineReducers({
   router: routerReducer,
   commands: commandsReducer,
+  network: networkReducer,
   backend: backendReducer,
   widgets: widgetsReducer,
 });

@@ -1,6 +1,7 @@
 import React from 'react';
 import Widget from 'goblin-laboratory/widgets/widget';
 import Maintenance from 'goblin-laboratory/widgets/maintenance/widget';
+import DisconnectOverlay from '../disconnect-overlay/widget';
 import ThemeContext from 'goblin-laboratory/widgets/theme-context/widget';
 
 import importer from 'goblin_importer';
@@ -12,13 +13,19 @@ class LaboratoryNC extends Widget {
   }
 
   renderContent() {
-    {
-      const {status, root, rootId} = this.props;
-      if (status && status !== 'off') {
-        return <Maintenance />;
+    const {status, root, rootId, isDisconnected, message} = this.props;
+    if (status && status !== 'off') {
+      return <Maintenance />;
+    } else {
+      const widgetName = root.split('@')[0];
+      const RootWidget = widgetImporter(widgetName);
+      if (isDisconnected) {
+        return (
+          <DisconnectOverlay message={message}>
+            <RootWidget id={rootId} />
+          </DisconnectOverlay>
+        );
       } else {
-        const widgetName = root.split('@')[0];
-        const RootWidget = widgetImporter(widgetName);
         return <RootWidget id={rootId} />;
       }
     }
@@ -70,6 +77,8 @@ const Laboratory = Widget.connect((state, props) => {
     theme: labState.get('theme'),
     themeContext: labState.get('themeContext'),
     status: state.get('backend.workshop.maintenance.status'),
+    isDisconnected: state.get('network.disconnected'),
+    message: state.get('network.message'),
   };
 })(LaboratoryNC);
 

@@ -548,6 +548,7 @@ class Widget extends React.Component {
         const s = new Shredder({
           backend: state.backend,
           widgets: state.widgets,
+          network: state.network,
         });
         let parentModel = '';
         if (!fullPath) {
@@ -970,6 +971,7 @@ class Widget extends React.Component {
     const state = new Shredder({
       backend: storeState.backend,
       widgets: storeState.widgets,
+      network: storeState.network,
     });
     if (fullPath) {
       if (isFunction(model)) {
@@ -993,6 +995,7 @@ class Widget extends React.Component {
     const state = new Shredder({
       backend: storeState.backend,
       widgets: storeState.widgets,
+      network: storeState.network,
     });
     return state.get(fullpath);
   }
