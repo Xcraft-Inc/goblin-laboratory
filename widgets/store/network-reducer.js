@@ -4,6 +4,7 @@ const initialState = fromJS({
   disconnected: false,
   message: '...',
   latency: {},
+  noLatency: false,
 });
 
 export default (state = initialState, action = {}) => {
@@ -19,7 +20,13 @@ export default (state = initialState, action = {}) => {
     if (latency.size > 10) {
       latency = latency.skipLast(1);
     }
-    return state.setIn(['latency', action.horde], latency);
+    return state
+      .set('noLatency', false)
+      .setIn(['latency', action.horde], latency);
+  }
+
+  if (action.type === 'NO_LATENCY') {
+    return state.set('noLatency', true);
   }
 
   return state;
