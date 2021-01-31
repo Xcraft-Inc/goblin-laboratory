@@ -17,7 +17,7 @@ export default (state = initialState, action = {}) => {
   if (action.type === 'PUSH_JITTER') {
     let jitter = state.getIn(['jitter', action.horde]) || fromJS([]);
     jitter = jitter.unshift(action.jitter);
-    if (jitter.size > 10) {
+    if (jitter.size > 60) {
       jitter = jitter.skipLast(1);
     }
     return state.set('noJitter', false).setIn(['jitter', action.horde], jitter);
