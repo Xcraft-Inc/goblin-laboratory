@@ -6,7 +6,7 @@ export default function styles(theme, props) {
   const fullScreenStyle = {
     visibility: 'visible',
     position: 'fixed',
-    zIndex: zIndex || 10,
+    zIndex: zIndex || 20,
     top: '0px',
     left: '0px',
     width: '100%',
