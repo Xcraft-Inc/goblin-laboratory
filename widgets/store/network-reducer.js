@@ -25,7 +25,10 @@ export default (state = initialState, action = {}) => {
   if (action.type === 'PUSH_JITTER') {
     let jitter = state.getIn(['jitter', action.horde]) || fromJS([]);
     jitter = unshift(jitter, action.jitter);
-    return state.set('noJitter', false).setIn(['jitter', action.horde], jitter);
+    return state
+      .set('disconnected', false)
+      .set('noJitter', false)
+      .setIn(['jitter', action.horde], jitter);
   }
 
   if (action.type === 'NO_JITTER') {
