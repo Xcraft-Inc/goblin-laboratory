@@ -189,10 +189,10 @@ class Widget extends React.Component {
       props: jsStyles,
     };
 
-    /* Limit the style cache to 1024 entries. The less used item is deleted
+    /* Limit the style cache to 2048 entries. The less used item is deleted
      * when the limit is reached.
      */
-    if (stylesCache.size > 1024) {
+    if (stylesCache.size > 2048) {
       item = stylesCacheUses.head;
       item.detach();
       stylesCache.delete(item.hash);
