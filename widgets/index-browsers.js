@@ -125,6 +125,15 @@ class BrowsersRenderer extends Renderer {
     this._socket = socket;
   }
 
+  getCookie(name) {
+    let cookies = {};
+    document.cookie.split(';').forEach((cookie) => {
+      let [k, v] = cookie.split('=');
+      cookies[k.trim()] = v;
+    });
+    return cookies[name];
+  }
+
   getTokens() {
     let clientToken;
     let sessionToken;
@@ -141,8 +150,14 @@ class BrowsersRenderer extends Renderer {
     }
 
     if (!clientToken) {
-      clientToken = 'new-client';
+      if (window.navigator.userAgent === 'Epsitec.Cresus.Shell') {
+        const cookie = this.getCookie('epsitec-client-token');
+        clientToken = cookie;
+      } else {
+        clientToken = 'new-client';
+      }
     }
+
     if (!sessionToken) {
       sessionToken = 'new-session';
     }
