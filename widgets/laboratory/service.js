@@ -160,16 +160,28 @@ Goblin.registerQuest(goblinName, 'create', function* (
       }
     )
   );
-
-  quest.evt(`<create-window-requested>`, {
-    labId: quest.goblin.id,
+  const win = yield quest.create('wm', {
+    id: winId,
     desktopId,
-    forDesktopId: desktopId,
-    winId,
     url,
+    labId: quest.goblin.id,
     clientSessionId,
-    config,
+    feeds: config.feeds,
+    options: {
+      openDevTools: process.env.WESTEROS_DEVTOOLS === '1',
+      useWS: config.useWS,
+      target: config.target,
+      title: config.title,
+      //enableTestAutomationLogguer: true,
+    },
   });
+  const titlebarInfos = yield win.getTitlebar();
+  if (titlebarInfos) {
+    const {titlebar, titlebarId} = titlebarInfos;
+    yield quest.me.setTitlebar({titlebar, titlebarId});
+  }
+  yield win.feedSub({desktopId, feeds: config.feeds});
+  yield win.beginRender();
 
   quest.log.info(`Laboratory ${quest.goblin.id} created!`);
   return quest.goblin.id;
