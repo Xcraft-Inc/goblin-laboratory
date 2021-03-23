@@ -89,7 +89,8 @@ Goblin.registerQuest(goblinName, 'create', function* (
   desktopId,
   clientSessionId,
   url,
-  config
+  config,
+  next
 ) {
   quest.goblin.setX('url', url);
   quest.goblin.setX('desktopId', desktopId);
@@ -102,10 +103,14 @@ Goblin.registerQuest(goblinName, 'create', function* (
 
   for (const ctx of themeContexts) {
     const composerId = `theme-composer@${ctx}`;
-    yield quest.create('theme-composer', {
-      id: composerId,
-      desktopId: desktopId,
-    });
+    quest.create(
+      'theme-composer',
+      {
+        id: composerId,
+        desktopId: desktopId,
+      },
+      next.parallel()
+    );
     config.feeds.push(composerId);
   }
 
@@ -129,15 +134,26 @@ Goblin.registerQuest(goblinName, 'create', function* (
     )
   );
 
-  yield quest.doSync({id: quest.goblin.id, feed, wid: winId, url, config});
+  quest.doSync(
+    {id: quest.goblin.id, feed, wid: winId, url, config},
+    next.parallel()
+  );
 
-  yield quest.me.initZoom({
-    clientSessionId,
-  });
+  quest.me.initZoom(
+    {
+      clientSessionId,
+    },
+    next.parallel()
+  );
 
-  yield quest.me.initTheme({
-    clientSessionId,
-  });
+  quest.me.initTheme(
+    {
+      clientSessionId,
+    },
+    next.parallel()
+  );
+
+  yield next.sync();
 
   quest.goblin.defer(
     quest.sub.local(
