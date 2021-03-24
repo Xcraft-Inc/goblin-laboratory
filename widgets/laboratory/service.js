@@ -176,7 +176,7 @@ Goblin.registerQuest(goblinName, 'create', function* (
       }
     )
   );
-  const win = yield quest.create('wm', {
+  yield quest.create('wm', {
     id: winId,
     desktopId,
     url,
@@ -191,13 +191,12 @@ Goblin.registerQuest(goblinName, 'create', function* (
       //enableTestAutomationLogguer: true,
     },
   });
-  const titlebarInfos = yield win.getTitlebar();
+
+  /*const titlebarInfos = yield win.getTitlebar();
   if (titlebarInfos) {
     const {titlebar, titlebarId} = titlebarInfos;
     yield quest.me.setTitlebar({titlebar, titlebarId});
-  }
-  yield win.feedSub({desktopId, feeds: config.feeds});
-
+  }*/
   quest.log.info(`Laboratory ${quest.goblin.id} created!`);
   return quest.goblin.id;
 });
