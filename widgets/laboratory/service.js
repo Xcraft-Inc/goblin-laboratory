@@ -197,7 +197,6 @@ Goblin.registerQuest(goblinName, 'create', function* (
     yield quest.me.setTitlebar({titlebar, titlebarId});
   }
   yield win.feedSub({desktopId, feeds: config.feeds});
-  yield win.beginRender();
 
   quest.log.info(`Laboratory ${quest.goblin.id} created!`);
   return quest.goblin.id;
