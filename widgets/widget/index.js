@@ -1135,6 +1135,25 @@ class Widget extends React.Component {
       );
     }
   }
+
+  static getLoginSession(state) {
+    const clientSessionId = state.get(
+      `backend.${state.get(`backend.${window.labId}.clientSessionId`)}`,
+      null
+    );
+    if (!clientSessionId) {
+      return null;
+    }
+    const loginSession = state.get(
+      `backend.${state.get(`backend.login-session@${clientSessionId}`)}`,
+      null
+    );
+    if (!loginSession) {
+      return null;
+    } else {
+      return loginSession;
+    }
+  }
 }
 
 Widget.propTypes = {
