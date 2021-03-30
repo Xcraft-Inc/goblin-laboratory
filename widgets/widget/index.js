@@ -1138,7 +1138,7 @@ class Widget extends React.Component {
 
   static getLoginSession(state) {
     const clientSessionId = state.get(
-      `backend.${state.get(`backend.${window.labId}.clientSessionId`)}`,
+      `backend.${window.labId}.clientSessionId`,
       null
     );
     if (!clientSessionId) {
