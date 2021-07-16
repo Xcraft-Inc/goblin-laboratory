@@ -1,40 +1,21 @@
 import {fromJS} from 'immutable';
 
 const initialState = fromJS({
-  disconnected: false,
-  message: '...',
-  jitter: {},
-  noJitter: false,
+  hordes: {},
+  hasOverlay: false,
 });
 
-function unshift(jitter, newValue) {
-  jitter = jitter.unshift(newValue);
-  if (jitter.size > 60) {
-    jitter = jitter.skipLast(1);
-  }
-  return jitter;
-}
-
 export default (state = initialState, action = {}) => {
-  if (action.type === 'SET_DISCONNECTED') {
-    return state
-      .set('disconnected', action.disconnected)
-      .set('message', action.message);
-  }
+  if (action.type === 'CONNECTION_STATUS') {
+    state = state.setIn(['hordes', action.horde], {
+      lag: action.lag,
+      delta: action.delta,
+      overlay: action.overlay,
+      message: action.message,
+    });
 
-  if (action.type === 'PUSH_JITTER') {
-    let jitter = state.getIn(['jitter', action.horde]) || fromJS([]);
-    jitter = unshift(jitter, action.jitter);
-    return state
-      .set('disconnected', false)
-      .set('noJitter', false)
-      .setIn(['jitter', action.horde], jitter);
-  }
-
-  if (action.type === 'NO_JITTER') {
-    let jitter = state.getIn(['jitter', action.horde]) || fromJS([]);
-    jitter = unshift(jitter, 1000);
-    return state.set('noJitter', true).setIn(['jitter', action.horde], jitter);
+    const hasOverlay = state.get('hordes').some(({overlay}) => overlay);
+    return state.set('hasOverlay', hasOverlay);
   }
 
   return state;

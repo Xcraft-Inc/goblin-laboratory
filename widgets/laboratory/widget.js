@@ -13,13 +13,13 @@ class LaboratoryNC extends Widget {
   }
 
   renderContent() {
-    const {status, root, rootId, isDisconnected, message} = this.props;
+    const {status, root, rootId, overlay, message} = this.props;
     if (status && status !== 'off') {
       return <Maintenance />;
     } else {
       const widgetName = root.split('@')[0];
       const RootWidget = widgetImporter(widgetName);
-      if (isDisconnected) {
+      if (overlay) {
         return (
           <DisconnectOverlay message={message}>
             <RootWidget id={rootId} />
@@ -69,6 +69,19 @@ const Laboratory = Widget.connect((state, props) => {
   if (!labState) {
     return {};
   }
+
+  let overlay = false;
+  let message = '';
+  const hasOverlay = state.get('network.hasOverlay');
+  if (hasOverlay) {
+    const hordes = state.get('network.hordes');
+    const payload = hordes.find(({overlay}) => overlay);
+    if (payload) {
+      overlay = payload.overlay;
+      message = payload.message;
+    }
+  }
+
   return {
     root: labState.get('root'),
     rootId: labState.get('rootId'),
@@ -77,8 +90,8 @@ const Laboratory = Widget.connect((state, props) => {
     theme: labState.get('theme'),
     themeContext: labState.get('themeContext'),
     status: state.get('backend.workshop.maintenance.status'),
-    isDisconnected: state.get('network.disconnected'),
-    message: state.get('network.message'),
+    overlay,
+    message,
   };
 })(LaboratoryNC);
 
