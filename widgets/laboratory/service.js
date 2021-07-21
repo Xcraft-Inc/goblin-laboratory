@@ -134,6 +134,29 @@ Goblin.registerQuest(goblinName, 'create', function* (
     )
   );
 
+  quest.goblin.setX('forceDispose', false);
+
+  /* Case where the socket is still connected but it lags */
+  quest.goblin.defer(
+    quest.sub.local('greathall::<perf>', (err, {msg}) => {
+      quest.goblin.setX('forceDispose', !!msg.data.lag);
+    })
+  );
+
+  /* Case where the socket */
+  quest.goblin.defer(
+    quest.resp.onReconnect((status) => {
+      switch (status) {
+        case 'attempt':
+          quest.goblin.setX('forceDispose', true);
+          break;
+        case 'done':
+          quest.goblin.setX('forceDispose', false);
+          break;
+      }
+    })
+  );
+
   quest.doSync(
     {id: quest.goblin.id, feed, wid: winId, url, config},
     next.parallel()
@@ -477,6 +500,13 @@ Goblin.registerQuest(goblinName, 'del', function* (quest, widgetId) {
   const branch = widgetId;
   const labId = quest.goblin.id;
   const useConfigurator = quest.goblin.getX('useConfigurator');
+
+  if (quest.goblin.getX('forceDispose')) {
+    const WM = require('xcraft-core-host/lib/wm.js').instance;
+    WM.disposeAll();
+    quest.cmd('shutdown'); /* no yield here because it's terminated */
+    return;
+  }
 
   if (branch === feed || (branch === labId && useConfigurator === false)) {
     yield quest.warehouse.unsubscribe({feed: branch});
