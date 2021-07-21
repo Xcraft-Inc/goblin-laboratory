@@ -12,6 +12,7 @@ export default (state = initialState, action = {}) => {
       delta: action.delta,
       overlay: action.overlay,
       message: action.message,
+      noSocket: action.noSocket,
     });
 
     const hasOverlay = state.get('hordes').some(({overlay}) => overlay);
