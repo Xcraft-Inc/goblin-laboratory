@@ -1045,6 +1045,10 @@ class Widget extends React.Component {
     return this.context.store.getState();
   }
 
+  getSchema(path) {
+    return Widget.getSchema(this.getState(), path);
+  }
+
   getWidgetState() {
     const widgetId = this.widgetId;
     if (!widgetId) {
@@ -1153,6 +1157,18 @@ class Widget extends React.Component {
     } else {
       return loginSession;
     }
+  }
+
+  static getSchema(state, path) {
+    if (state && state.backend) {
+      const backend = new Shredder(state.backend);
+      if (!path) {
+        return backend.get(`workshop.schema`, null);
+      } else {
+        return backend.get(`workshop.schema.${path}`, null);
+      }
+    }
+    return null;
   }
 }
 
