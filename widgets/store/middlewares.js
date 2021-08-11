@@ -2,7 +2,7 @@
 import _ from 'lodash';
 import helpers from 'xcraft-core-transport/lib/helpers.js';
 
-let nextGeneration = 0;
+let nextGeneration = -1;
 const compensatorStates = {};
 let compensatorTimeout = null;
 
