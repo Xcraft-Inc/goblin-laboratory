@@ -132,7 +132,7 @@ const transitMiddleware = (store) => (next) => (action) => {
     action.data = helpers.fromXcraftJSON(action.data)[0].data;
 
     const generation = action.data.get('generation');
-    if (action.data.get('_xcraftPath')) {
+    if (action.data.get('_xcraftPatch')) {
       nextGeneration++;
 
       if (generation !== nextGeneration) {
