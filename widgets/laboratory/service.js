@@ -88,6 +88,7 @@ Goblin.registerQuest(goblinName, 'create', function* (
   quest,
   desktopId,
   clientSessionId,
+  userId,
   url,
   config,
   next
@@ -205,6 +206,7 @@ Goblin.registerQuest(goblinName, 'create', function* (
     url,
     labId: quest.goblin.id,
     clientSessionId,
+    userId,
     feeds: config.feeds,
     options: {
       openDevTools: process.env.WESTEROS_DEVTOOLS === '1',
@@ -328,15 +330,21 @@ Goblin.registerQuest(goblinName, 'set-root', function (
   quest.do();
 });
 
-Goblin.registerQuest(goblinName, 'listen', function (
+Goblin.registerQuest(goblinName, 'listen', function* (
   quest,
   desktopId,
+  userId,
   useConfigurator
 ) {
   unlisten(quest);
 
   if (useConfigurator === true || useConfigurator === false) {
     quest.goblin.setX('useConfigurator', useConfigurator);
+  }
+
+  if (userId) {
+    const wmAPI = quest.getAPI(`wm@${quest.goblin.id}`);
+    yield wmAPI.setUserId({userId});
   }
 
   const labId = quest.goblin.id;
