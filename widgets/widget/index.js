@@ -772,13 +772,13 @@ class Widget extends React.Component {
       );
       return;
     }
+    const state = this.getState().backend;
 
     if (args && !args.labId) {
       args.labId = this.context.labId;
     }
 
     if (args && !args.clientSessionId) {
-      const state = this.getState().backend;
       args.clientSessionId = state.get(args.labId).get('clientSessionId');
     }
 
@@ -786,6 +786,18 @@ class Widget extends React.Component {
       args.desktopId = this.context.desktopId;
     }
 
+    const loginSession = state.get(`login-session@${args.clientSessionId}`);
+    if (loginSession && this.registry[cmd] !== true) {
+      const rank = loginSession.get('rank');
+      if (this.registry[cmd][rank] && this.registry[cmd][rank] === true) {
+        console.warn(
+          '%cGoblins Warning',
+          'font-weight: bold;',
+          `Command will be blocked`
+        );
+        return;
+      }
+    }
     const action = {
       type: 'QUEST',
       cmd,
