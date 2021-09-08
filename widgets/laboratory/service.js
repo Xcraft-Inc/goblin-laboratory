@@ -344,7 +344,7 @@ Goblin.registerQuest(goblinName, 'listen', function* (
 
   if (userId) {
     const wmAPI = quest.getAPI(`wm@${quest.goblin.id}`);
-    yield wmAPI.setUserId({userId});
+    // concerns wip/shield: yield wmAPI.setUserId({userId});
   }
 
   const labId = quest.goblin.id;
