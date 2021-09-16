@@ -14,11 +14,11 @@
     }
   },
   "dependencies": {
-    "goblin-theme": "^1.0.0",
+    "goblin-theme": "^2.0.0",
     "immutablepatch": "github:Xcraft-Inc/immutable-js-patch",
-    "xcraft-core-goblin": "^4.0.1",
-    "xcraft-core-probe": "^1.0.2",
-    "xcraft-core-transport": "^3.0.0"
+    "xcraft-core-goblin": "^5.0.0",
+    "xcraft-core-probe": "^2.0.0",
+    "xcraft-core-transport": "^4.0.0"
   },
   "devDependencies": {
     "aphrodite": "^2.2.2",
@@ -39,7 +39,7 @@
     "react-router": "^5.0.0",
     "redux-thunk": "^2.3.0",
     "traverse": "^0.6.6",
-    "xcraft-core-shredder": "^4.0.0",
+    "xcraft-core-shredder": "^5.0.0",
     "xcraft-dev-prettier": "^2.0.0",
     "xcraft-dev-rules": "^2.0.0"
   },
