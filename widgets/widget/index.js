@@ -763,6 +763,24 @@ class Widget extends React.Component {
     return this.getState().commands.get('registry');
   }
 
+  canDo(cmd) {
+    if (!this.registry[cmd]) {
+      return false;
+    }
+    const state = this.getState().backend;
+    const clientSessionId = state
+      .get(this.context.labId)
+      .get('clientSessionId');
+    const loginSession = state.get(`login-session@${clientSessionId}`);
+    if (loginSession && this.registry[cmd] !== true) {
+      const rank = loginSession.get('rank');
+      if (this.registry[cmd][rank] && this.registry[cmd][rank] === true) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   cmd(cmd, args) {
     if (!this.registry[cmd]) {
       console.warn(
