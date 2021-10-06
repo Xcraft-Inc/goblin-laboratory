@@ -209,7 +209,7 @@ Goblin.registerQuest(goblinName, 'create', function* (
     userId,
     feeds: config.feeds,
     options: {
-      openDevTools: process.env.WESTEROS_DEVTOOLS === '1',
+      openDevTools: process.env.GOBLINS_DEVTOOLS === '1',
       useWS: config.useWS,
       target: config.target,
       title: config.title,
