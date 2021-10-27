@@ -1160,14 +1160,9 @@ class Widget extends React.Component {
   }
 
   static getUserSession(state) {
-    if (window.isBrowser) {
-      //TODO: impl. browser session
-      return new Shredder({locale: navigator.language});
-    } else {
-      return state.get(
-        `backend.${state.get(`backend.${window.labId}.clientSessionId`)}`
-      );
-    }
+    return state.get(
+      `backend.${state.get(`backend.${window.labId}.clientSessionId`)}`
+    );
   }
 
   static getLoginSession(state) {
