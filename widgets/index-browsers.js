@@ -113,9 +113,11 @@ class BrowsersRenderer extends Renderer {
         this.reconnectTimeout = 16000;
       }
 
-      clearTimeout(resetTimeoutHandle);
-      setTimeout(this.connect, this.reconnectTimeout);
-      this.reconnectTimeout *= 2;
+      if (!event.wasClean) {
+        clearTimeout(resetTimeoutHandle);
+        setTimeout(this.connect, this.reconnectTimeout);
+        this.reconnectTimeout *= 2;
+      }
     };
 
     socket.onerror = (event) => {
