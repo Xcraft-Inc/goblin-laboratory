@@ -783,12 +783,9 @@ class Widget extends React.Component {
 
   cmd(cmd, args) {
     if (!this.registry[cmd]) {
-      console.warn(
-        '%cGoblins Warning',
-        'font-weight: bold;',
-        `Command not impl. ${cmd}`
+      throw new Error(
+        `Command ${cmd} not implemented or authorized by the zepplin firewall`
       );
-      return;
     }
     const state = this.getState().backend;
 
