@@ -1152,8 +1152,10 @@ class Widget extends React.Component {
 
   setUserSettings(questName, payload) {
     const state = this.getState().backend;
-    payload.id = state.get(window.labId).get('clientSessionId');
-    this.cmd(`client-session.${questName}`, payload);
+    const serviceId = state.get(window.labId).get('clientSessionId');
+    payload.id = serviceId;
+    const service = serviceId.split('@', 1)[0];
+    this.cmd(`${service}.${questName}`, payload);
   }
 
   static getUserSession(state) {
