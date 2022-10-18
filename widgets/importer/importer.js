@@ -9,10 +9,18 @@ export default function importer(config) {
     if (r) {
       const files = r.keys();
       files.forEach((file) => {
-        const nameSpace =
-          kind === 'theme-context'
-            ? file.replace(/.*[\\/.]goblin-([^\\/]+).*/, '$1')
-            : path.basename(path.dirname(file));
+        let nameSpace;
+        switch (kind) {
+          case 'file':
+            nameSpace = file.replace(/^[\\/.]+/, '').replace(/\\/g, '/');
+            break;
+          case 'theme-context':
+            nameSpace = file.replace(/.*[\\/.]goblin-([^\\/]+).*/, '$1');
+            break;
+          default:
+            nameSpace = path.basename(path.dirname(file));
+            break;
+        }
         cache[kind][nameSpace] = r(file);
       });
     }
@@ -25,7 +33,7 @@ export default function importer(config) {
     if (key) {
       return cache[kind][name][key];
     }
-    return cache[kind][name].default;
+    return cache[kind][name].default ?? cache[kind][name];
   };
 
   return (kind) => {
