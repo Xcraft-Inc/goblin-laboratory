@@ -213,6 +213,7 @@ Goblin.registerQuest(goblinName, 'create', function* (
       useWS: config.useWS,
       target: config.target,
       title: config.title,
+      fullscreenable: !!config.fullscreenable,
       //enableTestAutomationLogguer: true,
     },
   });
