@@ -11,6 +11,7 @@ export default function importer(config) {
       files.forEach((file) => {
         let nameSpace;
         switch (kind) {
+          case 'tutorials':
           case 'file':
             nameSpace = file.replace(/^[\\/.]+/, '').replace(/\\/g, '/');
             break;
