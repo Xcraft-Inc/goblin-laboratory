@@ -67,13 +67,13 @@ export default (state = fromJS({}), action = {}) => {
       return state;
     }
 
-    const generation = action.data.get('generation');
+    const generation = action.data.generation;
     const nextGeneration = action.nextGeneration;
 
     if (generation === nextGeneration) {
-      state = action.data.get('_xcraftPatch')
-        ? patch(prevState, action.data.get('state'))
-        : action.data.get('state');
+      state = action.data._xcraftPatch
+        ? patch(prevState, action.data.state)
+        : action.data.state;
       prevState = state;
     }
 
