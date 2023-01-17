@@ -1,0 +1,9 @@
+[
+  {
+    "Module": "goblin-laboratory",
+    "Version": "v3.0.1",
+    "Hash": "49727e0",
+    "Dev": "master",
+    "Prod": "3.0"
+  }
+]
