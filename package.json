@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "goblin-theme": "^2.0.0",
-    "immutablepatch": "github:Xcraft-Inc/immutable-js-patch",
+    "immutablepatch": "github:Xcraft-Inc/immutable-js-patch#5d9fd9e888da06660309ec6ad97832720092cad9",
     "xcraft-core-goblin": "^5.0.0",
     "xcraft-core-probe": "^2.0.0",
     "xcraft-core-transport": "^4.0.0"
