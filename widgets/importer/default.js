@@ -9,6 +9,8 @@ const defaultConfig = {
   'reducer':       require.context('../../../../node_modules/', true, /\/widgets\/[^/]+\/reducer\.js$/),
   'compensator':   require.context('../../../../node_modules/', true, /\/widgets\/[^/]+\/compensator\.js$/),
   'theme-context': require.context('../../../../node_modules/', true, /\/widgets\/theme-context\/index\.js$/),
+  'file':          null,
+  'tutorials':     null,
 };
 
 export default defaultConfig;
