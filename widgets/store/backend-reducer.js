@@ -51,6 +51,23 @@ function applyCompensators(state, action) {
   return state;
 }
 
+function applyPatches(state, action) {
+  if (!action.data.patches) {
+    return patch(prevState, action.data.state);
+  }
+
+  return state.withMutations((state) => {
+    for (const branch in action.data.patches) {
+      if (action.data.patches[branch] === false) {
+        state.delete(branch);
+        continue;
+      }
+      const _prevState = prevState.get(branch) || fromJS({});
+      state.set(branch, patch(_prevState, action.data.patches[branch]));
+    }
+  });
+}
+
 export default (state = fromJS({}), action = {}) => {
   // Compensate field change
   if (action.type === 'FIELD-CHANGED' && action.path.startsWith('backend.')) {
@@ -72,7 +89,7 @@ export default (state = fromJS({}), action = {}) => {
 
     if (generation === nextGeneration) {
       state = action.data._xcraftPatch
-        ? patch(prevState, action.data.state)
+        ? applyPatches(state, action)
         : action.data.state;
       prevState = state;
     }
