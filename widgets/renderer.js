@@ -52,11 +52,13 @@ class Renderer {
   }
 
   newBackendState(transitState) {
-    this.store.dispatch({
-      type: 'NEW_BACKEND_STATE',
-      data: transitState,
-      renderer: this,
-    });
+    setTimeout(() =>
+      this.store.dispatch({
+        type: 'NEW_BACKEND_STATE',
+        data: transitState,
+        renderer: this,
+      })
+    );
   }
 
   main(labId) {
