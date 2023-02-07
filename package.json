@@ -15,10 +15,10 @@
   },
   "dependencies": {
     "goblin-theme": "^2.0.0",
-    "immutablepatch": "github:Xcraft-Inc/immutable-js-patch#3ca333f0d324674c779d6db2edb420133ea9d9ac",
     "xcraft-core-goblin": "^5.0.0",
     "xcraft-core-probe": "^2.0.0",
-    "xcraft-core-transport": "^4.0.0"
+    "xcraft-core-transport": "^4.0.0",
+    "xcraft-immutablepatch": "^1.0.0"
   },
   "devDependencies": {
     "aphrodite": "^2.2.2",

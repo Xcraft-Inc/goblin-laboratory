@@ -1,5 +1,5 @@
 //T:2019-02-27
-import patch from 'immutablepatch';
+import patch from 'xcraft-immutablepatch';
 import {fromJS} from 'immutable';
 import Shredder from 'xcraft-core-shredder';
 import importer from 'goblin_importer';
