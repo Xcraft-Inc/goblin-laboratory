@@ -826,6 +826,13 @@ class Widget extends React.Component {
     const desktopId = this.context.desktopId
       ? this.context.desktopId
       : this.props.desktopId;
+    if (error) {
+      error = {
+        name: error.name,
+        message: error.message,
+        stack: error.stack,
+      };
+    }
     this.doFor(this.context.labId, 'when-ui-crash', {desktopId, error, info});
   }
 
