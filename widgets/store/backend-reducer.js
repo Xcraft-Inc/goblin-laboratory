@@ -1,5 +1,4 @@
 //T:2019-02-27
-import patch from 'xcraft-immutablepatch';
 import {fromJS} from 'immutable';
 import Shredder from 'xcraft-core-shredder';
 import importer from 'goblin_importer';
@@ -51,22 +50,7 @@ function applyCompensators(state, action) {
   return state;
 }
 
-function applyPatches(state, action) {
-  if (!action.data.patches) {
-    return patch(prevState, action.data.state);
-  }
 
-  return state.withMutations((state) => {
-    for (const branch in action.data.patches) {
-      if (action.data.patches[branch] === false) {
-        state.delete(branch);
-        continue;
-      }
-      const _prevState = prevState.get(branch) || fromJS({});
-      state.set(branch, patch(_prevState, action.data.patches[branch]));
-    }
-  });
-}
 
 export default (state = fromJS({}), action = {}) => {
   // Compensate field change
@@ -89,7 +73,7 @@ export default (state = fromJS({}), action = {}) => {
 
     if (generation === nextGeneration) {
       state = action.data._xcraftPatch
-        ? applyPatches(state, action)
+        ? Shredder.applyPatches(state, prevState, action.data)
         : action.data.state;
       prevState = state;
     }
