@@ -217,7 +217,7 @@ class Widget extends React.Component {
   }
 
   static Wired(component) {
-    return () => Widget.connectBackend(component.wiring)(component);
+    return Widget.connectBackend(component.wiring)(component);
   }
 
   // Goblin bus

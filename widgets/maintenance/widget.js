@@ -62,4 +62,4 @@ class Maintenance extends Widget {
   }
 }
 
-export default Widget.Wired(Maintenance)('workshop');
+export default Widget.Wired(Maintenance);

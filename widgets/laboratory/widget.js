@@ -15,7 +15,7 @@ class LaboratoryNC extends Widget {
   renderContent() {
     const {status, root, rootId, overlay, message} = this.props;
     if (status && status !== 'off') {
-      return <Maintenance />;
+      return <Maintenance id="workshop" />;
     } else {
       const widgetName = root.split('@')[0];
       const RootWidget = widgetImporter(widgetName);
