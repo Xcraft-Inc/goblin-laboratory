@@ -1,26 +1,26 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Widget from 'goblin-laboratory/widgets/widget';
-import DesktopIdContext from './context.js';
+import ReadonlyContext from './context.js';
 
-export default class WithDesktopId extends Widget {
+export default class WithReadonly extends Widget {
   getChildContext() {
     return {
-      desktopId: this.props.desktopId,
+      readonly: this.props.readonly,
     };
   }
 
   static get childContextTypes() {
     return {
-      desktopId: PropTypes.string,
+      readonly: PropTypes.bool,
     };
   }
 
   render() {
     return (
-      <DesktopIdContext.Provider value={this.props.desktopId}>
+      <ReadonlyContext.Provider value={this.props.readonly}>
         {this.props.children}
-      </DesktopIdContext.Provider>
+      </ReadonlyContext.Provider>
     );
   }
 }

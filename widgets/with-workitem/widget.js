@@ -1,5 +1,7 @@
+import React from 'react';
 import PropTypes from 'prop-types';
 import Widget from 'goblin-laboratory/widgets/widget';
+import WithReadonly from '../with-readonly/widget.js';
 
 export default class WithWorkitem extends Widget {
   constructor() {
@@ -8,7 +10,6 @@ export default class WithWorkitem extends Widget {
 
   getChildContext() {
     return {
-      readonly: this.props.readonly,
       id: this.props.id,
       entityId: this.props.entityId,
       dragServiceId: this.props.dragServiceId,
@@ -17,7 +18,6 @@ export default class WithWorkitem extends Widget {
 
   static get childContextTypes() {
     return {
-      readonly: PropTypes.any,
       id: PropTypes.string,
       entityId: PropTypes.string,
       dragServiceId: PropTypes.string,
@@ -25,6 +25,10 @@ export default class WithWorkitem extends Widget {
   }
 
   render() {
-    return this.props.children;
+    return (
+      <WithReadonly readonly={this.props.readonly}>
+        {this.props.children}
+      </WithReadonly>
+    );
   }
 }
