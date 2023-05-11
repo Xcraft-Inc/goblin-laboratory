@@ -5,8 +5,10 @@ import PropTypes from 'prop-types';
 
 import {Provider} from 'react-redux';
 import {ConnectedRouter} from 'connected-react-router/immutable';
-import Widget from 'goblin-laboratory/widgets/widget';
 import Laboratory from '../laboratory/widget';
+import {withRoute} from '../with-route/with-route.js';
+
+const LabWithRoute = withRoute('/')(Laboratory);
 
 class Root extends React.PureComponent {
   getChildContext() {
@@ -27,7 +29,6 @@ class Root extends React.PureComponent {
 
   renderLabWithRouter() {
     const {history, labId} = this.props;
-    const LabWithRoute = Widget.withRoute('/')(Laboratory);
     return (
       <ConnectedRouter history={history}>
         <LabWithRoute id={labId} />
