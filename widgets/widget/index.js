@@ -590,32 +590,32 @@ class Widget extends React.Component {
     return new Shredder(this.context.store.getState().router);
   }
 
-  static getSelectionState(target) {
-    if (target.type !== 'text') {
-      return null;
-    }
-    return {
-      ss: target.selectionStart,
-      se: target.selectionEnd,
-      sd: target.selectionDirection,
-    };
-  }
+  // static getSelectionState(target) {
+  //   if (target.type !== 'text') {
+  //     return null;
+  //   }
+  //   return {
+  //     ss: target.selectionStart,
+  //     se: target.selectionEnd,
+  //     sd: target.selectionDirection,
+  //   };
+  // }
 
-  static getHinterType(hinterId) {
-    let type = hinterId;
-    if (!type || type === '') {
-      return null;
-    }
-    const index = hinterId.indexOf('@');
-    if (index !== -1) {
-      type = hinterId.substr(0, index);
-    }
-    return type;
-  }
+  // static getHinterType(hinterId) {
+  //   let type = hinterId;
+  //   if (!type || type === '') {
+  //     return null;
+  //   }
+  //   const index = hinterId.indexOf('@');
+  //   if (index !== -1) {
+  //     type = hinterId.substr(0, index);
+  //   }
+  //   return type;
+  // }
 
-  getHash() {
-    return this.getRouting().get('location.hash');
-  }
+  // getHash() {
+  //   return this.getRouting().get('location.hash');
+  // }
 
   getUserSettings() {
     return Widget.getUserSession(new Shredder(this.getState()));
