@@ -456,10 +456,6 @@ class Widget extends React.Component {
 
   // State
 
-  backendHasBranch(branch) {
-    return this.getState().backend.has(branch);
-  }
-
   getState(path) {
     const storeState = this.context.store.getState();
     if (path) {
@@ -494,6 +490,10 @@ class Widget extends React.Component {
     }
     return this.getState().widgets.get(path);
   }
+
+  // backendHasBranch(branch) {
+  //   return this.getState().backend.has(branch);
+  // }
 
   // getModelValue(model, fullPath) {
   //   const storeState = this.getState();
@@ -554,23 +554,22 @@ class Widget extends React.Component {
   //   }
   // }
 
-  getEntityById(entityId) {
-    const state = new Shredder(this.getState().backend);
-    return state.get(entityId);
-  }
+  // getEntityById(entityId) {
+  //   const state = new Shredder(this.getState().backend);
+  //   return state.get(entityId);
+  // }
 
-  getEntityPathInCollection(collectionPath, id, entityPath) {
-    return (entity) => {
-      const item = entity
-        .get(collectionPath)
-        .find((pack) => pack.get('id') === id);
+  // getEntityPathInCollection(collectionPath, id, entityPath) {
+  //   return (entity) => {
+  //     const item = entity
+  //       .get(collectionPath)
+  //       .find((pack) => pack.get('id') === id);
 
-      return entityPath
-        ? `.${collectionPath}[${item.key}].${entityPath}`
-        : `.${collectionPath}[${item.key}]`;
-    };
-  }
-
+  //     return entityPath
+  //       ? `.${collectionPath}[${item.key}].${entityPath}`
+  //       : `.${collectionPath}[${item.key}]`;
+  //   };
+  // }
 
   getSchema(path) {
     return Widget.getSchema(this.getState(), path);
