@@ -12,6 +12,7 @@ import connectBackend from './utils/connectBackend';
 import * as widgetsActions from './utils/widgets-actions';
 import mergeStyleDefinitions from './style/merge-style-definitions.js';
 import buildStyle from './style/build-style.js';
+import joinModels from '../connect-helpers/join-models.js';
 
 const stylesImporter = importer('styles');
 const reducerImporter = importer('reducer');
@@ -80,7 +81,7 @@ class Widget extends React.Component {
       dispatch: PropTypes.func,
       store: PropTypes.object,
       theme: PropTypes.object,
-      // model: PropTypes.any,
+      model: PropTypes.any,
       // register: PropTypes.func,
       // id: PropTypes.string,
       desktopId: PropTypes.string,
@@ -459,6 +460,41 @@ class Widget extends React.Component {
     return this.getState().backend.has(branch);
   }
 
+  getState(path) {
+    const storeState = this.context.store.getState();
+    if (path) {
+      const state = new Shredder({
+        backend: storeState.backend,
+        widgets: storeState.widgets,
+        network: storeState.network,
+      });
+      const fullpath = joinModels(this.context.model, path);
+      return state.get(fullpath);
+    }
+    return storeState;
+  }
+
+  getBackendState(path) {
+    if (!path) {
+      if (!this.props.id) {
+        throw new Error('Cannot resolve backend state without a valid id');
+      }
+      path = this.props.id;
+    }
+    return this.getState().backend.get(path);
+  }
+
+  getWidgetState(path) {
+    if (!path) {
+      const widgetId = this.widgetId;
+      if (!widgetId) {
+        throw new Error('Cannot resolve widget state without a valid id');
+      }
+      path = widgetId;
+    }
+    return this.getState().widgets.get(path);
+  }
+
   // getModelValue(model, fullPath) {
   //   const storeState = this.getState();
   //   const state = new Shredder({
@@ -483,6 +519,7 @@ class Widget extends React.Component {
   //   }
   // }
 
+  /** @deprecated Replaced by this.getState(path) */
   getBackendValue(fullpath) {
     const storeState = this.getState();
     const state = new Shredder({
@@ -534,20 +571,9 @@ class Widget extends React.Component {
     };
   }
 
-  getState() {
-    return this.context.store.getState();
-  }
 
   getSchema(path) {
     return Widget.getSchema(this.getState(), path);
-  }
-
-  getWidgetState() {
-    const widgetId = this.widgetId;
-    if (!widgetId) {
-      throw new Error('Cannot resolve widget state without a valid id');
-    }
-    return this.getState().widgets.get(widgetId);
   }
 
   getWidgetCacheState(widgetId) {
@@ -559,13 +585,6 @@ class Widget extends React.Component {
       'widgetsCache',
       widgetId,
     ]);
-  }
-
-  getBackendState() {
-    if (!this.props.id) {
-      throw new Error('Cannot resolve backend state without a valid id');
-    }
-    return this.getState().backend.get(this.props.id);
   }
 
   getRouting() {
