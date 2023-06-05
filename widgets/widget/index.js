@@ -343,7 +343,7 @@ class Widget extends React.Component {
    * Dispatch an action in the frontend reducer for this widget.
    *
    * @param {Object} action - Redux action.
-   * @param {String} name - (optional) Reducer name.
+   * @param {String} [name] - (optional) Reducer name.
    */
   dispatch(action, name) {
     this.dispatchTo(this.widgetId, action, name || this.name);
@@ -365,7 +365,7 @@ class Widget extends React.Component {
    *
    * @param {String} id - Destination widget id.
    * @param {Object} action - Redux action.
-   * @param {String} name - (optional) Reducer name.
+   * @param {String} [name] - (optional) Reducer name.
    */
   dispatchTo(id, action, name) {
     if (typeof action !== 'function') {
