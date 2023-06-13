@@ -1,12 +1,13 @@
 import React from 'react';
-
 import Widget from 'goblin-laboratory/widgets/widget';
+import * as styles from './styles.js';
 import Label from 'goblin-gadgets/widgets/label/widget';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 class DisconnectOverlay extends Widget {
   constructor() {
     super(...arguments);
+    this.styles = styles;
   }
 
   render() {
