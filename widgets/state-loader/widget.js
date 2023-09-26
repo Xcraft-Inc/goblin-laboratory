@@ -12,8 +12,11 @@ class StateLoader extends Widget {
 }
 
 export default Widget.connect((state, props) => {
+  // Get path or fallback on fullPath
+  let path = props.path ? `backend.${props.path}.id` : null;
+  path = path || props.fullPath;
   // Check state is loaded
-  const loaded = state.get(`backend.${props.path}.id`);
+  const loaded = state.get(path);
   if (!loaded) {
     return {loading: true};
   }
