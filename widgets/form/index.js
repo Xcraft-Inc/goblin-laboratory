@@ -1,6 +1,6 @@
 //T:2019-02-27
 import React from 'react';
-
+import PropTypes from 'prop-types';
 import Widget from 'goblin-laboratory/widgets/widget';
 import WithModel from '../with-model/widget';
 
@@ -27,6 +27,13 @@ const FormComponent = (props) => {
 class Form extends Widget {
   constructor() {
     super(...arguments);
+  }
+
+  static get contextTypes() {
+    return {
+      ...Widget.contextTypes,
+      id: PropTypes.string,
+    };
   }
 
   get Form() {
