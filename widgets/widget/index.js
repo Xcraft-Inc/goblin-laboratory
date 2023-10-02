@@ -83,7 +83,7 @@ class Widget extends React.Component {
       theme: PropTypes.object,
       model: PropTypes.any,
       // register: PropTypes.func,
-      // id: PropTypes.string,
+      id: PropTypes.string,
       desktopId: PropTypes.string,
       // contextId: PropTypes.string,
       // entityId: PropTypes.string,
@@ -303,7 +303,9 @@ class Widget extends React.Component {
   do(action, args) {
     return this.doAs(this.name, action, args);
   }
-
+  /** @deprecated Replace by doFor.
+   * It's possible to have a mismatch between service name and serviceId.
+   * Prefer to use doFor with the service id. */
   doAs(service, action, args) {
     const id = this.props.id || this.context.id;
     if (!id) {
