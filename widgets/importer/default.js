@@ -7,6 +7,7 @@ const defaultConfig = {
   'widget':        require.context('../../../../node_modules/', true, /\/widgets\/[^/]+\/widget\.js$/),
   'ui':            require.context('../../../../node_modules/', true, /\/widgets\/[^/]+\/ui\.js$/),
   'reducer':       require.context('../../../../node_modules/', true, /\/widgets\/[^/]+\/reducer\.js$/),
+  'app-reducer':   require.context('../../../../node_modules/', true, /\/widgets\/app-reducer\/index\.js$/),
   'compensator':   require.context('../../../../node_modules/', true, /\/widgets\/[^/]+\/compensator\.js$/),
   'theme-context': require.context('../../../../node_modules/', true, /\/widgets\/theme-context\/index\.js$/),
   'file':          null,

@@ -3,6 +3,7 @@ import backendReducer from 'goblin-laboratory/widgets/store/backend-reducer';
 import commandsReducer from 'goblin-laboratory/widgets/store/commands-reducer';
 import networkReducer from 'goblin-laboratory/widgets/store/network-reducer';
 import widgetsReducer from 'goblin-laboratory/widgets/store/widgets-reducer';
+import appReducer from 'goblin-laboratory/widgets/store/app-reducer';
 
 import Shredder from 'xcraft-core-shredder';
 /**
@@ -32,4 +33,5 @@ export default combineReducers({
   network: networkReducer,
   backend: backendReducer,
   widgets: widgetsReducer,
+  app: appReducer,
 });
