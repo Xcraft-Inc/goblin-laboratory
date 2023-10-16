@@ -16,6 +16,7 @@ export default function importer(config) {
             nameSpace = file.replace(/^[\\/.]+/, '').replace(/\\/g, '/');
             break;
           case 'theme-context':
+          case 'app-reducer':
             nameSpace = file.replace(/.*[\\/.]goblin-([^\\/]+).*/, '$1');
             break;
           default:
