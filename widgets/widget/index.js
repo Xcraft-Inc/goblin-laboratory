@@ -556,10 +556,11 @@ class Widget extends React.Component {
   //   }
   // }
 
-  // getEntityById(entityId) {
-  //   const state = new Shredder(this.getState().backend);
-  //   return state.get(entityId);
-  // }
+  /** @deprecated Used by Polypheme */
+  getEntityById(entityId) {
+    const state = new Shredder(this.getState().backend);
+    return state.get(entityId);
+  }
 
   // getEntityPathInCollection(collectionPath, id, entityPath) {
   //   return (entity) => {
