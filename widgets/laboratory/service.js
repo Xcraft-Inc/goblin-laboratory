@@ -84,14 +84,13 @@ const logicHandlers = {
 };
 
 // Register quest's according rc.json
-Goblin.registerQuest(goblinName, 'create', function* (
+Goblin.registerQuest(goblinName, 'create', async function (
   quest,
   desktopId,
   clientSessionId,
   userId,
   url,
-  config,
-  next
+  config
 ) {
   quest.goblin.setX('url', url);
   quest.goblin.setX('desktopId', desktopId);
@@ -99,18 +98,17 @@ Goblin.registerQuest(goblinName, 'create', function* (
   const labId = quest.goblin.id;
   const feed = desktopId;
   const winId = `wm@${labId}`;
+  const promises = [];
 
   const themeContexts = config.themeContexts || ['theme'];
 
   for (const ctx of themeContexts) {
     const composerId = `theme-composer@${ctx}`;
-    quest.create(
-      'theme-composer',
-      {
+    promises.push(
+      quest.create('theme-composer', {
         id: composerId,
         desktopId: desktopId,
-      },
-      next.parallel()
+      })
     );
     config.feeds.push(composerId);
   }
@@ -118,20 +116,21 @@ Goblin.registerQuest(goblinName, 'create', function* (
   const id = quest.goblin.id;
 
   quest.goblin.defer(
-    quest.sub('goblin.released', function* (err, {msg, resp}) {
-      yield resp.cmd('laboratory.del', {
-        id,
-        widgetId: msg.data.id,
-      });
-    })
+    quest.sub(
+      'goblin.released',
+      async (err, {msg, resp}) =>
+        await resp.cmd('laboratory.del', {
+          id,
+          widgetId: msg.data.id,
+        })
+    )
   );
 
   quest.goblin.defer(
     quest.sub(
       `*::theme-composer@*.${clientSessionId}.reload-theme.requested`,
-      function* (err, {msg, resp}) {
-        yield resp.cmd('laboratory.reload-theme', {...msg.data, id});
-      }
+      async (err, {msg, resp}) =>
+        await resp.cmd('laboratory.reload-theme', {...msg.data, id})
     )
   );
 
@@ -158,49 +157,43 @@ Goblin.registerQuest(goblinName, 'create', function* (
     })
   );
 
-  quest.doSync(
-    {id: quest.goblin.id, feed, wid: winId, url, config},
-    next.parallel()
+  promises.push(
+    quest.doSync({id: quest.goblin.id, feed, wid: winId, url, config})
   );
 
-  quest.me.initZoom(
-    {
+  promises.push(
+    quest.me.initZoom({
       clientSessionId,
-    },
-    next.parallel()
+    })
   );
 
-  quest.me.initTheme(
-    {
+  promises.push(
+    quest.me.initTheme({
       clientSessionId,
-    },
-    next.parallel()
+    })
   );
 
-  yield next.sync();
+  await Promise.all(promises);
 
   quest.goblin.defer(
     quest.sub.local(
       `*::${winId}.${clientSessionId}.<window-closed>`,
-      function* (err, {msg, resp}) {
-        yield resp.cmd('laboratory.close', {id});
-      }
+      async (err, {msg, resp}) => await resp.cmd('laboratory.close', {id})
     )
   );
 
   quest.goblin.defer(
     quest.sub.local(
       `*::${winId}.${clientSessionId}.<window-state-changed>`,
-      function* (err, {msg, resp}) {
-        yield resp.cmd('laboratory.save-window-state', {
+      async (err, {msg, resp}) =>
+        await resp.cmd('laboratory.save-window-state', {
           id,
           winId,
           state: msg.data.state,
-        });
-      }
+        })
     )
   );
-  yield quest.create('wm', {
+  await quest.create('wm', {
     id: winId,
     desktopId,
     url,
