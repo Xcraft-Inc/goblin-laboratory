@@ -70,7 +70,7 @@ function isShredderOrImmutable(obj) {
  * @param {Object} dispatchProps - (optional) Mapping between value props and dispatch props.
  * @param {Object} [options] - Options.
  * @param {String} [options.modelProp] - Set context.model given the path in the prop "modelProp".
- * @return {Widget} A widget supporting connected props.
+ * @returns {Widget} A widget supporting connected props.
  */
 export default function withC(Component, dispatchProps = {}, {modelProp} = {}) {
   // Component used after connect
