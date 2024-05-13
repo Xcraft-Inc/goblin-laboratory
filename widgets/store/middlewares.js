@@ -55,6 +55,7 @@ const handleChange = (send, action, registry) => {
         id: goblinId,
         newValue: action.value,
         clientSessionId: action.clientSessionId,
+        desktopId: action.desktopId,
       },
       _xcraftIPC,
     };
@@ -71,6 +72,7 @@ const handleChange = (send, action, registry) => {
         path: fields.join('.'),
         newValue: action.value,
         clientSessionId: action.clientSessionId,
+        desktopId: action.desktopId,
       },
       _xcraftIPC,
     };
@@ -85,13 +87,17 @@ const formMiddleware = (send) => (store) => (next) => (action) => {
     case 'FIELD-CHANGED':
       {
         if (action.path.startsWith('backend')) {
-          const clientSessionId = store
-            .getState()
-            .backend.get(window.labId)
-            .get('clientSessionId');
+          const lab = store.getState().backend.get(window.labId);
+          const clientSessionId = lab.get('clientSessionId');
+          const desktopId = lab.get('feed');
           handleChange(
             send,
-            {model: action.path, value: action.value, clientSessionId},
+            {
+              model: action.path,
+              value: action.value,
+              clientSessionId,
+              desktopId,
+            },
             store.getState().commands.get('registry')
           );
         }
