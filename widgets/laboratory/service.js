@@ -102,18 +102,18 @@ Goblin.registerQuest(goblinName, 'create', function* (
 
   const themeContexts = config.themeContexts || ['theme'];
 
+  const promises = [];
   for (const ctx of themeContexts) {
     const composerId = `theme-composer@${ctx}`;
-    quest.create(
-      'theme-composer',
-      {
+    promises.push(
+      quest.create('theme-composer', {
         id: composerId,
         desktopId: desktopId,
-      },
-      next.parallel()
+      })
     );
     config.feeds.push(composerId);
   }
+  yield Promise.all(promises);
 
   const id = quest.goblin.id;
 
