@@ -25,7 +25,9 @@ export default (state = initialState, action = {}) => {
       );
     }
 
-    const hasOverlay = state.get('hordes').some(({overlay}) => overlay);
+    const hasOverlay = state
+      .get('hordes')
+      .some((horde) => horde.get('overlay'));
     return state.set('hasOverlay', hasOverlay);
   }
 
