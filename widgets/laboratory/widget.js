@@ -75,10 +75,10 @@ const Laboratory = Widget.connect((state, props) => {
   const hasOverlay = state.get('network.hasOverlay');
   if (hasOverlay) {
     const hordes = state.get('network.hordes');
-    const payload = hordes.find(({overlay}) => overlay);
+    const payload = hordes.find((horde) => horde.get('overlay'));
     if (payload) {
-      overlay = payload.overlay;
-      message = payload.message;
+      overlay = payload.get('overlay');
+      message = payload.get('message');
     }
   }
 
