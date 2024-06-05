@@ -9,7 +9,7 @@ export default (state = initialState, action = {}) => {
   if (action.type === 'CONNECTION_STATUS') {
     const horde = action.horde;
 
-    ['lag', 'delta', 'overlay', 'message', 'noSocket']
+    ['lag', 'delta', 'overlay', 'message', 'noSocket', 'reason']
       .filter((key) => action[key] !== undefined)
       .forEach(
         (key) => (state = state.setIn(['hordes', horde, key], action[key]))
