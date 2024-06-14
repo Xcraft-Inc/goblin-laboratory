@@ -163,21 +163,8 @@ Goblin.registerQuest(goblinName, 'create', function* (
     next.parallel()
   );
 
-  quest.me.initZoom(
-    {
-      clientSessionId,
-    },
-    next.parallel()
-  );
-
-  quest.me.initTheme(
-    {
-      clientSessionId,
-    },
-    next.parallel()
-  );
-
-  yield next.sync();
+  yield quest.me.initZoom({clientSessionId});
+  yield quest.me.initTheme({clientSessionId});
 
   quest.goblin.defer(
     quest.sub.local(
