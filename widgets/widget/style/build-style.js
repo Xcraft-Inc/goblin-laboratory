@@ -1,7 +1,7 @@
 import computeStyleHash from './compute-style-hash.js';
 import getStyleProps from './get-style-props.js';
 import {StyleSheet as Aphrodite} from 'aphrodite/no-important';
-import traverse from 'traverse';
+import traverse from 'xcraft-traverse';
 import StylesCache from './styles-cache.js';
 
 let stylesCache = new StylesCache();
