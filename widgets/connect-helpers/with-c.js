@@ -150,6 +150,10 @@ export default function withC(Component, dispatchProps = {}, {modelProp} = {}) {
       this.addContextToPath = this.addContextToPath.bind(this);
     }
 
+    getChildContext() {
+      return {};
+    }
+
     addContextToPath(path) {
       if (path === null || path === undefined) {
         return null;
@@ -267,6 +271,8 @@ export default function withC(Component, dispatchProps = {}, {modelProp} = {}) {
       }
     }
   }
+
+  WithC.propTypes = {};
 
   return (props) => (
     <ModelContext.Consumer>
