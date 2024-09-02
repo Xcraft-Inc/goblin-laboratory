@@ -1,6 +1,6 @@
 {
   "name": "goblin-laboratory",
-  "version": "4.2.10",
+  "version": "4.2.11",
   "description": "Laboratory",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
