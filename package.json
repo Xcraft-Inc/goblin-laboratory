@@ -27,7 +27,6 @@
     "@fortawesome/react-fontawesome": "^0.1.9",
     "history": "^4.6.1",
     "immutable": "4.0.0-rc.14",
-    "immutable-devtools": "0.0.7",
     "linked-list": "^1.0.4",
     "obj-to-css": "^1.0.1",
     "prettier": "2.0.4",

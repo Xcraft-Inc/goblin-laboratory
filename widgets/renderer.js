@@ -1,7 +1,3 @@
-if (process.env.NODE_ENV === 'development') {
-  require('./devtools.js');
-}
-
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Root from 'goblin-laboratory/widgets/root';
