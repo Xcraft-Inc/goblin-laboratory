@@ -38,7 +38,7 @@
     "redux-thunk": "^2.3.0",
     "xcraft-core-shredder": "^5.3.0",
     "xcraft-dev-prettier": "^2.0.0",
-    "xcraft-dev-rules": "^4.4.1",
+    "xcraft-dev-rules": "^4.4.2",
     "xcraft-traverse": "^0.7.0"
   },
   "prettier": "xcraft-dev-prettier"
