@@ -50,8 +50,6 @@ function applyCompensators(state, action) {
   return state;
 }
 
-
-
 export default (state = fromJS({}), action = {}) => {
   // Compensate field change
   if (action.type === 'FIELD-CHANGED' && action.path.startsWith('backend.')) {

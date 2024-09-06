@@ -155,6 +155,7 @@ const transitMiddleware = (store) => (next) => (action) => {
 
     insertCompensators(store, action);
   }
+
   return next(action);
 };
 
