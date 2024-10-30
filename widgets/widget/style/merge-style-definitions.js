@@ -33,6 +33,9 @@ export default function mergeStyleDefinitions(styleDefs) {
     mapProps: (props, theme) =>
       mapPropsList.reduce((p, mapProps) => mapProps(p, theme), props),
     func: (theme, props) =>
-      funcList.reduce((styles, func) => func.bind({styles})(theme, props), {}),
+      funcList.reduce(
+        (styles, func) => ({...styles, ...func.bind({styles})(theme, props)}),
+        {}
+      ),
   };
 }
