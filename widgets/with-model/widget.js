@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import Widget from 'goblin-laboratory/widgets/widget';
 import joinModels from '../connect-helpers/join-models';
 import ModelContext from './context';
+import withC from '../connect-helpers/with-c.js';
 
-export default class WithModel extends Widget {
+class WithModelNC extends Widget {
   constructor() {
     super(...arguments);
   }
@@ -40,3 +41,7 @@ export default class WithModel extends Widget {
     );
   }
 }
+
+const WithModel = withC(WithModelNC);
+
+export default WithModel;
