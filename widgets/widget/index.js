@@ -28,10 +28,6 @@ const throttle250 = _.throttle((fct) => fct(), 250);
 //   );
 // }
 
-function getWidgetName(constructorName) {
-  return constructorName.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
-}
-
 class Widget extends React.Component {
   constructor() {
     super(...arguments);
@@ -47,6 +43,10 @@ class Widget extends React.Component {
     }
   }
 
+  static getWidgetName(constructorName) {
+    return constructorName.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+  }
+
   _getInheritedNames() {
     let p = this;
     const names = new Set();
@@ -55,7 +55,7 @@ class Widget extends React.Component {
       if (constructorName === 'Widget') {
         break;
       }
-      const widgetName = getWidgetName(constructorName);
+      const widgetName = Widget.getWidgetName(constructorName);
       names.add(widgetName);
     }
     return [...names];
