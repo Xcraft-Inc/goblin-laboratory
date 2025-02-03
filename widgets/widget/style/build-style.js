@@ -17,10 +17,10 @@ const {StyleSheet, css} = Aphrodite.extend([
       const nestedTags = [];
       const selectors = selector.split(',');
       _.each(selectors, (subselector, key) => {
-        if (selector[0] === '&') {
-          const tag = key === 0 ? subselector.slice(1) : subselector;
+        if (subselector.includes('&')) {
+          const tag = subselector.replace(/&/g, baseSelector);
           const nestedTag = generateSubtreeStyles(
-            `${baseSelector}${tag}`.replace(/ +(?= )/g, '')
+            `${tag}`.replace(/ +(?= )/g, '')
           );
           nestedTags.push(nestedTag);
         }
