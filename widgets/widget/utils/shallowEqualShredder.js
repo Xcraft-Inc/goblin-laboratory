@@ -2,7 +2,7 @@
 
 const hasOwn = Object.prototype.hasOwnProperty;
 
-function is(x, y) {
+export function isEqual(x, y) {
   if (x && typeof x.equals === 'function') {
     return x.equals(y);
   }
@@ -10,7 +10,7 @@ function is(x, y) {
 }
 
 export default function shallowEqualShredder(objA, objB) {
-  if (is(objA, objB)) return true;
+  if (isEqual(objA, objB)) return true;
 
   if (
     typeof objA !== 'object' ||
@@ -27,7 +27,10 @@ export default function shallowEqualShredder(objA, objB) {
   if (keysA.length !== keysB.length) return false;
 
   for (let i = 0; i < keysA.length; i++) {
-    if (!hasOwn.call(objB, keysA[i]) || !is(objA[keysA[i]], objB[keysA[i]])) {
+    if (
+      !hasOwn.call(objB, keysA[i]) ||
+      !isEqual(objA[keysA[i]], objB[keysA[i]])
+    ) {
       return false;
     }
   }
