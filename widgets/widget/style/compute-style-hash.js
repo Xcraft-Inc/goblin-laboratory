@@ -1,9 +1,9 @@
-import fasterStringify from 'faster-stable-stringify';
+import safeStringify from 'safe-stable-stringify';
 
 export default function computeStyleHash(myStyle, theme, styleProps) {
   let hashProps = '';
   if (myStyle.hasPropsParam) {
-    hashProps = fasterStringify(styleProps);
+    hashProps = safeStringify(styleProps);
   }
 
   let hashTheme = '';
