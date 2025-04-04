@@ -57,9 +57,7 @@ function getReducerForAction(action) {
   }
 
   throw new Error(
-    `No reducer named "${reducerName}" found. Action:\n${JSON.stringify(
-      action
-    )}`
+    `No reducer named "${reducerName}" found. Action:\n${action.type}`
   );
 }
 
