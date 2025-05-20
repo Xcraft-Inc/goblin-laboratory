@@ -73,7 +73,7 @@ Paramètres UI globaux pour l'entité : icône, tri par défaut, label principal
 ```
 const {T} = require('nabu');
 const {parse} = require('xcraft-core-stones');
-const {BlueprintShape} = require('./BlueprintShape');
+const {BlueprintShape} = require('goblin-laboratory/lib/blueprint.js');
 
 module.exports = parse(BlueprintShape, {
   entity: 'case',
