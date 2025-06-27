@@ -16,6 +16,7 @@
   "dependencies": {
     "goblin-theme": "^2.0.0",
     "xcraft-core-goblin": "^5.0.0",
+    "xcraft-core-log": "^2.2.0",
     "xcraft-core-probe": "^2.0.0",
     "xcraft-core-transport": "^4.0.0",
     "xcraft-core-stones": "^0.4.16"
