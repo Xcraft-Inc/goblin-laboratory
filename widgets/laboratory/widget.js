@@ -1,10 +1,11 @@
 import React from 'react';
-import Widget from 'goblin-laboratory/widgets/widget';
-import Maintenance from 'goblin-laboratory/widgets/maintenance/widget';
+import Widget from '../widget';
+import Maintenance from '../maintenance/widget';
 import DisconnectOverlay from '../disconnect-overlay/widget';
-import ThemeContext from 'goblin-laboratory/widgets/theme-context/widget';
-
+import ThemeContext from '../theme-context/widget';
+import Quake from '../quake/widget.js';
 import importer from 'goblin_importer';
+
 const widgetImporter = importer('widget');
 
 class LaboratoryNC extends Widget {
@@ -13,22 +14,24 @@ class LaboratoryNC extends Widget {
   }
 
   renderContent() {
-    const {status, root, rootId, overlay, message} = this.props;
+    const {id, status, root, rootId, overlay, message} = this.props;
     if (status && status !== 'off') {
       return <Maintenance id="workshop" />;
-    } else {
-      const widgetName = root.split('@')[0];
-      const RootWidget = widgetImporter(widgetName);
-      if (overlay) {
-        return (
+    }
+
+    const widgetName = root.split('@')[0];
+    const RootWidget = widgetImporter(widgetName);
+    return (
+      <Quake labId={id}>
+        {overlay ? (
           <DisconnectOverlay message={message}>
             <RootWidget id={rootId} />
           </DisconnectOverlay>
-        );
-      } else {
-        return <RootWidget id={rootId} />;
-      }
-    }
+        ) : (
+          <RootWidget id={rootId} />
+        )}
+      </Quake>
+    );
   }
 
   render() {

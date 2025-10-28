@@ -27,6 +27,10 @@ const logicHandlers = {
       themesGen: {default: 1},
       zoom: null,
       themeContext: conf.themeContexts ? conf.themeContexts[0] : 'theme',
+      console: {
+        busy: false,
+        history: [],
+      },
     });
   },
   'set-feed': (state, action) => {
@@ -80,6 +84,16 @@ const logicHandlers = {
   'change-zoom': (state, action) => {
     const zoom = action.get('zoom');
     return state.set('zoom', zoom);
+  },
+  'sendCommand': (state, action) => {
+    let history = state.get('console.history');
+    history = history.push(action.get('prompt') + ' ' + action.get('command'));
+    return state.set('console.history', history).set('console.busy', true);
+  },
+  'endCommand': (state, action) => {
+    let history = state.get('console.history');
+    history = history.push(action.get('result'));
+    return state.set('console.history', history).set('console.busy', false);
   },
 };
 
@@ -520,6 +534,26 @@ Goblin.registerQuest(goblinName, 'del', function* (quest, widgetId) {
     yield quest.warehouse.feedSubscriptionDel({feed, branch, parents});
   }
 });
+
+/******************************************************************************/
+
+Goblin.registerQuest(goblinName, 'endCommand', async function (quest, result) {
+  const {setTimeout: setTimeoutAsync} = require('node:timers/promises');
+  await setTimeoutAsync(1000);
+  quest.do();
+});
+
+Goblin.registerQuest(goblinName, 'sendCommand', async function (
+  quest,
+  command
+) {
+  quest.do();
+  quest.doSync();
+  quest.log.dbg(`sendCommand: ${command}`);
+  await quest.me.endCommand({result: 'terminé'});
+});
+
+/******************************************************************************/
 
 Goblin.registerQuest(goblinName, 'delete', function (quest) {
   unlisten(quest);
