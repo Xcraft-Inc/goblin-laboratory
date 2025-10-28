@@ -51,7 +51,9 @@ class QuakeNC extends Widget {
     const {busy} = this.props;
     return (
       <div className="cli">
-        {busy ? null : (
+        {busy ? (
+          <span>&nbsp;</span>
+        ) : (
           <>
             <span>~ $&nbsp;</span>
             <input
@@ -72,9 +74,12 @@ class QuakeNC extends Widget {
       <div className="history" onMouseDown={this.setCliFocus}>
         {this.props.history.reverse().map((row, index) => (
           <span key={index}>
-            {row}
-            <br />
-            &nbsp;
+            {row.split('\n').map((row) => (
+              <>
+                {row}
+                <br />
+              </>
+            ))}
           </span>
         ))}
       </div>
