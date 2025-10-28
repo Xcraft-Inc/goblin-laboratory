@@ -39,6 +39,7 @@ export default function styles() {
 
       '& > span': {
         whiteSpace: 'nowrap',
+        color: 'rgb(200, 200, 200)',
       },
     },
 
