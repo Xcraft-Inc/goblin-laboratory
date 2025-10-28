@@ -87,21 +87,23 @@ class QuakeNC extends Widget {
   }
 
   renderConsole() {
-    const {show} = this.state;
     return (
-      <div className={this.styles.classNames.console} data-show={show}>
+      <>
         {this.renderHistory()}
-        {show ? this.renderCli() : null}
-      </div>
+        {this.renderCli()}
+      </>
     );
   }
 
   render() {
     const {children} = this.props;
+    const {show} = this.state;
     return (
       <>
         {children}
-        {this.renderConsole()}
+        <div className={this.styles.classNames.console} data-show={show}>
+          {show ? this.renderConsole() : null}
+        </div>
       </>
     );
   }
