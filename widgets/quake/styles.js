@@ -9,10 +9,10 @@ export default function styles() {
     'left': 0,
     'transition': 'height 0.2s ease-out, opacity 0.2s',
     'opacity': 0,
+    'border': '5px solid transparent',
 
     'display': 'flex',
     'flexDirection': 'column',
-    'padding': '3px',
     'overflowY': 'auto',
     'pointerEvents': 'none',
 
