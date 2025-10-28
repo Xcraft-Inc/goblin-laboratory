@@ -1,8 +1,18 @@
 export default function styles() {
+  const fontColor = {
+    'color': 'rgb(200, 200, 200)',
+    '@media (prefers-color-scheme: light)': {
+      color: 'rgb(50, 50, 50)',
+    },
+  };
+
   const console = {
     'width': '100vw',
     'height': 0,
     'backgroundColor': 'rgba(0, 0, 0, 0.6)',
+    '@media (prefers-color-scheme: light)': {
+      backgroundColor: 'rgba(180, 180, 180, 0.6)',
+    },
     'backdropFilter': 'blur(10px)',
     'position': 'fixed',
     'top': 0,
@@ -30,7 +40,7 @@ export default function styles() {
       flexGrow: 1,
       flexFlow: 'column-reverse',
       fontSize: 'medium',
-      color: 'rgb(200, 200, 200)',
+      ...fontColor,
     },
 
     '& > .cli': {
@@ -39,14 +49,14 @@ export default function styles() {
 
       '& > span': {
         whiteSpace: 'nowrap',
-        color: 'rgb(200, 200, 200)',
+        ...fontColor,
       },
     },
 
     '& > .cli > .input': {
       'flexGrow': 1,
       'width': '100%',
-      'color': 'rgb(200, 200, 200)',
+      ...fontColor,
       'border': 0,
       'backgroundColor': 'transparent',
       'fontSize': 'medium',
