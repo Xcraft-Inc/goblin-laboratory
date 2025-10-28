@@ -29,6 +29,7 @@ export default function styles() {
       display: 'flex',
       flexGrow: 1,
       flexFlow: 'column-reverse',
+      fontSize: 'medium',
     },
 
     '& > .cli': {
@@ -46,6 +47,7 @@ export default function styles() {
       'color': 'rgb(200, 200, 200)',
       'border': 0,
       'backgroundColor': 'transparent',
+      'fontSize': 'medium',
 
       '&:focus': {
         outline: 'none',
