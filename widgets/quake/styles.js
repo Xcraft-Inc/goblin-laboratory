@@ -30,6 +30,7 @@ export default function styles() {
       flexGrow: 1,
       flexFlow: 'column-reverse',
       fontSize: 'medium',
+      color: 'rgb(200, 200, 200)',
     },
 
     '& > .cli': {
