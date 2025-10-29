@@ -26,8 +26,8 @@ class QuakeNC extends Widget {
     this.setState({show: !this.state.show});
   };
 
-  sendCommand = (prompt, name) => {
-    this.doFor('termux', 'beginCommand', {prompt, name});
+  sendCommand = (prompt, name, params) => {
+    this.doFor('termux', 'beginCommand', {prompt, name, params});
   };
 
   setCliFocus = () => {
@@ -41,8 +41,14 @@ class QuakeNC extends Widget {
           break;
         }
         const {value} = this.inputRef.current;
+
+        /* TODO: parse properly the parameters wuit quotes, etc. */
+        const values = value.split(' ');
+        const name = values[0];
+        const params = values.slice(1);
+
         const prompt = '~ $';
-        this.sendCommand(prompt, value);
+        this.sendCommand(prompt, name, params);
         this.inputRef.current.value = '';
         break;
       }
@@ -87,7 +93,7 @@ class QuakeNC extends Widget {
           <span key={index}>
             {row.split('\n').map((row) => (
               <>
-                {row}
+                {row.replaceAll(' ', ' ')}
                 <br />
               </>
             ))}
