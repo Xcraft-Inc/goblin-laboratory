@@ -23,7 +23,7 @@ export default function styles() {
 
     'display': 'flex',
     'flexDirection': 'column',
-    'overflowY': 'auto',
+    'overflowY': 'scroll',
     'pointerEvents': 'none',
 
     'fontFamily': 'monospace',
