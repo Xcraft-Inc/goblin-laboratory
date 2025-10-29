@@ -46,6 +46,7 @@ export default function styles() {
     '& > .cli': {
       'display': 'flex',
       'flexDirection': 'row',
+      'height': '15px',
 
       '& > span': {
         whiteSpace: 'nowrap',
