@@ -549,7 +549,7 @@ Goblin.registerQuest(goblinName, 'sendCommand', async function (
 ) {
   quest.doSync();
   quest.log.dbg(`sendCommand: ${command}`);
-  await quest.me.endCommand({result: 'terminé'});
+  await quest.me.endCommand({result: 'terminé\n'});
 });
 
 /******************************************************************************/
