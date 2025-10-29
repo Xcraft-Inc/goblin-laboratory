@@ -35,15 +35,26 @@ class QuakeNC extends Widget {
   };
 
   handleKeyDown = (event) => {
-    if (event.key === 'Enter' && this.inputRef.current) {
-      const {value} = this.inputRef.current;
-      const prompt = '~ $';
-      this.sendCommand(prompt, value);
-      this.inputRef.current.value = '';
-    }
-    if (event.key === 'F12') {
-      event.preventDefault();
-      this.toggleConsole();
+    switch (event.key) {
+      case 'Enter': {
+        if (!this.inputRef.current) {
+          break;
+        }
+        const {value} = this.inputRef.current;
+        const prompt = '~ $';
+        this.sendCommand(prompt, value);
+        this.inputRef.current.value = '';
+        break;
+      }
+      case 'F12': {
+        event.preventDefault();
+        this.toggleConsole();
+        break;
+      }
+      case 'Tab': {
+        event.preventDefault();
+        break;
+      }
     }
   };
 
