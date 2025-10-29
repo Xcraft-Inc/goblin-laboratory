@@ -27,10 +27,6 @@ const logicHandlers = {
       themesGen: {default: 1},
       zoom: null,
       themeContext: conf.themeContexts ? conf.themeContexts[0] : 'theme',
-      console: {
-        busy: false,
-        history: [],
-      },
     });
   },
   'set-feed': (state, action) => {
@@ -85,16 +81,6 @@ const logicHandlers = {
     const zoom = action.get('zoom');
     return state.set('zoom', zoom);
   },
-  'sendCommand': (state, action) => {
-    let history = state.get('console.history');
-    history = history.push(action.get('prompt') + ' ' + action.get('command'));
-    return state.set('console.history', history).set('console.busy', true);
-  },
-  'endCommand': (state, action) => {
-    let history = state.get('console.history');
-    history = history.push(action.get('result'));
-    return state.set('console.history', history).set('console.busy', false);
-  },
 };
 
 // Register quest's according rc.json
@@ -115,6 +101,8 @@ Goblin.registerQuest(goblinName, 'create', function* (
   const winId = `wm@${labId}`;
 
   const themeContexts = config.themeContexts || ['theme'];
+
+  config.feeds.push('termux');
 
   const promises = [];
   for (const ctx of themeContexts) {
@@ -533,23 +521,6 @@ Goblin.registerQuest(goblinName, 'del', function* (quest, widgetId) {
     }
     yield quest.warehouse.feedSubscriptionDel({feed, branch, parents});
   }
-});
-
-/******************************************************************************/
-
-Goblin.registerQuest(goblinName, 'endCommand', async function (quest, result) {
-  const {setTimeout: setTimeoutAsync} = require('node:timers/promises');
-  await setTimeoutAsync(1000);
-  quest.do();
-});
-
-Goblin.registerQuest(goblinName, 'sendCommand', async function (
-  quest,
-  command
-) {
-  quest.doSync();
-  quest.log.dbg(`sendCommand: ${command}`);
-  await quest.me.endCommand({result: 'terminé\n'});
 });
 
 /******************************************************************************/

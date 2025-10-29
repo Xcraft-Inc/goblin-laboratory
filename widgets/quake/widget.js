@@ -26,8 +26,8 @@ class QuakeNC extends Widget {
     this.setState({show: !this.state.show});
   };
 
-  sendCommand = (prompt, command) => {
-    this.doFor(this.props.labId, 'sendCommand', {prompt, command});
+  sendCommand = (prompt, name) => {
+    this.doFor('termux', 'beginCommand', {prompt, name});
   };
 
   setCliFocus = () => {
@@ -121,15 +121,14 @@ class QuakeNC extends Widget {
 }
 
 const Quake = Widget.connect((state, props) => {
-  const labState = state.get('backend').get(props.labId);
-  if (!labState) {
-    return {labId: props.labId, history: [], busy: true};
+  const termux = state.get('backend').get('termux');
+  if (!termux) {
+    return {busy: true, history: []};
   }
 
   return {
-    labId: props.labId,
-    history: labState.get('console.history'),
-    busy: labState.get('console.busy'),
+    busy: termux.get('busy', false),
+    history: termux.get('history', []),
   };
 })(QuakeNC);
 
