@@ -4,6 +4,8 @@ import Mousetrap from 'mousetrap';
 import * as styles from './styles.js';
 
 class QuakeNC extends Widget {
+  scrollTimeout;
+
   constructor() {
     super(...arguments);
     this.styles = styles;
@@ -14,12 +16,23 @@ class QuakeNC extends Widget {
     };
   }
 
+  scrollToBottom() {
+    if (this.inputRef.current) {
+      this.inputRef.current.scrollIntoView();
+    }
+  }
+
   componentDidMount() {
     Mousetrap.bind('f12', this.toggleConsole);
   }
 
   componentWillUnmount() {
+    super.componentWillUnmount();
     Mousetrap.unbind('f12');
+    if (this.scrollTimeout) {
+      clearTimeout(this.scrollTimeout);
+      this.scrollTimeout = null;
+    }
   }
 
   toggleConsole = () => {
@@ -62,6 +75,17 @@ class QuakeNC extends Widget {
         break;
       }
     }
+
+    /* Handle scroll with a timeout because (just after the send, the new state
+     * is not available)
+     */
+    this.scrollToBottom();
+    if (this.scrollTimeout) {
+      clearTimeout(this.scrollTimeout);
+    }
+    this.scrollTimeout = setTimeout(() => {
+      this.scrollToBottom();
+    }, 100);
   };
 
   renderCli() {
