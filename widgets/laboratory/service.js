@@ -2,6 +2,7 @@
 
 const path = require('path');
 const Goblin = require('xcraft-core-goblin');
+const {Termux} = require('../../lib/termux.js');
 const goblinName = path.basename(module.parent.filename, '.js');
 
 // Define initial logic values
@@ -103,6 +104,9 @@ Goblin.registerQuest(goblinName, 'create', function* (
   const themeContexts = config.themeContexts || ['theme'];
 
   config.feeds.push('termux');
+
+  const termux = new Termux(quest);
+  yield termux.init();
 
   const promises = [];
   for (const ctx of themeContexts) {
