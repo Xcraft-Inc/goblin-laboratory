@@ -24,12 +24,12 @@ class QuakeNC extends Widget {
   }
 
   componentDidMount() {
-    Mousetrap.bind('f12', this.toggleConsole);
+    Mousetrap.bind('alt+f12', this.toggleConsole);
   }
 
   componentWillUnmount() {
     super.componentWillUnmount();
-    Mousetrap.unbind('f12');
+    Mousetrap.unbind('alt+f12');
     if (this.scrollTimeout) {
       clearTimeout(this.scrollTimeout);
       this.scrollTimeout = null;
@@ -81,8 +81,10 @@ class QuakeNC extends Widget {
         break;
       }
       case 'F12': {
-        event.preventDefault();
-        this.toggleConsole();
+        if (event.altKey) {
+          event.preventDefault();
+          this.toggleConsole();
+        }
         break;
       }
       case 'Tab': {
