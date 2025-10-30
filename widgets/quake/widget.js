@@ -48,9 +48,9 @@ class QuakeNC extends Widget {
     this.setState({show: !this.state.show});
   };
 
-  setTabulation = () => {
+  setTabulation = (prompt) => {
     const input = this.inputRef.current?.value;
-    this.doFor('termux', 'setTabulation', {input});
+    this.doFor('termux', 'setTabulation', {prompt, input});
   };
 
   clearCompletion = () => {
@@ -66,6 +66,8 @@ class QuakeNC extends Widget {
   };
 
   handleKeyDown = (event) => {
+    const prompt = '~ $';
+
     switch (event.key) {
       case 'Enter': {
         const {value} = this.state;
@@ -75,7 +77,6 @@ class QuakeNC extends Widget {
         const name = values[0];
         const params = values.slice(1);
 
-        const prompt = '~ $';
         this.sendCommand(prompt, name, params);
         this.setState({value: ''});
         break;
@@ -89,7 +90,7 @@ class QuakeNC extends Widget {
       }
       case 'Tab': {
         event.preventDefault();
-        this.setTabulation();
+        this.setTabulation(prompt);
         break;
       }
     }
