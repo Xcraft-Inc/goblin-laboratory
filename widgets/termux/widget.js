@@ -3,7 +3,7 @@ import Widget from 'goblin-laboratory/widgets/widget';
 import Mousetrap from 'mousetrap';
 import * as styles from './styles.js';
 
-class QuakeNC extends Widget {
+class TermuxNC extends Widget {
   scrollTimeout;
 
   constructor() {
@@ -184,7 +184,7 @@ class QuakeNC extends Widget {
   }
 }
 
-const Quake = Widget.connect((state, props) => {
+const Termux = Widget.connect((state, props) => {
   const termux = state.get('backend').get('termux');
   if (!termux) {
     return {busy: true, history: [], completion: ''};
@@ -195,6 +195,6 @@ const Quake = Widget.connect((state, props) => {
     history: termux.get('history', []),
     completion: termux.get('completion', ''),
   };
-})(QuakeNC);
+})(TermuxNC);
 
-export default Quake;
+export default Termux;

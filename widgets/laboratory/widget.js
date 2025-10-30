@@ -3,7 +3,7 @@ import Widget from '../widget';
 import Maintenance from '../maintenance/widget';
 import DisconnectOverlay from '../disconnect-overlay/widget';
 import ThemeContext from '../theme-context/widget';
-import Quake from '../quake/widget.js';
+import Termux from '../termux/widget.js';
 import importer from 'goblin_importer';
 
 const widgetImporter = importer('widget');
@@ -22,7 +22,7 @@ class LaboratoryNC extends Widget {
     const widgetName = root.split('@')[0];
     const RootWidget = widgetImporter(widgetName);
     return (
-      <Quake labId={id}>
+      <Termux labId={id}>
         {overlay ? (
           <DisconnectOverlay message={message}>
             <RootWidget id={rootId} />
@@ -30,7 +30,7 @@ class LaboratoryNC extends Widget {
         ) : (
           <RootWidget id={rootId} />
         )}
-      </Quake>
+      </Termux>
     );
   }
 
