@@ -50,9 +50,9 @@ class QuakeNC extends Widget {
     this.setState({show: !this.state.show});
   };
 
-  setTabulation = (prompt) => {
+  askForCompletion = (prompt) => {
     const input = this.inputRef.current?.value;
-    this.doFor('termux', 'setTabulation', {prompt, input});
+    this.doFor('termux', 'askForCompletion', {prompt, input});
   };
 
   setFromHistory = (up) => {
@@ -97,7 +97,7 @@ class QuakeNC extends Widget {
       }
       case 'Tab': {
         event.preventDefault();
-        this.setTabulation(prompt);
+        this.askForCompletion(prompt);
         break;
       }
       case 'ArrowUp':
