@@ -13,6 +13,7 @@ class QuakeNC extends Widget {
 
     this.state = {
       show: false,
+      value: '',
     };
   }
 
@@ -35,8 +36,25 @@ class QuakeNC extends Widget {
     }
   }
 
+  componentDidUpdate(prevProps) {
+    const {completion} = this.props;
+    if (completion && prevProps.completion !== completion) {
+      this.setState({value: this.props.completion + ' '});
+      this.clearCompletion();
+    }
+  }
+
   toggleConsole = () => {
     this.setState({show: !this.state.show});
+  };
+
+  setTabulation = () => {
+    const input = this.inputRef.current?.value;
+    this.doFor('termux', 'setTabulation', {input});
+  };
+
+  clearCompletion = () => {
+    this.doFor('termux', 'clearCompletion');
   };
 
   sendCommand = (prompt, name, params) => {
@@ -50,10 +68,7 @@ class QuakeNC extends Widget {
   handleKeyDown = (event) => {
     switch (event.key) {
       case 'Enter': {
-        if (!this.inputRef.current) {
-          break;
-        }
-        const {value} = this.inputRef.current;
+        const {value} = this.state;
 
         /* TODO: parse properly the parameters wuit quotes, etc. */
         const values = value.split(' ');
@@ -62,7 +77,7 @@ class QuakeNC extends Widget {
 
         const prompt = '~ $';
         this.sendCommand(prompt, name, params);
-        this.inputRef.current.value = '';
+        this.setState({value: ''});
         break;
       }
       case 'F12': {
@@ -72,6 +87,7 @@ class QuakeNC extends Widget {
       }
       case 'Tab': {
         event.preventDefault();
+        this.setTabulation();
         break;
       }
     }
@@ -103,6 +119,8 @@ class QuakeNC extends Widget {
               onKeyDown={this.handleKeyDown}
               autoFocus
               ref={this.inputRef}
+              value={this.state.value}
+              onChange={(e) => this.setState({value: e.target.value})}
             ></input>
           </>
         )}
@@ -153,12 +171,13 @@ class QuakeNC extends Widget {
 const Quake = Widget.connect((state, props) => {
   const termux = state.get('backend').get('termux');
   if (!termux) {
-    return {busy: true, history: []};
+    return {busy: true, history: [], completion: ''};
   }
 
   return {
     busy: termux.get('busy', false),
     history: termux.get('history', []),
+    completion: termux.get('completion', ''),
   };
 })(QuakeNC);
 
