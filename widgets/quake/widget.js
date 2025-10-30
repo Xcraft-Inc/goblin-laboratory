@@ -133,11 +133,11 @@ class QuakeNC extends Widget {
       <div className="history" onMouseDown={this.setCliFocus}>
         {this.props.history.reverse().map((row, index) => (
           <span key={index}>
-            {row.split('\n').map((row) => (
-              <>
+            {row.split('\n').map((row, index) => (
+              <span key={index}>
                 {row.replaceAll(' ', ' ')}
                 <br />
-              </>
+              </span>
             ))}
           </span>
         ))}
