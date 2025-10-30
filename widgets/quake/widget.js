@@ -39,7 +39,9 @@ class QuakeNC extends Widget {
   componentDidUpdate(prevProps) {
     const {completion} = this.props;
     if (completion && prevProps.completion !== completion) {
-      this.setState({value: this.props.completion + ' '});
+      this.setState({
+        value: completion === '<empty>' ? '' : this.props.completion + ' ',
+      });
       this.clearCompletion();
     }
   }
@@ -51,6 +53,11 @@ class QuakeNC extends Widget {
   setTabulation = (prompt) => {
     const input = this.inputRef.current?.value;
     this.doFor('termux', 'setTabulation', {prompt, input});
+  };
+
+  setFromHistory = (up) => {
+    const input = this.inputRef.current?.value;
+    this.doFor('termux', 'setFromHistory', {up, input});
   };
 
   clearCompletion = () => {
@@ -91,6 +98,12 @@ class QuakeNC extends Widget {
       case 'Tab': {
         event.preventDefault();
         this.setTabulation(prompt);
+        break;
+      }
+      case 'ArrowUp':
+      case 'ArrowDown': {
+        event.preventDefault();
+        this.setFromHistory(event.key === 'ArrowUp');
         break;
       }
     }
