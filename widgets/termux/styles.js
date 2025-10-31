@@ -40,6 +40,7 @@ export default function styles() {
       flexGrow: 1,
       flexFlow: 'column-reverse',
       fontSize: 'medium',
+      wordWrap: 'break-word',
       ...fontColor,
     },
 
