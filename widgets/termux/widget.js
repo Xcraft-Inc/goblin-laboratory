@@ -50,9 +50,9 @@ class TermuxNC extends Widget {
     this.setState({show: !this.state.show});
   };
 
-  askForCompletion = (prompt) => {
+  askForCompletion = () => {
     const input = this.inputRef.current?.value;
-    this.doFor('termux', 'askForCompletion', {prompt, input});
+    this.doFor('termux', 'askForCompletion', {input});
   };
 
   setFromHistory = (up) => {
@@ -64,8 +64,8 @@ class TermuxNC extends Widget {
     this.doFor('termux', 'clearCompletion');
   };
 
-  sendCommand = (prompt, name, params) => {
-    this.doFor('termux', 'beginCommand', {prompt, name, params});
+  sendCommand = (name, params) => {
+    this.doFor('termux', 'beginCommand', {name, params});
   };
 
   setCliFocus = () => {
@@ -73,8 +73,6 @@ class TermuxNC extends Widget {
   };
 
   handleKeyDown = (event) => {
-    const prompt = '~ $';
-
     switch (event.key) {
       case 'Enter': {
         const {value} = this.state;
@@ -84,7 +82,7 @@ class TermuxNC extends Widget {
         const name = values[0];
         const params = values.slice(1);
 
-        this.sendCommand(prompt, name, params);
+        this.sendCommand(name, params);
         this.setState({value: ''});
         break;
       }
@@ -97,7 +95,7 @@ class TermuxNC extends Widget {
       }
       case 'Tab': {
         event.preventDefault();
-        this.askForCompletion(prompt);
+        this.askForCompletion();
         break;
       }
       case 'ArrowUp':
@@ -135,14 +133,14 @@ class TermuxNC extends Widget {
   };
 
   renderCli() {
-    const {busy} = this.props;
+    const {prompt, busy} = this.props;
     return (
       <div className="cli">
         {busy ? (
           <span>&nbsp;</span>
         ) : (
           <>
-            <span>~ $&nbsp;</span>
+            <span>{prompt}&nbsp;</span>
             <input
               className="input"
               type="text"
@@ -201,10 +199,10 @@ class TermuxNC extends Widget {
 const Termux = Widget.connect((state, props) => {
   const termux = state.get('backend').get('termux');
   if (!termux) {
-    return {busy: true, history: [], completion: ''};
+    return {prompt: '~ $', busy: true, history: [], completion: ''};
   }
-
   return {
+    prompt: termux.get('prompt', '~ $'),
     busy: termux.get('busy', false),
     history: termux.get('history', []),
     completion: termux.get('completion', ''),
