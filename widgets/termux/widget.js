@@ -64,8 +64,8 @@ class TermuxNC extends Widget {
     this.doFor('termux', 'clearCompletion');
   };
 
-  sendCommand = (name, params) => {
-    this.doFor('termux', 'beginCommand', {name, params});
+  sendCommand = (command) => {
+    this.doFor('termux', 'beginCommand', {command});
   };
 
   setCliFocus = () => {
@@ -76,13 +76,7 @@ class TermuxNC extends Widget {
     switch (event.key) {
       case 'Enter': {
         const {value} = this.state;
-
-        /* TODO: parse properly the parameters wuit quotes, etc. */
-        const values = value.split(' ');
-        const name = values[0];
-        const params = values.slice(1);
-
-        this.sendCommand(name, params);
+        this.sendCommand(value);
         this.setState({value: ''});
         break;
       }

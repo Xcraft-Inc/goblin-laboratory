@@ -53,9 +53,9 @@ describe('goblin.laboratory.termux.completion', function () {
 
       await termux.init();
 
-      await termux.beginCommand('$', 'cmd1', []);
+      await termux.beginCommand('cmd1');
       await termux.endCommand('done 1');
-      await termux.beginCommand('$', 'cmd2', []);
+      await termux.beginCommand('cmd2');
       await termux.endCommand('done 2');
 
       //////////////////////////////////////////////////////////////////////////
