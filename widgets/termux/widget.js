@@ -106,6 +106,20 @@ class TermuxNC extends Widget {
         this.setFromHistory(event.key === 'ArrowUp');
         break;
       }
+      case 'a':
+      case 'e': {
+        if (event.ctrlKey) {
+          event.preventDefault();
+          if (event.key === 'a') {
+            this.inputRef.current.setSelectionRange(0, 0);
+          } else if (event.key === 'e') {
+            const {length} = this.inputRef.current.value;
+            this.inputRef.current.setSelectionRange(length, length);
+          }
+          this.inputRef.current.focus();
+        }
+        break;
+      }
     }
 
     /* Handle scroll with a timeout because (just after the send, the new state
