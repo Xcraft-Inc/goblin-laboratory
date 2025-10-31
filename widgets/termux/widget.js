@@ -74,12 +74,14 @@ class TermuxNC extends Widget {
 
   handleKeyDown = (event) => {
     switch (event.key) {
+      /* Valid the command line */
       case 'Enter': {
         const {value} = this.state;
         this.sendCommand(value);
         this.setState({value: ''});
         break;
       }
+      /* Show or hide the console */
       case 'F12': {
         if (event.altKey) {
           event.preventDefault();
@@ -87,17 +89,20 @@ class TermuxNC extends Widget {
         }
         break;
       }
+      /* Try to autocomplete */
       case 'Tab': {
         event.preventDefault();
         this.askForCompletion();
         break;
       }
+      /* Move into the command history */
       case 'ArrowUp':
       case 'ArrowDown': {
         event.preventDefault();
         this.setFromHistory(event.key === 'ArrowUp');
         break;
       }
+      /* [a] move to the begining, [e] move to the end */
       case 'a':
       case 'e': {
         if (event.ctrlKey) {
@@ -112,6 +117,7 @@ class TermuxNC extends Widget {
         }
         break;
       }
+      /* Erase the whole line */
       case 'u': {
         if (event.ctrlKey) {
           this.setState({value: ''});
