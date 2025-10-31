@@ -112,6 +112,12 @@ class TermuxNC extends Widget {
         }
         break;
       }
+      case 'u': {
+        if (event.ctrlKey) {
+          this.setState({value: ''});
+        }
+        break;
+      }
     }
 
     /* Handle scroll with a timeout because (just after the send, the new state
