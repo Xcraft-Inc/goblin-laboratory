@@ -124,6 +124,15 @@ class TermuxNC extends Widget {
         }
         break;
       }
+      /* Remove the previous word */
+      case 'w': {
+        if (event.ctrlKey) {
+          const values = this.state.value.split(' ');
+          const value = values.slice(0, -1).join(' ');
+          this.setState({value});
+        }
+        break;
+      }
     }
 
     /* Handle scroll with a timeout because (just after the send, the new state
