@@ -58,11 +58,13 @@ describe('goblin.laboratory.termux.completion', function () {
       await termux.beginCommand('$', 'cmd2', []);
       await termux.endCommand('done 2');
 
+      //////////////////////////////////////////////////////////////////////////
+
       await termux.setFromHistory(true, 'cmd2 '); // UP
       state = await this.quest.getState('termux');
       expect(state.get('completion')).to.be.equal('cmd1');
 
-      await termux.setFromHistory(true, 'cmd1 '); // UP
+      await termux.setFromHistory(true, 'cmd1 '); // UP (roof)
       state = await this.quest.getState('termux');
       expect(state.get('completion')).to.be.equal('cmd1');
 
@@ -70,7 +72,17 @@ describe('goblin.laboratory.termux.completion', function () {
       state = await this.quest.getState('termux');
       expect(state.get('completion')).to.be.equal('cmd2');
 
-      await termux.setFromHistory(false, 'cmd2 '); // DOWN
+      await termux.setFromHistory(false, 'cmd2 '); // DOWN (ground)
+      state = await this.quest.getState('termux');
+      expect(state.get('completion')).to.be.equal('<empty>');
+
+      //////////////////////////////////////////////////////////////////////////
+
+      await termux.setFromHistory(true, 'cmd3 '); // UP
+      state = await this.quest.getState('termux');
+      expect(state.get('completion')).to.be.equal('<empty>');
+
+      await termux.setFromHistory(false, 'cmd3 '); // DOWN
       state = await this.quest.getState('termux');
       expect(state.get('completion')).to.be.equal('<empty>');
     }
