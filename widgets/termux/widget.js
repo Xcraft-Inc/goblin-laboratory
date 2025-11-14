@@ -64,8 +64,12 @@ class TermuxNC extends Widget {
     this.doFor('termux', 'clearCompletion');
   };
 
-  sendCommand = (command) => {
+  beginCommand = (command) => {
     this.doFor('termux', 'beginCommand', {command});
+  };
+
+  inputCommand = (input) => {
+    this.doFor('termux', 'inputCommand', {input});
   };
 
   setCliFocus = () => {
@@ -77,7 +81,12 @@ class TermuxNC extends Widget {
       /* Valid the command line */
       case 'Enter': {
         const {value} = this.state;
-        this.sendCommand(value);
+        const {inputCommand} = this.props;
+        if (inputCommand) {
+          this.inputCommand(value);
+        } else {
+          this.beginCommand(value);
+        }
         this.setState({value: ''});
         break;
       }
@@ -214,13 +223,20 @@ class TermuxNC extends Widget {
 const Termux = Widget.connect((state, props) => {
   const termux = state.get('backend').get('termux');
   if (!termux) {
-    return {prompt: '~ $', busy: true, history: [], completion: ''};
+    return {
+      prompt: '~ $',
+      busy: true,
+      history: [],
+      completion: '',
+      inputCommand: false,
+    };
   }
   return {
     prompt: termux.get('prompt', '~ $'),
     busy: termux.get('busy', false),
     history: termux.get('history', []),
     completion: termux.get('completion', ''),
+    inputCommand: termux.get('inputCommand', false),
   };
 })(TermuxNC);
 
