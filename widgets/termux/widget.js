@@ -72,6 +72,10 @@ class TermuxNC extends Widget {
     this.doFor('termux', 'inputCommand', {input});
   };
 
+  sendSignal = (signal) => {
+    this.doFor('termux', 'signal', {signal});
+  };
+
   setCliFocus = () => {
     setTimeout(() => this.inputRef.current?.focus());
   };
@@ -139,6 +143,13 @@ class TermuxNC extends Widget {
           const values = this.state.value.split(' ');
           const value = values.slice(0, -1).join(' ');
           this.setState({value});
+        }
+        break;
+      }
+      /* Ctrl+C: SIGINT */
+      case 'c': {
+        if (event.ctrlKey) {
+          this.sendSignal('SIGINT');
         }
         break;
       }
