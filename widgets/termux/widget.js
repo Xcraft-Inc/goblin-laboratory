@@ -52,24 +52,37 @@ class TermuxNC extends Widget {
 
   askForCompletion = () => {
     const input = this.inputRef.current?.value;
-    this.doFor('termux', 'askForCompletion', {input});
+    this.doFor('termux', 'askForCompletion', {
+      desktopId: this.props.desktopId,
+      input,
+    });
   };
 
   setFromHistory = (up) => {
     const input = this.inputRef.current?.value;
-    this.doFor('termux', 'setFromHistory', {up, input});
+    this.doFor('termux', 'setFromHistory', {
+      desktopId: this.props.desktopId,
+      up,
+      input,
+    });
   };
 
   clearCompletion = () => {
-    this.doFor('termux', 'clearCompletion');
+    this.doFor('termux', 'clearCompletion', {desktopId: this.props.desktopId});
   };
 
   beginCommand = (command) => {
-    this.doFor('termux', 'beginCommand', {command});
+    this.doFor('termux', 'beginCommand', {
+      desktopId: this.props.desktopId,
+      command,
+    });
   };
 
   inputCommand = (input) => {
-    this.doFor('termux', 'inputCommand', {input});
+    this.doFor('termux', 'inputCommand', {
+      desktopId: this.props.desktopId,
+      input,
+    });
   };
 
   setCliFocus = () => {
@@ -222,6 +235,7 @@ class TermuxNC extends Widget {
 
 const Termux = Widget.connect((state, props) => {
   const termux = state.get('backend').get('termux');
+  const desktopId = state.get('backend').get(props.labId).get('feed');
   if (!termux) {
     return {
       prompt: '~ $',
@@ -229,6 +243,7 @@ const Termux = Widget.connect((state, props) => {
       history: [],
       completion: '',
       inputCommand: false,
+      desktopId,
     };
   }
   return {
@@ -237,6 +252,7 @@ const Termux = Widget.connect((state, props) => {
     history: termux.get('history', []),
     completion: termux.get('completion', ''),
     inputCommand: termux.get('inputCommand', false),
+    desktopId,
   };
 })(TermuxNC);
 
