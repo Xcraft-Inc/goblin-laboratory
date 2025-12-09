@@ -34,7 +34,7 @@ export default function (
 ) {
   return connect(
     withShredder(mapStateToProps),
-    mapDispatchToProps,
+    mapDispatchToProps || (() => ({})),
     mergeProps,
     {
       pure: true,
