@@ -5,15 +5,28 @@ import Shredder from 'xcraft-core-shredder';
 import shallowEqualShredder from './shallowEqualShredder';
 import wrapMapStateToProps from './wrapMapStateToProps';
 
+let lastState = null;
+let lastShredder = null;
+
+function stateToShredder(state) {
+  if (state === lastState) {
+    return lastShredder;
+  }
+  const s = new Shredder({
+    backend: state.backend,
+    widgets: state.widgets,
+    network: state.network,
+  });
+  lastState = state;
+  lastShredder = s;
+  return s;
+}
+
 function withShredder(mapStateToProps) {
   mapStateToProps = wrapMapStateToProps(mapStateToProps);
 
   const mapStateToPropsWithOwnProps = (state, ownProps) => {
-    const s = new Shredder({
-      backend: state.backend,
-      widgets: state.widgets,
-      network: state.network,
-    });
+    const s = stateToShredder(state);
     return mapStateToProps(s, ownProps);
   };
 
