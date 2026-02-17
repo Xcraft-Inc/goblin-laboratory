@@ -77,7 +77,7 @@ export default function withC(Component, dispatchProps = {}, {modelProp} = {}) {
   // It applies "inFunc" to the connected props and
   // prevents giving internal props (starting with "_") to the underlying component
   const ConnectedPropsMapper = (props) => {
-    let {_connectedProps, _connectedProp, ...otherProps} = props;
+    let {_connectedProps, _connectedProp, _model, ...otherProps} = props;
     const newProps = {};
     for (const prop of _connectedProps) {
       const inFunc = prop.inFunc;
@@ -158,7 +158,7 @@ export default function withC(Component, dispatchProps = {}, {modelProp} = {}) {
       if (path === null || path === undefined) {
         return null;
       }
-      const model = this.props.model || this.context.model;
+      const model = this.props._model || this.context.model;
       return joinModels(model, path);
     }
 
@@ -246,7 +246,8 @@ export default function withC(Component, dispatchProps = {}, {modelProp} = {}) {
 
     // Render function used when there is no connected prop
     renderNotConnected() {
-      return <Component {...this.props} />;
+      const {_model, ...props} = this.props;
+      return <Component {...props} />;
     }
 
     render() {
@@ -276,7 +277,7 @@ export default function withC(Component, dispatchProps = {}, {modelProp} = {}) {
 
   return (props) => (
     <ModelContext.Consumer>
-      {(model) => <WithC model={model} {...props} />}
+      {(model) => <WithC _model={model} {...props} />}
     </ModelContext.Consumer>
   );
 }
