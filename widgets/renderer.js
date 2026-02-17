@@ -48,7 +48,7 @@ class Renderer {
   }
 
   newBackendState(transitState) {
-    setTimeout(() =>
+    queueMicrotask(() =>
       this.store.dispatch({
         type: 'NEW_BACKEND_STATE',
         data: transitState,
