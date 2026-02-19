@@ -36,5 +36,18 @@ export default function configureStore(initialState, history, send) {
       store.replaceReducer(nextRootReducer);
     });
   }
+
+  const subscribe = store.subscribe.bind(store);
+  store.subscribe = (listener) => {
+    let previousState = undefined;
+    return subscribe(() => {
+      const state = store.getState();
+      if (state !== previousState) {
+        previousState = state;
+        listener();
+      }
+    });
+  };
+
   return store;
 }
