@@ -29,6 +29,8 @@ const throttle250 = _.throttle((fct) => fct(), 250);
 // }
 
 class Widget extends React.Component {
+  static #nameCache = new Map();
+
   constructor() {
     super(...arguments);
     this._names = this._getInheritedNames();
@@ -44,7 +46,14 @@ class Widget extends React.Component {
   }
 
   static getWidgetName(constructorName) {
-    return constructorName.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+    if (this.#nameCache.has(constructorName)) {
+      return this.#nameCache.get(constructorName);
+    }
+    const name = constructorName
+      .replace(/([a-z])([A-Z])/g, '$1-$2')
+      .toLowerCase();
+    this.#nameCache.set(constructorName, name);
+    return name;
   }
 
   _getInheritedNames() {
