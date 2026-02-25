@@ -314,7 +314,8 @@ class Widget extends React.Component {
   }
   /** @deprecated Replace by doFor.
    * It's possible to have a mismatch between service name and serviceId.
-   * Prefer to use doFor with the service id. */
+   * Prefer to use doFor with the service id.
+   */
   doAs(service, action, args) {
     const id = this.props.id || this.context.id;
     if (!id) {
