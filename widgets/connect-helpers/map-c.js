@@ -5,7 +5,12 @@ export default function mapC(value, inFunc, outFunc) {
     return C(
       value.path,
       value.inFunc ? (...args) => inFunc(value.inFunc(...args)) : inFunc,
-      value.outFunc ? (...args) => value.outFunc(outFunc(...args)) : outFunc
+      value.outFunc
+        ? value.outFunc.length > 1 || outFunc.length > 1
+          ? (newValue, ...oldValues) =>
+              value.outFunc(outFunc(newValue, ...oldValues), ...oldValues)
+          : (newValue) => value.outFunc(outFunc(newValue))
+        : outFunc
     );
   }
   return inFunc(value);
