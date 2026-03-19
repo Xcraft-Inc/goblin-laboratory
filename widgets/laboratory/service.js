@@ -164,10 +164,7 @@ Goblin.registerQuest(goblinName, 'create', function* (
     })
   );
 
-  quest.doSync(
-    {id: quest.goblin.id, feed, wid: winId, url, config},
-    next.parallel()
-  );
+  yield quest.doSync({id: quest.goblin.id, feed, wid: winId, url, config});
 
   yield quest.me.initZoom({clientSessionId});
   yield quest.me.initTheme({clientSessionId});
