@@ -207,11 +207,6 @@ Goblin.registerQuest(goblinName, 'create', async function (
     },
   });
 
-  /*const titlebarInfos = yield win.getTitlebar();
-  if (titlebarInfos) {
-    const {titlebar, titlebarId} = titlebarInfos;
-    yield quest.me.setTitlebar({titlebar, titlebarId});
-  }*/
   quest.log.info(() => `Laboratory ${quest.goblin.id} created!`);
   return quest.goblin.id;
 });
