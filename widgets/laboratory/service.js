@@ -85,14 +85,13 @@ const logicHandlers = {
 };
 
 // Register quest's according rc.json
-Goblin.registerQuest(goblinName, 'create', function* (
+Goblin.registerQuest(goblinName, 'create', async function (
   quest,
   desktopId,
   clientSessionId,
   userId,
   url,
-  config,
-  next
+  config
 ) {
   quest.goblin.setX('url', url);
   quest.goblin.setX('desktopId', desktopId);
@@ -106,7 +105,7 @@ Goblin.registerQuest(goblinName, 'create', function* (
   config.feeds.push('termux');
 
   const termux = new Termux(quest);
-  yield termux.init();
+  await termux.init();
 
   const promises = [];
   for (const ctx of themeContexts) {
@@ -119,13 +118,13 @@ Goblin.registerQuest(goblinName, 'create', function* (
     );
     config.feeds.push(composerId);
   }
-  yield Promise.all(promises);
+  await Promise.all(promises);
 
   const id = quest.goblin.id;
 
   quest.goblin.defer(
-    quest.sub('goblin.released', function* (err, {msg, resp}) {
-      yield resp.cmd('laboratory.del', {
+    quest.sub('goblin.released', async (err, {msg, resp}) => {
+      await resp.cmd('laboratory.del', {
         id,
         widgetId: msg.data.id,
       });
@@ -135,8 +134,8 @@ Goblin.registerQuest(goblinName, 'create', function* (
   quest.goblin.defer(
     quest.sub(
       `*::theme-composer@*.${clientSessionId}.reload-theme.requested`,
-      function* (err, {msg, resp}) {
-        yield resp.cmd('laboratory.reload-theme', {...msg.data, id});
+      async (err, {msg, resp}) => {
+        await resp.cmd('laboratory.reload-theme', {...msg.data, id});
       }
     )
   );
@@ -164,16 +163,16 @@ Goblin.registerQuest(goblinName, 'create', function* (
     })
   );
 
-  yield quest.doSync({id: quest.goblin.id, feed, wid: winId, url, config});
+  await quest.doSync({id: quest.goblin.id, feed, wid: winId, url, config});
 
-  yield quest.me.initZoom({clientSessionId});
-  yield quest.me.initTheme({clientSessionId});
+  await quest.me.initZoom({clientSessionId});
+  await quest.me.initTheme({clientSessionId});
 
   quest.goblin.defer(
     quest.sub.local(
       `*::${winId}.${clientSessionId}.<window-closed>`,
-      function* (err, {msg, resp}) {
-        yield resp.cmd('laboratory.close', {id});
+      async (err, {msg, resp}) => {
+        await resp.cmd('laboratory.close', {id});
       }
     )
   );
@@ -181,8 +180,8 @@ Goblin.registerQuest(goblinName, 'create', function* (
   quest.goblin.defer(
     quest.sub.local(
       `*::${winId}.${clientSessionId}.<window-state-changed>`,
-      function* (err, {msg, resp}) {
-        yield resp.cmd('laboratory.save-window-state', {
+      async (err, {msg, resp}) => {
+        await resp.cmd('laboratory.save-window-state', {
           id,
           winId,
           state: msg.data.state,
@@ -190,7 +189,7 @@ Goblin.registerQuest(goblinName, 'create', function* (
       }
     )
   );
-  yield quest.create('wm', {
+  await quest.create('wm', {
     id: winId,
     desktopId,
     url,
@@ -217,15 +216,15 @@ Goblin.registerQuest(goblinName, 'create', function* (
   return quest.goblin.id;
 });
 
-Goblin.registerQuest(goblinName, 'close', function* (quest) {
+Goblin.registerQuest(goblinName, 'close', async function (quest) {
   const clientSessionId = quest.goblin.getX('clientSessionId');
   const labId = quest.goblin.id;
 
-  yield quest.cmd('client-session.close-window', {
+  await quest.cmd('client-session.close-window', {
     id: clientSessionId,
     winId: `wm@${labId}`,
   });
-  yield quest.cmd('client.close-window', {labId});
+  await quest.cmd('client.close-window', {labId});
   quest.release(labId);
 });
 
@@ -241,17 +240,17 @@ Goblin.registerQuest(goblinName, 'get-win-feed', function (quest) {
   };
 });
 
-Goblin.registerQuest(goblinName, 'set-feed', function* (quest, desktopId) {
+Goblin.registerQuest(goblinName, 'set-feed', async function (quest, desktopId) {
   quest.goblin.setX('desktopId', desktopId);
   const feeds = quest.goblin.getState().get('feeds');
   const wm = quest.getAPI(`wm@${quest.goblin.id}`);
-  yield wm.feedSub({desktopId, feeds: feeds.valueSeq().toArray()});
+  await wm.feedSub({desktopId, feeds: feeds.valueSeq().toArray()});
 
   const labId = quest.goblin.id;
   const clientSessionId = quest.goblin.getState().get('clientSessionId');
   const fromFeed = quest.goblin.getState().get('feed');
   for (const branch of [labId, clientSessionId].filter((id) => !!id)) {
-    yield quest.warehouse.graft({
+    await quest.warehouse.graft({
       branch,
       fromFeed,
       toFeed: desktopId,
@@ -259,7 +258,7 @@ Goblin.registerQuest(goblinName, 'set-feed', function* (quest, desktopId) {
   }
 
   quest.do();
-  yield quest.warehouse.resend({feed: desktopId});
+  await quest.warehouse.resend({feed: desktopId});
 });
 
 Goblin.registerQuest(goblinName, 'set-titlebar', function (
@@ -278,11 +277,11 @@ Goblin.registerQuest(goblinName, 'get-url', function (quest) {
   return quest.goblin.getX('url');
 });
 
-Goblin.registerQuest(goblinName, 'duplicate', function* (quest, forId) {
+Goblin.registerQuest(goblinName, 'duplicate', async function (quest, forId) {
   const state = quest.goblin.getState();
   const url = state.get('url');
   const newLabId = `laboratory@${quest.uuidV4()}`;
-  const lab = yield quest.createFor(forId, forId, newLabId, {
+  const lab = await quest.createFor(forId, forId, newLabId, {
     id: newLabId,
     url,
   });
@@ -321,7 +320,7 @@ Goblin.registerQuest(goblinName, 'set-root', function (
   quest.do();
 });
 
-Goblin.registerQuest(goblinName, 'listen', function* (
+Goblin.registerQuest(goblinName, 'listen', async function (
   quest,
   desktopId,
   userId,
@@ -335,14 +334,14 @@ Goblin.registerQuest(goblinName, 'listen', function* (
 
   if (userId) {
     const wmAPI = quest.getAPI(`wm@${quest.goblin.id}`);
-    yield wmAPI.setUserId({userId});
+    await wmAPI.setUserId({userId});
   }
 
   const labId = quest.goblin.id;
   quest.goblin.setX(
     `nav-unsub`,
-    quest.sub(`*::<${desktopId}>.nav.requested`, function* (err, {msg, resp}) {
-      yield resp.cmd('laboratory.nav', {
+    quest.sub(`*::<${desktopId}>.nav.requested`, async (err, {msg, resp}) => {
+      await resp.cmd('laboratory.nav', {
         id: labId,
         desktopId,
         ...msg.data,
@@ -352,28 +351,28 @@ Goblin.registerQuest(goblinName, 'listen', function* (
 
   quest.goblin.setX(
     `change-theme-unsub`,
-    quest.sub(`*::<${desktopId}>.change-theme.requested`, function* (
-      err,
-      {msg, resp}
-    ) {
-      yield resp.cmd('laboratory.change-theme', {
-        id: labId,
-        ...msg.data,
-      });
-    })
+    quest.sub(
+      `*::<${desktopId}>.change-theme.requested`,
+      async (err, {msg, resp}) => {
+        await resp.cmd('laboratory.change-theme', {
+          id: labId,
+          ...msg.data,
+        });
+      }
+    )
   );
 
   quest.goblin.setX(
     `dispatch-unsub`,
-    quest.sub(`*::<${desktopId}>.dispatch.requested`, function* (
-      err,
-      {msg, resp}
-    ) {
-      yield resp.cmd('laboratory.dispatch', {
-        id: labId,
-        ...msg.data,
-      });
-    })
+    quest.sub(
+      `*::<${desktopId}>.dispatch.requested`,
+      async (err, {msg, resp}) => {
+        await resp.cmd('laboratory.dispatch', {
+          id: labId,
+          ...msg.data,
+        });
+      }
+    )
   );
 });
 
@@ -388,29 +387,32 @@ function unlisten(quest) {
   }
 }
 
-Goblin.registerQuest(goblinName, 'nav', function* (quest, route) {
+Goblin.registerQuest(goblinName, 'nav', async function (quest, route) {
   const win = quest.getAPI(`wm@${quest.goblin.id}`);
-  yield win.nav({route});
+  await win.nav({route});
 });
 
 /************************        SETTINGS      *********************************/
 
-Goblin.registerQuest(goblinName, 'save-settings', function* (quest, propertie) {
+Goblin.registerQuest(goblinName, 'save-settings', async function (
+  quest,
+  propertie
+) {
   const value = quest.goblin.getState().get(propertie);
   const clientSessionId = quest.goblin.getX('clientSessionId');
-  yield quest.cmd(`client-session.set-${propertie}`, {
+  await quest.cmd(`client-session.set-${propertie}`, {
     id: clientSessionId,
     [propertie]: value,
   });
 });
 
-Goblin.registerQuest(goblinName, 'save-window-state', function* (
+Goblin.registerQuest(goblinName, 'save-window-state', async function (
   quest,
   winId,
   state
 ) {
   const clientSessionId = quest.goblin.getX('clientSessionId');
-  yield quest.cmd(`client-session.set-window-state`, {
+  await quest.cmd(`client-session.set-window-state`, {
     id: clientSessionId,
     winId,
     state,
@@ -419,22 +421,22 @@ Goblin.registerQuest(goblinName, 'save-window-state', function* (
 
 /******************************************************************************/
 
-Goblin.registerQuest(goblinName, 'init-theme', function* (
+Goblin.registerQuest(goblinName, 'init-theme', async function (
   quest,
   clientSessionId
 ) {
-  const name = yield quest.cmd('client-session.get-theme', {
+  const name = await quest.cmd('client-session.get-theme', {
     id: clientSessionId,
   });
 
   if (name) {
-    yield quest.me.changeTheme({name});
+    await quest.me.changeTheme({name});
   }
 });
 
-Goblin.registerQuest(goblinName, 'change-theme', function* (quest, name) {
+Goblin.registerQuest(goblinName, 'change-theme', async function (quest, name) {
   quest.do({name});
-  yield quest.me.saveSettings({propertie: 'theme'});
+  await quest.me.saveSettings({propertie: 'theme'});
 });
 
 Goblin.registerQuest(goblinName, 'reload-theme', function (quest, name) {
@@ -443,49 +445,47 @@ Goblin.registerQuest(goblinName, 'reload-theme', function (quest, name) {
 
 /******************************************************************************/
 
-Goblin.registerQuest(goblinName, 'init-zoom', function* (
+Goblin.registerQuest(goblinName, 'init-zoom', async function (
   quest,
   clientSessionId
 ) {
-  let zoom = yield quest.cmd('client-session.get-zoom', {
+  let zoom = await quest.cmd('client-session.get-zoom', {
     id: clientSessionId,
   });
 
-  yield quest.me.setZoom({
-    zoom,
-  });
+  await quest.me.setZoom({zoom});
 });
 
-Goblin.registerQuest(goblinName, 'set-zoom', function* (quest) {
+Goblin.registerQuest(goblinName, 'set-zoom', async function (quest) {
   quest.do();
-  yield quest.me.saveSettings({propertie: 'zoom'});
+  await quest.me.saveSettings({propertie: 'zoom'});
 });
 
-Goblin.registerQuest(goblinName, 'zoom', function* (quest) {
+Goblin.registerQuest(goblinName, 'zoom', async function (quest) {
   quest.do();
-  yield quest.me.saveSettings({propertie: 'zoom'});
+  await quest.me.saveSettings({propertie: 'zoom'});
 });
 
-Goblin.registerQuest(goblinName, 'un-zoom', function* (quest) {
+Goblin.registerQuest(goblinName, 'un-zoom', async function (quest) {
   quest.do();
-  yield quest.me.saveSettings({propertie: 'zoom'});
+  await quest.me.saveSettings({propertie: 'zoom'});
 });
 
-Goblin.registerQuest(goblinName, 'default-zoom', function* (quest) {
+Goblin.registerQuest(goblinName, 'default-zoom', async function (quest) {
   quest.do();
-  yield quest.me.saveSettings({propertie: 'zoom'});
+  await quest.me.saveSettings({propertie: 'zoom'});
 });
 
-Goblin.registerQuest(goblinName, 'change-zoom', function* (quest) {
+Goblin.registerQuest(goblinName, 'change-zoom', async function (quest) {
   quest.do();
-  yield quest.me.saveSettings({propertie: 'zoom'});
+  await quest.me.saveSettings({propertie: 'zoom'});
 });
 
 /******************************************************************************/
 
-Goblin.registerQuest(goblinName, 'dispatch', function* (quest, action) {
+Goblin.registerQuest(goblinName, 'dispatch', async function (quest, action) {
   const win = quest.getAPI(`wm@${quest.goblin.id}`);
-  yield win.dispatch({action});
+  await win.dispatch({action});
 });
 
 Goblin.registerQuest(goblinName, 'open', function (quest, route) {
@@ -493,7 +493,7 @@ Goblin.registerQuest(goblinName, 'open', function (quest, route) {
   quest.log.info(route);
 });
 
-Goblin.registerQuest(goblinName, 'del', function* (quest, widgetId) {
+Goblin.registerQuest(goblinName, 'del', async function (quest, widgetId) {
   const state = quest.goblin.getState();
   const feed = state.get('feed');
   const branch = widgetId;
@@ -503,12 +503,12 @@ Goblin.registerQuest(goblinName, 'del', function* (quest, widgetId) {
   if (quest.goblin.getX('forceDispose')) {
     const WM = require('xcraft-core-host/lib/wm.js').instance;
     WM.disposeAll();
-    quest.cmd('shutdown'); /* no yield here because it's terminated */
+    quest.cmd('shutdown'); /* no await here because it's terminated */
     return;
   }
 
   if (branch === feed || (branch === labId && useConfigurator === false)) {
-    yield quest.warehouse.unsubscribe({feed: branch});
+    await quest.warehouse.unsubscribe({feed: branch});
   } else {
     quest.log.info(
       `Laboratory deleting widget ${widgetId} from window ${feed}`
@@ -520,7 +520,7 @@ Goblin.registerQuest(goblinName, 'del', function* (quest, widgetId) {
     if (branch === labId) {
       parents.push(`goblin-orc@*`);
     }
-    yield quest.warehouse.feedSubscriptionDel({feed, branch, parents});
+    await quest.warehouse.feedSubscriptionDel({feed, branch, parents});
   }
 });
 
