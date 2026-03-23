@@ -1,20 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Root from 'goblin-laboratory/widgets/root';
-import {createHashHistory} from 'history';
-import {push} from 'connected-react-router/immutable';
 import configureStore from 'goblin-laboratory/widgets/store/store';
 
 class Renderer {
   constructor(send, options = {}) {
     this.send = send;
-    this.push = push;
     this.options = options;
 
     this.history = undefined;
-    if (this.options.useRouter !== false) {
-      this.history = createHashHistory();
-    }
 
     this._store = configureStore(
       window.__INITIAL_STATE__,
@@ -69,12 +63,7 @@ class Renderer {
       render = ReactDOM.hydrate;
     }
     render(
-      <Root
-        store={this.store}
-        labId={labId}
-        useRouter={this.options.useRouter !== false}
-        history={this.history}
-      />,
+      <Root store={this.store} labId={labId} history={this.history} />,
       rootElement
     );
   }

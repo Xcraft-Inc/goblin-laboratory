@@ -2,7 +2,6 @@ import React from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import Shredder from 'xcraft-core-shredder';
-import {push} from 'connected-react-router/immutable';
 import {flushToStyleTag} from 'aphrodite/no-important';
 import importer from 'goblin_importer';
 import shallowEqualShredder from './utils/shallowEqualShredder';
@@ -430,12 +429,8 @@ class Widget extends React.Component {
     this.context.store.dispatch(action);
   }
 
-  nav(route, frontOnly) {
-    if (frontOnly) {
-      this.context.dispatch(push(route));
-    } else {
-      this.doFor(this.context.labId, 'nav', {route});
-    }
+  nav(route) {
+    this.doFor(this.context.labId, 'nav', {route});
   }
 
   setBackendValue(path, value) {

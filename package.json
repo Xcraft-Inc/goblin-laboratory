@@ -37,7 +37,6 @@
   },
   "devDependencies": {
     "aphrodite": "^2.2.2",
-    "connected-react-router": "^6.3.2",
     "css-key": "^1.0.0",
     "@fortawesome/react-fontawesome": "^0.1.9",
     "history": "^4.6.1",
