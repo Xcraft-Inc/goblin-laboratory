@@ -1,8 +1,8 @@
 import {connect} from 'react-redux';
 import Shredder from 'xcraft-core-shredder';
-import {matchPath} from 'react-router';
 import {getParameter} from '../../lib/helpers.js';
 import shallowEqualShredder from '../widget/utils/shallowEqualShredder.js';
+import matchPath from './matchPath.js';
 
 export function withRoute(path, watchedParams, watchedSearchs, watchHash) {
   return connect(
