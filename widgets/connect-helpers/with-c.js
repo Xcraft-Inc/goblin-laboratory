@@ -226,16 +226,22 @@ export default function withC(Component, dispatchProps = {}, {modelProp} = {}) {
             const outFunc = prop.outFunc;
             if (outFunc) {
               if (outFunc.length > 1) {
-                let currentValues;
                 if (Array.isArray(prop.fullPath)) {
-                  currentValues = prop.fullPath.map((path) =>
-                    this.getState(path)
-                  );
+                  onChangeProps[dispatchPropName] = (value) => {
+                    const currentValues = prop.fullPath.map((path) =>
+                      this.getState(path)
+                    );
+                    this.handlePropChange(
+                      name,
+                      outFunc(value, ...currentValues)
+                    );
+                  };
                 } else {
-                  currentValues = [this.getState(prop.fullPath)];
+                  onChangeProps[dispatchPropName] = (value) => {
+                    const currentValue = this.getState(prop.fullPath);
+                    this.handlePropChange(name, outFunc(value, currentValue));
+                  };
                 }
-                onChangeProps[dispatchPropName] = (value) =>
-                  this.handlePropChange(name, outFunc(value, ...currentValues));
               } else {
                 onChangeProps[dispatchPropName] = (value) =>
                   this.handlePropChange(name, outFunc(value));
