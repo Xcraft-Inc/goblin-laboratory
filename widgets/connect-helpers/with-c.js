@@ -27,13 +27,13 @@ function isShredderOrImmutable(obj) {
  * ```
  * And then the prop "value" can be connected to the state using:
  * ```javascript
- * <TextFieldNC
+ * <TextField
  *   value={C('.age')}
  * />
  * ```
  * Two functions can be applied, when reading and writing to the state:
  * ```javascript
- * <TextFieldNC
+ * <TextField
  *   value={C('.age', age => age + '', age => Number(age))}
  * />
  * ```
@@ -53,7 +53,7 @@ function isShredderOrImmutable(obj) {
  *
  * It is possible to connect a prop to multiple values in the state:
  * ```javascript
- * <TextFieldNC
+ * <TextField
  *   value={C(['.age', '.limit'], (age, limit) => age > limit ? age : limit)}
  * />
  * ```
