@@ -53,8 +53,24 @@ function isShredderOrImmutable(obj) {
  *
  * It is possible to connect a prop to multiple values in the state:
  * ```javascript
- * <TextField
- *   value={C(['.age', '.limit'], (age, limit) => age > limit ? age : limit)}
+ * <Label
+ *   text={C(['.firstname', '.lastname'], (firstname, lastname) => `${firstname} ${lastname}`)}
+ * />
+ * ```
+ *
+ * When multiple values are connected, the write action is "patch"
+ * and the output function must return a patch object:
+ * ```javascript
+ * <TextFieldTyped
+ *   type="date"
+ *   value={C(
+ *     ['.year', '.month', '.day'],
+ *     (year, month, day) => `${year}-${month}-${day}`,
+ *     (value) => {
+ *       const [year, month, day] = value.split('-');
+ *       return {year, month, day};
+ *     }
+ *   )}
  * />
  * ```
  *
@@ -163,7 +179,32 @@ export default function withC(Component, dispatchProps = {}, {modelProp} = {}) {
     }
 
     handlePropChange(propName, value) {
-      const path = this.addContextToPath(this.props[propName].path);
+      const propPath = this.props[propName].path;
+
+      if (Array.isArray(propPath)) {
+        const [root, id, ...pathArray] = (
+          this.props._model || this.context.model
+        ).split('.');
+        if (pathArray.length > 0) {
+          throw new Error(`Patch with a path is not supported`);
+        }
+        if (root === 'backend') {
+          this.doFor(id, 'patch', {patch: value});
+          return;
+        } else if (root === 'widgets') {
+          this.dispatchTo(id, {
+            type: 'PATCH',
+            patch: value,
+          });
+          return;
+        } else {
+          throw new Error(
+            `Model path starting with '${root}' is not supported.`
+          );
+        }
+      }
+
+      const path = this.addContextToPath(propPath);
       if (!path) {
         throw new Error(`Path is not defined`);
       }
