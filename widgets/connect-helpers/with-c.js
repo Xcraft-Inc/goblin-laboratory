@@ -95,18 +95,17 @@ export default function withC(Component, dispatchProps = {}, {modelProp} = {}) {
   const ConnectedPropsMapper = (props) => {
     let {_connectedProps, _connectedProp, _model, ...otherProps} = props;
     const newProps = {};
-    for (const prop of _connectedProps) {
+    for (const {name, prop, fullPath} of _connectedProps) {
       const inFunc = prop.inFunc;
       if (inFunc) {
-        const name = prop.name;
         if (name === '_connectedProp') {
-          if (Array.isArray(prop.fullPath)) {
+          if (Array.isArray(fullPath)) {
             _connectedProp = inFunc(..._connectedProp);
           } else {
             _connectedProp = inFunc(_connectedProp);
           }
         } else {
-          if (Array.isArray(prop.fullPath)) {
+          if (Array.isArray(fullPath)) {
             newProps[name] = inFunc(...props[name]);
           } else {
             newProps[name] = inFunc(props[name]);
@@ -120,7 +119,7 @@ export default function withC(Component, dispatchProps = {}, {modelProp} = {}) {
     }
     if (modelProp) {
       const connectedModelProp = _connectedProps.find(
-        (prop) => prop.name === modelProp
+        ({name}) => name === modelProp
       );
       if (connectedModelProp) {
         const path = connectedModelProp.path;
@@ -140,8 +139,7 @@ export default function withC(Component, dispatchProps = {}, {modelProp} = {}) {
   const ConnectedComponent = Widget.connect(
     (state, props) => {
       const newProps = {};
-      for (const prop of props._connectedProps) {
-        const fullPath = prop.fullPath;
+      for (const {name, fullPath} of props._connectedProps) {
         let value;
         if (Array.isArray(fullPath)) {
           value = fullPath.map((p) => state.get(p));
@@ -150,7 +148,7 @@ export default function withC(Component, dispatchProps = {}, {modelProp} = {}) {
         } else {
           value = state.get(fullPath);
         }
-        newProps[prop.name] = value;
+        newProps[name] = value;
       }
       return newProps;
     },
@@ -244,22 +242,22 @@ export default function withC(Component, dispatchProps = {}, {modelProp} = {}) {
 
       for (const name of this.connectedPropNames) {
         const prop = this.props[name];
-        prop.name = name;
 
         // Add context to path
+        let fullPath;
         if (Array.isArray(prop.path)) {
           // Handle array of paths (for extra arguments to inFunc)
-          prop.fullPath = prop.path.map(this.addContextToPath);
+          fullPath = prop.path.map(this.addContextToPath);
         } else {
-          prop.fullPath = this.addContextToPath(prop.path);
+          fullPath = this.addContextToPath(prop.path);
         }
 
-        if (prop.fullPath === null || prop.fullPath === undefined) {
+        if (fullPath === null || fullPath === undefined) {
           // No path, the prop will receive 'undefined'
           undefinedProps[name] = undefined;
         } else {
           // There is a path, add the prop to the list of connected props
-          connectedProps.push(prop);
+          connectedProps.push({name, prop, fullPath});
 
           // Setup a dispatch prop to change the prop value
           if (name in dispatchProps) {
@@ -267,9 +265,9 @@ export default function withC(Component, dispatchProps = {}, {modelProp} = {}) {
             const outFunc = prop.outFunc;
             if (outFunc) {
               if (outFunc.length > 1) {
-                if (Array.isArray(prop.fullPath)) {
+                if (Array.isArray(fullPath)) {
                   onChangeProps[dispatchPropName] = (value) => {
-                    const currentValues = prop.fullPath.map((path) =>
+                    const currentValues = fullPath.map((path) =>
                       this.getState(path)
                     );
                     this.handlePropChange(
@@ -279,7 +277,7 @@ export default function withC(Component, dispatchProps = {}, {modelProp} = {}) {
                   };
                 } else {
                   onChangeProps[dispatchPropName] = (value) => {
-                    const currentValue = this.getState(prop.fullPath);
+                    const currentValue = this.getState(fullPath);
                     this.handlePropChange(name, outFunc(value, currentValue));
                   };
                 }
