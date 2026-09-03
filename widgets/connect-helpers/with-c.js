@@ -122,7 +122,7 @@ export default function withC(Component, dispatchProps = {}, {modelProp} = {}) {
         ({name}) => name === modelProp
       );
       if (connectedModelProp) {
-        const path = connectedModelProp.path;
+        const path = connectedModelProp.prop.path;
         const model = Array.isArray(path) ? path[0] : path;
         return (
           <WithModel model={model}>
