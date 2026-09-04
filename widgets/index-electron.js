@@ -56,6 +56,10 @@ class ElectronRenderer extends Renderer {
       this.newBackendState(transitState)
     );
 
+    ipcRenderer.on('NEW_EVENT', (event, data) =>
+      this.emitEvent(data.topic, data.data)
+    );
+
     ipcRenderer.on('BEGIN_RENDER', () => {
       return super.main(labId);
     });

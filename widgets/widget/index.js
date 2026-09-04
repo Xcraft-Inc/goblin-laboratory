@@ -12,6 +12,7 @@ import * as widgetsActions from './utils/widgets-actions';
 import mergeStyleDefinitions from './style/merge-style-definitions.js';
 import buildStyle from './style/build-style.js';
 import joinModels from '../connect-helpers/join-models.js';
+import desktopEvents from '../desktop-events.js';
 
 const stylesImporter = importer('styles');
 const reducerImporter = importer('reducer');
@@ -141,6 +142,10 @@ class Widget extends React.Component {
 
   getNearestId() {
     return this.props.id || this.context.nearestParentId;
+  }
+
+  get events() {
+    return desktopEvents;
   }
 
   // Styles

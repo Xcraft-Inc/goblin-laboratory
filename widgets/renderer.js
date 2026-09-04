@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Root from 'goblin-laboratory/widgets/root';
 import configureStore from 'goblin-laboratory/widgets/store/store';
+import desktopEvents from './desktop-events.js';
 
 class Renderer {
   constructor(send, options = {}) {
@@ -49,6 +50,10 @@ class Renderer {
         renderer: this,
       })
     );
+  }
+
+  emitEvent(topic, data) {
+    desktopEvents.emit(topic, data);
   }
 
   main(labId) {

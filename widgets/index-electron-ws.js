@@ -84,6 +84,9 @@ class ElectronRendererWS extends Renderer {
         case 'NEW_BACKEND_STATE':
           this.newBackendState(data.transitState);
           break;
+        case 'NEW_EVENT':
+          this.emitEvent(data.topic, data.data);
+          break;
         case 'BEGIN_RENDER':
           super.main(labId);
           break;
