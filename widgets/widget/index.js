@@ -316,7 +316,8 @@ class Widget extends React.Component {
   do(action, args) {
     return this.doAs(this.name, action, args);
   }
-  /** @deprecated Replace by doFor.
+  /**
+   * @deprecated Replace by doFor.
    * It's possible to have a mismatch between service name and serviceId.
    * Prefer to use doFor with the service id.
    */
