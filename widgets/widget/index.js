@@ -144,7 +144,7 @@ class Widget extends React.Component {
     return this.props.id || this.context.nearestParentId;
   }
 
-  get events() {
+  get desktop() {
     return desktopEvents;
   }
 
