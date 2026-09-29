@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import Root from 'goblin-laboratory/widgets/root';
 import configureStore from 'goblin-laboratory/widgets/store/store';
 import desktopEvents from './desktop-events.js';
+import helpers from 'xcraft-core-transport/lib/helpers.js';
 
 class Renderer {
   constructor(send, options = {}) {
@@ -53,6 +54,7 @@ class Renderer {
   }
 
   emitEvent(topic, data) {
+    data = helpers.dataFromXcraftJSON(data).data;
     desktopEvents.emit(topic, data);
   }
 
