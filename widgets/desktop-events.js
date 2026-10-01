@@ -21,6 +21,20 @@ class DesktopEvents {
     };
   }
 
+  /**
+   * Subscribe on time to a topic.
+   * @param {string} topic
+   * @returns {Promise<any>}
+   */
+  once(topic) {
+    return new Promise((resolve) => {
+      const unsub = this.sub(topic, (data) => {
+        unsub();
+        resolve(data);
+      });
+    });
+  }
+
   emit(topic, data) {
     const callbacks = this.#events.get(topic);
     if (!callbacks) {
